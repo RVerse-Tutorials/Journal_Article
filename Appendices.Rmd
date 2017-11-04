@@ -1,5 +1,5 @@
 ---
-title: "Use of satellite data for understanding and predicting oil sardine (*Sardinella longiceps*) catch variability along the southwest coast of India"
+title: "Appendices: Use of satellite data for understanding and predicting oil sardine (*Sardinella longiceps*) catch variability along the southwest coast of India"
 date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
   word_document: default
@@ -7,11 +7,13 @@ output:
     fig_caption: yes
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+
+```{r child = 'Table A1 a and b.Rmd'}
 ```
 
-```{r cov-correlation, fig.cap="Correlation of the covariates across boxes.  Correlation is shown by the width of the lines between neighboring boxes.",fig.width=6,fig.height=8.5,message=FALSE,warning=FALSE}
+# Correlation of covariates across the boxes
+
+```{r cov-correlation, fig.cap="Correlation of the covariates across boxes.  Correlation is shown by the width of the lines between neighboring boxes.",fig.width=6,fig.height=8.5,message=FALSE,warning=FALSE, echo=FALSE}
 library(maps)
 library(mapdata)
 par(mfrow=c(2,2),mar=c(0,1,1,1))

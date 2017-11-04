@@ -141,3 +141,7 @@ Figure 10.  Non-linear effect of temperature on catch during the spawning season
 
 Figure 11.  Fitted versus observed catch in the spawning period from the best covariate model.  [*missing*]
 
+
+```{r child = 'Table 1.Rmd'}
+```
+
