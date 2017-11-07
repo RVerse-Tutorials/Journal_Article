@@ -11,6 +11,9 @@ output:
 ```{r child = 'Table A1 a and b.Rmd'}
 ```
 
+```{r child = 'Table A2 a-c.Rmd'}
+```
+
 # Correlation of covariates across the boxes
 
 ```{r cov-correlation, fig.cap="Correlation of the covariates across boxes.  Correlation is shown by the width of the lines between neighboring boxes.",fig.width=6,fig.height=8.5,message=FALSE,warning=FALSE, echo=FALSE}
