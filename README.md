@@ -20,9 +20,9 @@ Download all the Rmd files. The README file is not needed.
 Status
 ------
 
--   Next task is clean up Table 2 code.
+-   Next task is clean up Table 2 code.  
 -   Then the code for the spawner covariate tables.
--   After that write code for the model selection for the non-spawner catch data.
+-   [Started] After that write code for the model selection for the non-spawner catch data.  The tables for the appendix are labelled Table A2 code.  For the main paper, just show the linearity test as in Table A2b.
 -   Look at chlorophyl
 -   Look at whether the effects are time-varying.
 -   Make the missing figures:
