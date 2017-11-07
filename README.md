@@ -1,7 +1,6 @@
 README
 ================
 EE Holmes
-November 3, 2017
 
 To run
 ------
