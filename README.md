@@ -2,6 +2,8 @@ README
 ================
 EE Holmes
 
+The Rmd files create the manuscript OilSardine\_NOAA\_MoES.pdf and the Word version with .docx. Note that the tables do not look very good in Word.  Best to look at those in the pdf file.
+
 To run
 ------
 
@@ -22,10 +24,13 @@ Install SardineForecast and rmarkdown from GitHub.  While you can install rmarkd
         install_github("eeholmes/SardineForecast")
         install_github("rstudio/rmarkdown")
 
-Now you can run the Rmd files for the paper.
+Now you can run the Rmd files for the paper.  If the RStudio complains that it cannot make a pdf, then click the little arrow next to the 'knitr' button at top (in RStudio) and you will see 'Knit to Word'.  Click that.
 
--   Open OilSardine\_NOAA\_MoES.Rmd and knit to make the main paper. This will use the Rmd files for the tables and insert in the main document. The citations bib file is in the SardineForecast package.
--   Open Figures.Rmd to knit the figures for the main paper. Some of the figures are in the SardineForecast package.
+-   Open OilSardine\_NOAA\_MoES.Rmd and knit to make the main paper. To knit, click the 'knit' button in the top navbar in RStudio.  This will use the Rmd files for the tables and insert in the main document. The citations bib file is in the SardineForecast package.
+
+The main OilSardine Rmd file, runs the Figures and Appendices, but you make these separately too.
+
+-   Open Figures.Rmd to knit the figures for the main paper. 
 -   Open Appendices.Rmd to create the appendices. This will call the Rmd files for the appendix tables.
 
 Status 11/14/2017
