@@ -7,14 +7,25 @@ output:
     fig_caption: yes
 ---
 
+# Appendix A: Tests for the structure of the Qtr 3 and non-Qtr 3 catch models
 
-```{r child = 'Table A1 a and b.Rmd'}
+```{r child = 'Table App A spawner model.Rmd'}
 ```
 
-```{r child = 'Table A2 a-c.Rmd'}
+```{r child = 'Table App A nonspawner model.Rmd'}
 ```
 
-# Correlation of covariates across the boxes
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Appendix B: Model selection for the covariates
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Appendix C: Correlation of covariates across the boxes
 
 ```{r cov-correlation, fig.cap="Correlation of the covariates across boxes.  Correlation is shown by the width of the lines between neighboring boxes.",fig.width=6,fig.height=8.5,message=FALSE,warning=FALSE, echo=FALSE}
 library(maps)
@@ -82,7 +93,4 @@ title(var.title)
 
 
 
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
 

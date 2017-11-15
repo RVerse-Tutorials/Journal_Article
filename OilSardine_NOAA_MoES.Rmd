@@ -1,14 +1,27 @@
 ---
-title: "Use of satellite data for understanding and predicting oil sardine (*Sardinella longiceps*) catch variability along the southwest coast of India"
-author: ""
+title: Use of satellite data for understanding and predicting oil sardine (*Sardinella
+  longiceps*) catch variability along the southwest coast of India
+author: ''
 date: '`r format(Sys.time(), "%d %B, %Y")`'
-output: word_document
-bibliography: !expr system.file("docs", "Sardine.bib", package = "SardineForecast")
+output:
+  pdf_document: default
+  word_document: default
 csl: '`r system.file("docs", "ecology.csl", package = "SardineForecast")`'
+bibliography: '`r system.file("docs", "Sardine.bib", package = "SardineForecast")`'
+header-includes:
+    - \usepackage[labelformat=empty]{caption}
 ---
 
-```{r setup, include=FALSE}
+```{r setup_main, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+require(SardineForecast)
+#must label things like fig: and tab: or eqn:
+.rmdenvir = environment()
+.refctr <- c(`_` = 0)
+
+#add and recal a table number like so
+# `r ref("fig:a")`
+#it keeps track of whether the name exists.  Can be called anywhere.  First time is refed, it gets a number.
 ```
 
 # Introduction
@@ -19,7 +32,7 @@ The life cycle (include graphic of the life-cycle) of the oil sardine fishery be
 
 After eggs are spawned, they develop rapidly into larvae within 24 hrs [@Nair1959].  Variation in the bloom initiation time and intensity lead to changes in the food supply to sardine larvae and corresponding changes in their growth rate and survival and the later recruitment of sardines into the fishery [@Georgeetal2012].  The phytoplankton bloom that provides for sardine larvae food is dependent upon coastal upwelling.    Oil sardines grow rapidly during the first few months and mature to full size during the first 2.5 years. 
 
-The age at first maturity occurs at less than one year, at about 150 mm size, and the range of sardines that are fished typically range from 150-220 mm in size and 1-2.5 years old. On the southwest coast, the oil sardine fishery commences soon after the outbreak of monsoon in June and continues until March-April. Along the Kerala coast catches are fairly high throughout the year except during March-May (Figure 1). Along the west coast, the length composition of catches ranges between 50- 220mm. Virgin spawners (140-160 mm) enter the fishery on the Kerala coast during June/July and as the season progresses to September-December, adults occur in reduced quantities and catches are dominated by age-1 juveniles (120-140 mm) that were spawned in the prior season (citation). Seasons of rainfall extremes (weak or intense) cause recruitment failure, while a daily rainfall of 20-30 mm during June-August along the southwest coast may indicate good recruitment to the fishery (citation).
+The age at first maturity occurs at less than one year, at about 150 mm size, and the range of sardines that are fished typically range from 150-220 mm in size and 1-2.5 years old. On the southwest coast, the oil sardine fishery commences soon after the outbreak of monsoon in June and continues until March-April. Along the Kerala coast catches are fairly high throughout the year except during March-May (Figure `r ref("fig:catch")`). Along the west coast, the length composition of catches ranges between 50- 220mm. Virgin spawners (140-160 mm) enter the fishery on the Kerala coast during June/July and as the season progresses to September-December, adults occur in reduced quantities and catches are dominated by age-1 juveniles (120-140 mm) that were spawned in the prior season (citation). Seasons of rainfall extremes (weak or intense) cause recruitment failure, while a daily rainfall of 20-30 mm during June-August along the southwest coast may indicate good recruitment to the fishery (citation).
 
 As the success of commercial fishery for each season is determined by the number of juveniles recruited at the beginning of the same season, rainfall, which affects spawning success, has been used to forecast the strength of juvenile brood entering the fishery. Though earlier studies have shown that most of spawning activity occurs in the near-shore area or in the mouths of estuaries, there are observations of eggs and larvae in the shelf region even at 200m depth (citation). Also, studies from other upwelling ecosystems (citation), have shown that the planktonic stage larvae accumulate in frontal zones as well as in river plumes. Studies from Bakun (citation), Bakun and English (citation), Cury and Roy (citation) etc. explain the linkage to the atmospheric and oceanic processes based on number of hypothesis like Optimal environment window, Match-mismatch hypothesis etc. Also, the changes in the fishery in either short term or long term is explained for other similar theories such as population expansion (Mac Call's hypothesis) and the Wasp waist hypothesis.
 
@@ -31,7 +44,7 @@ In this paper, we revisit the analysis of environmental covariates that correlat
 
 Being land-locked to the north, the northern Indian Ocean is the only part of the world oceans that is not connected to the polar region and lies entirely in the tropics. It also experiences exclusively the seasonally reversing monsoon that is coupled with processes in the Pacific Ocean [@Websteretal1999]. The western Arabian Sea that experiences high atmospheric pressure during most of the year, lies adjacent to the Horn of Africa as well as the Arabian peninsula. This results in the Aeolian transport (referred to as Shamal activity) to the basin as well as persistent upwelling off-Somalia and along the coast of Yemen [@Raoetal2003; @Preusseretal2002; @Singhetal2008]. High plankton biomass, resulting in elevated productivity in this region is advected towards central Arabian Sea through Ekman pumping. This process is intensified during ISM and during the early spring-bloom period in February through March. A persistent Oxygen Minimum Zone (OMZ) in the north and central Arabian Sea basin results in large net-export of CO2 from waters to the atmosphere [@Sarmaetal1998; @Naqvietal2000; @Kumaretal2001]. Often this coastal productivity affects to the OMZ and vice-a-versa [@Devoletal2006]. Monsoonal reversal of winds and, in turn, coastal currents, along with high amount of river discharge, generates high degrees of variability in the productivity induced from either mixing or upwelling in the eastern Arabian Sea [@SarupriaBhargava1993; @SrinivasDineshkumar2006; @Habeebrehmanetal2008; @Jayarametal2010; @Chauhanetal2011; @JoshiRao2012; @Guptaetal2016].
 
-In this work, we focus on the the southeastern Arabian Sea (SEAS) (Figure 2). The SEAS has relatively narrow continental shelf on the western shoreline of the Indian peninsula and is influenced by ISM as well as IWM and tidal interactions as well as discharge from multiple rivers [@Shetyeetal1995; @Oasim2003; @Menonetal2005]. This region also recurrently witnesses intense spring blooms of Trichodesmium spp. This, along with coastal current dynamics, upwelling and high rainfall, results in high coastal productivity with surface chlorophyll values up to 32-39 mg m-3 off the Kerala coast [@Madhupratapetal2001; @Jayarametal2010; @Raghavanetal2010; @Chauhanetal2011]. The SEAS also experience high chlorophyll concentration s(~40 mg m-2) and net primary productivity (~1300 mgC m-2 d-1) off Kochi during summer upwelling [@Guptaetal2016].  In the southern SEAS coastal waters off Kochi, extreme variability in productivity during the ISM (40-1225 mgCm-2d-1), post-ISM (21-263 mgCm-2d-1) and during intermonsoon period (12-648 mgCm-2d-1) have been observed [@SarupriaBhargava1993; @SrinivasDineshkumar2006; @Habeebrehmanetal2008; @Jayarametal2010; @JoshiRao2012; @Guptaetal2016].
+In this work, we focus on the the southeastern Arabian Sea (SEAS) (Figure `r ref("fig:studyarea")`). The SEAS has relatively narrow continental shelf on the western shoreline of the Indian peninsula and is influenced by ISM as well as IWM and tidal interactions as well as discharge from multiple rivers [@Shetyeetal1995; @Oasim2003; @Menonetal2005]. This region also recurrently witnesses intense spring blooms of Trichodesmium spp. This, along with coastal current dynamics, upwelling and high rainfall, results in high coastal productivity with surface chlorophyll values up to 32-39 mg m-3 off the Kerala coast [@Madhupratapetal2001; @Jayarametal2010; @Raghavanetal2010; @Chauhanetal2011]. The SEAS also experience high chlorophyll concentration s(~40 mg m-2) and net primary productivity (~1300 mgC m-2 d-1) off Kochi during summer upwelling [@Guptaetal2016].  In the southern SEAS coastal waters off Kochi, extreme variability in productivity during the ISM (40-1225 mgCm-2d-1), post-ISM (21-263 mgCm-2d-1) and during intermonsoon period (12-648 mgCm-2d-1) have been observed [@SarupriaBhargava1993; @SrinivasDineshkumar2006; @Habeebrehmanetal2008; @Jayarametal2010; @JoshiRao2012; @Guptaetal2016].
 
 # Hypotheses concerning correlation between covariate and catches
 
@@ -75,7 +88,7 @@ Quarterly fish landing data have been collected by the Central Marine Fisheries 
 
 ## Covariate data
 
-We analysed monthly composites of the following satellite data: Sea Surface Temperature (SST), chlorophyll (CHL), Sea Surface Height (SSH), upwelling (UPW) and precipitation. Specifically the following datasets were used.  For sea surface temperature, Advanced Very-High Resolution Radiometer (AVHRR) SST data.  For 1981 to 2002, we used Pathfinder Version 5.2 product on a 4km grid.  For 2003 to 2016, we used the AVHRR product from the POES.  These data are at a 0.1° spatial scale.  For he chlorophyll-a, we used SeaWiFS data on a 0.1° spatial scale.for 1981 to 2002, and MODIS data from 2003 to 2017 at 0.05° spatial scale.  The upwelling index was based on the sea-surface temperature differential between near shore and 3 degrees offshore (citation) using our sea-surface data from 1981 to 2016. The index has been validated as more reliable metric of upwelling off the coast of Kerala compared to wind-based upwelling indices (Smitha citation).  All these satellite data were retrieved from the NOAA ERDDAP server (See Appendix for full details).   The satellite data were averaged across thirteen 2.5 degree by 2.5 degree boxes which roughly parallel the bathymetry (Figure 2). The precipitation data were downloaded from two different sources.  The first was an estimate of the monthly precipitation over Kerala from land-based gauges.  This time-series is available from the start of our landing data (1956).  The second was a remote-sensing precipitation product, the NOAA Global Precipitation Climatology Project.  This provides a precipitation estimate using a global 2.5 degree grid.  We used a 2.5 degree box defined by latitude 8.75 to 11.25 and longitude 73.25 to 75.75 for the precipitation off the coast of Kerala.  These data are available from 1979 forward.  Full details on the remote-sensing data sets are available in the appendices.  
+We analysed monthly composites of the following satellite data: Sea Surface Temperature (SST), chlorophyll (CHL), Sea Surface Height (SSH), upwelling (UPW) and precipitation. Specifically the following datasets were used.  For sea surface temperature, Advanced Very-High Resolution Radiometer (AVHRR) SST data.  For 1981 to 2002, we used Pathfinder Version 5.2 product on a 4km grid.  For 2003 to 2016, we used the AVHRR product from the POES.  These data are at a 0.1° spatial scale.  For he chlorophyll-a, we used SeaWiFS data on a 0.1° spatial scale.for 1981 to 2002, and MODIS data from 2003 to 2017 at 0.05° spatial scale.  The upwelling index was based on the sea-surface temperature differential between near shore and 3 degrees offshore (citation) using our sea-surface data from 1981 to 2016. The index has been validated as more reliable metric of upwelling off the coast of Kerala compared to wind-based upwelling indices (Smitha citation).  All these satellite data were retrieved from the NOAA ERDDAP server (See Appendix for full details).   The satellite data were averaged across thirteen 2.5 degree by 2.5 degree boxes which roughly parallel the bathymetry (Figure `r ref("fig:studyarea")`). The precipitation data were downloaded from two different sources.  The first was an estimate of the monthly precipitation over Kerala from land-based gauges.  This time-series is available from the start of our landing data (1956).  The second was a remote-sensing precipitation product, the NOAA Global Precipitation Climatology Project.  This provides a precipitation estimate using a global 2.5 degree grid.  We used a 2.5 degree box defined by latitude 8.75 to 11.25 and longitude 73.25 to 75.75 for the precipitation off the coast of Kerala.  These data are available from 1979 forward.  Full details on the remote-sensing data sets are available in the appendices.  
 
 # Models
 
@@ -92,13 +105,13 @@ Model selection was conducted in a step-wise fashion.  The length of the covaria
 
 # Results
 
-There was support for including the post-spawning catch in the previous year as an explanatory variable for the catch during the spawning season (3rd quarter).  Models with $ln(N_{t-1})$ were strongly supported over an intercept only model (Table 1, time-dependency test).  However the addition of the catch two years prior, $ln(N_{t-2})$, lead to either no decrease in the residual deviance (i.e. increase in the explained variance) and in fact, increased the residual deviance for the model with non-linearity (Table 1, Linearity test).  We also tested the support for non-linearity in the effect of the prior year catch on the catch in the spawning season.  This was done by comparing models with $ln(N_{t-1})$ included as a linear term or as a non-linear function $s(ln(N_{t-1}))$ (Table 1, Linearity test).  The residual deviance decreased using a non-linear response however the cost was 1.4 degrees of freedom.  The rest was only weak (non-significant) support for allowing a non-linear response.  The results were the same if we used the full landings dataset (1956-2015) or only the data that used for the covariate analysis (1982-2015) (Tables A1 and A2).
+There was support for including the post-spawning catch in the previous year as an explanatory variable for the catch during the spawning season (3rd quarter).  Models with $ln(N_{t-1})$ were strongly supported over an intercept only model (Table `r ref("tab:spawner_model_selection")`, time-dependency test).  However the addition of the catch two years prior, $ln(N_{t-2})$, lead to either no decrease in the residual deviance (i.e. increase in the explained variance) and in fact, increased the residual deviance for the model with non-linearity (Table `r ref("tab:spawner_model_selection")`, Linearity test).  We also tested the support for non-linearity in the effect of the prior year catch on the catch in the spawning season.  This was done by comparing models with $ln(N_{t-1})$ included as a linear term or as a non-linear function $s(ln(N_{t-1}))$ (Table `r ref("tab:spawner_model_selection")`, Linearity test).  The residual deviance decreased using a non-linear response however the cost was 1.4 degrees of freedom.  The rest was only weak (non-significant) support for allowing a non-linear response.  The results were the same if we used the full landings dataset (1956-2015) or only the data that used for the covariate analysis (1982-2015) (Tables `r ref("tabappA:spawner-model-time", pre="A")` and `r ref("tabappA:spawner-model-linearity", pre="A")`).
 
 There was no support for using precipitation during the summer monsoon (Jun-Jul) or pre-monsoon period (Apr-May) as an explanatory variable for the 3rd quarter catch (Table B1).  This was the case whether precipitation in the current or previous season was used, if precipitation was included as non-linear or non-linear effect, or if the smoothing term (degree of non-linearity allowed) was estimated and thus not constrained, and if either the 1982-2015 remote-sensing precipitation was used or the 1956-2015 land-based precipitation was used.
 
-However, we found significant correlation between average sea surface temperature during the early post-spawning period (Jul-Dec) and catch during the spawning season (Table 2).  Sea surface temperature has been found to be correlated with sardine biomass in a number of other studies [@JacobsonMacCall1995; add the others].  The residual deviance was lowest in a model with SST in both the prior year and two years prior included and with a non-linear response for both. This a similar result to Jacobson and MacCall [-@JacobsonMacCall1995] who found that SST in multiple prior years was supported as explanatory variables for sardine recruitment and productivity.  However the reduction in degrees of freedom was high for this model and it was not supported, despite having the lowest residual degrees of freedom, given the cost (loss of degrees of freedom).  The model with the lowest AIC and with a p-value of 0.108 for the F-test was a model with only the past year and non-linear response.  The response shows a step-response with a negative effect at low temperatures and then an increased effect a higher temperatures (Figure 9).  This type of step-response has been found in studies of the effect of SST on recruitment in Pacific sardines (*citations from Jacobson and MacCall*).  The R2 for this model was 0.50 (Table 2).
+However, we found significant correlation between average sea surface temperature during the early post-spawning period (Jul-Dec) and catch during the spawning season (Table 2).  Sea surface temperature has been found to be correlated with sardine biomass in a number of other studies [@JacobsonMacCall1995; add the others].  The residual deviance was lowest in a model with SST in both the prior year and two years prior included and with a non-linear response for both. This a similar result to Jacobson and MacCall [-@JacobsonMacCall1995] who found that SST in multiple prior years was supported as explanatory variables for sardine recruitment and productivity.  However the reduction in degrees of freedom was high for this model and it was not supported, despite having the lowest residual degrees of freedom, given the cost (loss of degrees of freedom).  The model with the lowest AIC and with a p-value of 0.108 for the F-test was a model with only the past year and non-linear response.  The response shows a step-response with a negative effect at low temperatures and then an increased effect a higher temperatures (Figure `r ref("fig:SSTeffect")`).  This type of step-response has been found in studies of the effect of SST on recruitment in Pacific sardines (*citations from Jacobson and MacCall*).  The R2 for this model was 0.50 (Table 2).
 
-The strongest predictor of the catch during the spawning season however was the upwelling strength during Jan-Mar (Table 3), during a period when the young of the year and age-1 fish would be found feeding in large shoals in the coastal region.  The is the time of year with the second highest catches that are dominated by small-sized fish (*citation*).  The model with lowest residual deviance included a non-linear effect of upwelling in the prior year and two years prior.  As for SST, the cost in terms of low of degrees of freedom led to this model not being the best supported.  The best supported model included only the upwelling strength in the prior year, not two years prior, and included a non-linear response (Table 3).  The R^2 for this model was 0.63 (Figure 10).
+The strongest predictor of the catch during the spawning season however was the upwelling strength during Jan-Mar (Table 3), during a period when the young of the year and age-1 fish would be found feeding in large shoals in the coastal region.  The is the time of year with the second highest catches that are dominated by small-sized fish (*citation*).  The model with lowest residual deviance included a non-linear effect of upwelling in the prior year and two years prior.  As for SST, the cost in terms of low of degrees of freedom led to this model not being the best supported.  The best supported model included only the upwelling strength in the prior year, not two years prior, and included a non-linear response (Table 3).  The $R^2$ for this model was 0.63 (Figure `r ref("fig:fittedmodel")`).
 
 *Still to do.  Test interactions between the variables that turned out to be important.*
 
@@ -117,31 +130,51 @@ Do a pilot analysis of chlorophyll however the data available are short and will
 
 <div id="refs"></div>
 
+\clearpage
+
 # Figure Legends
 
-Figure 1. Quarterly catch data 1956-2014 from Kerala. The catches have a strong seasonal pattern with the highest catches in quarter 4. Note that quarter 3 is July-Sept and that the fishery is closed July 1 to Aug 15, thus the fishery is only open 1.5 months in quarter 3. The per month catch rate is second highest in quarter 3 although total catch is lower in quarter 3.
+Figure `r ref("fig:catch")`. Quarterly catch data 1956-2014 from Kerala. The catches have a strong seasonal pattern with the highest catches in quarter 4. Note that quarter 3 is July-Sept and that the fishery is closed July 1 to Aug 15, thus the fishery is only open 1.5 months in quarter 3. The per month catch rate is second highest in quarter 3 although total catch is lower in quarter 3.
 
-Figure 2. Close up of Kerala State with the latitude/longitude boxes used for the satellite data. Kerala State is marked in grey and the oil sardine catch from this region is being modelled.
+Figure `r ref("fig:studyarea")`. Close up of Kerala State with the latitude/longitude boxes used for the satellite data. Kerala State is marked in grey and the oil sardine catch from this region is being modelled.
 
-Figure 3.  Key currents and circulation patterns in the Indian Ocean that affect winter and summer monsoon associated upwelling.
+Figure `r ref("fig:seiocurrents")`.  Key currents and circulation patterns in the Indian Ocean that affect winter and summer monsoon associated upwelling.
 
-Figure 4. Cartoon of the sardine life-cycle in the SE Indian Ocean and how it interacts with the fishery.  [*missing*]
+Figure `r ref("fig:cartoon")`.  Cartoon of the sardine life-cycle in the SE Indian Ocean and how it interacts with the fishery.  [*missing*]
 
-Figure 5. Chlorophyll-a bloom intensity in quarter 2 versus quarter 4 of 2017.  Data from NOAA.
+Figure `r ref("fig:CHL")`.  Average Chlorophyll-a bloom intensity in 2016 by quarter. Red is high density chlorophyll-a.  Black is missing data due to cloud cover. Data from NOAA.
 
-Figure 6. Monthly rainfall 1956-2014 from Kerala.
+Figure `r ref("fig:precipts")`.  Monthly rainfall 1956-2014 from Kerala.
 
-Figure 7. Monthly Upwelling Index 1981-2012 off the Kerala coast. The upwelling index is the difference between the near-shore and offshore sea surface temperature.
+Figure `r ref("fig:UPWts")`.  Monthly Upwelling Index 1981-2012 off the Kerala coast. The upwelling index is the difference between the near-shore and offshore sea surface temperature.
 
-Figure 8. Monthly Chl-a 1997-2017 off the Kerala coast. 
+Figure `r ref("fig:CHLts")`.  Monthly Chl-a 1997-2017 off the Kerala coast. 
 
-Figure 9. Monthly SST 1981-2012 off the Kerala coast. [missing]
+Figure `r ref("fig:SSTts")`.  Monthly SST 1981-2012 off the Kerala coast. [*missing*]
 
-Figure 10.  Non-linear effect of temperature on catch during the spawning season (3rd quarter). [*missing*]
+Figure `r ref("fig:SSTeffect")`.  Non-linear effect of temperature on catch during the spawning season (3rd quarter). [*missing*]
 
-Figure 11.  Fitted versus observed catch in the spawning period from the best covariate model.  [*missing*]
+Figure `r ref("fig:fittedmodel")`.  Fitted versus observed catch in the spawning period from the best covariate model.  [*missing*]
 
+#
 
-```{r child = 'Table 1.Rmd'}
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+#
+
+```{r child = 'Tables.Rmd', echo=FALSE}
+```
+
+#
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+#
+
+```{r child = 'Appendices.Rmd', echo=FALSE}
 ```
 

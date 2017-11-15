@@ -1,19 +1,19 @@
 ---
-title: "Spawner Model Selection Table"
-author: "EE Holmes"
-date: "October 17, 2017"
+title: "Tables A1 a-b: Spawner Model Selection Tables"
 output: word_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup-tableA1, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
 require(SardineForecast)
 require(stringr)
 require(mgcv)
 require(knitr)
+# If this is being called from another Rmd (as a child), this counter will exist
+if(!exists(".rmdenvir")) .rmdenvir = environment()
 ```
 
-```{r setup-data, echo=FALSE}
+```{r setup-data-tableA1, echo=FALSE}
 reg="Kerala"
 Qtr=3
 respdat=data.frame(
@@ -67,7 +67,7 @@ respdat$Catch12 = log(exp(respdat$Catch1)+exp(respdat$Catch2))
 fullrespdat = respdat
 ```
 
-```{r seltable-timedep, echo=FALSE}
+```{r seltable-timedep-A1a, echo=FALSE}
 seltable = data.frame(Model="Time dependency test 1956-2015 data", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 
 respdat = fullrespdat
@@ -139,13 +139,16 @@ tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq,
 seltable=rbind(seltable,tmp1,tmp2)
 
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
-kable(seltable, align="lccccc", caption="Table A1a. F-tests of nested models of the time-dependency of the catch in Qtr 3 using the full catch data (1956-2015) or only the data that overlap with the satellite covariate data (1982-2015).  See Table 1 for definitions.")
+if(knitr::opts_knit$get("rmarkdown.pandoc.to")=="latex") colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
+thecap=paste("F-tests of nested models of the time-dependency of the catch in Qtr 3 using the full catch data (1956-2015) or only the data that overlap with the satellite covariate data (1982-2015).  See Table",ref("tab:spawner_model_selection"),"for definitions.")
+fullcap=paste("Table ", ref("tabappA:spawner-model-time", pre="A"), ". ", thecap, sep="")
+kable(seltable, align="lccccc", caption=fullcap)
 ```
 
 #
 
 
-```{r seltable-linearity, echo=FALSE}
+```{r seltable-linearity-A1b, echo=FALSE}
 seltable = data.frame(Model="Linearity test 1956-2015 data", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 
 respdat=fullrespdat
@@ -213,5 +216,8 @@ tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq,
 seltable=rbind(seltable,tmp1,tmp2)
 
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
-kable(seltable, align="lccccc", caption="Table A1b. F-tests of nested models of the linearity of the catch in Qtr 3 using the full catch data (1956-2015) or only the data that overlap with the satellite covariate data (1982-2015).  See Table 1 for definitions.")
+if(knitr::opts_knit$get("rmarkdown.pandoc.to")=="latex") colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
+thecap=paste("F-tests of nested models of the linearity of the catch in Qtr 3 using the full catch data (1956-2015) or only the data that overlap with the satellite covariate data (1982-2015).  See Table",ref("tab:spawner_model_selection"),"for definitions.")
+fullcap=paste("Table ", ref("tabappA:spawner-model-linearity", pre="A"), ". ", thecap, sep="")
+kable(seltable, align="lccccc", caption=fullcap)
 ```

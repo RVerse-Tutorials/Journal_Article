@@ -1,17 +1,23 @@
 ---
-title: "Table 1"
-output: word_document
+title: 'Table 1: Spawner Model Selection'
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+fontsize: 12pt
 ---
 
-```{r setup, include=FALSE}
+```{r setup-table1, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 require(SardineForecast)
 require(stringr)
 require(mgcv)
 require(knitr)
+# If this is being called from another Rmd (as a child), this counter will exist
+if(!exists(".rmdenvir")) .rmdenvir = environment()
 ```
 
-```{r setup-data, echo=FALSE}
+```{r setup-data-table1, echo=FALSE}
 reg="Kerala"
 Qtr=3
 respdat=data.frame(
@@ -65,7 +71,7 @@ respdat$Catch12 = log(exp(respdat$Catch1)+exp(respdat$Catch2))
 fullrespdat = respdat
 ```
 
-```{r seltable, echo=FALSE}
+```{r seltable1, echo=FALSE}
 respdat = fullrespdat[which(fullrespdat$Year==1982):which(fullrespdat$Year==2015),]
 
 #set up table
@@ -132,7 +138,13 @@ tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq,
 seltable=rbind(seltable,tmp1,tmp2)
 ```
 
-```{r print-table, echo=FALSE}
+```{r print-table1, echo=FALSE}
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
-kable(seltable, align="lccccc", caption="Table 1. Model selection tests of time-dependency and linearity for the $S_t$ model using F-tests of nested models fit to log landings data.  $S_t$ is the catch during the spawning period (Qtr 3 = July-Sep) of season $t$ (Jul-Jun). $N_{t-1}$ is the catch during the prior sardine season after the spawning period (the 9-months following Qtr 3, Oct-Jun, of the previous sardine season). $N_{t-2}$ is the same for two seasons prior.  $s()$ is a non-linear function of the response variable.")
+if(knitr::opts_knit$get("rmarkdown.pandoc.to")=="latex") colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
+
+thecap = "Model selection tests of time-dependency and linearity for the $S_t$ model using F-tests of nested models fit to log landings data.  $S_t$ is the catch during the spawning period (Qtr 3 = July-Sep) of season $t$ (Jul-Jun). $N_{t-1}$ is the catch during the prior sardine season after the spawning period (the 9-months following Qtr 3, Oct-Jun, of the previous sardine season). $N_{t-2}$ is the same for two seasons prior.  $s()$ is a non-linear function of the response variable."
+
+fullcap = paste("Table ", ref("tab:spawner_model_selection"), ". ", thecap, sep="")
+
+kable(seltable, align="lccccc", caption=fullcap)
 ```

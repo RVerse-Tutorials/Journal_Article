@@ -1,14 +1,19 @@
 ---
-title: "Use of satellite data for understanding and predicting oil sardine (*Sardinella longiceps*) catch variability along the southwest coast of India"
-date: '`r format(Sys.time(), "%d %B, %Y")`'
+title: Use of satellite data for understanding and predicting oil sardine (*Sardinella
+  longiceps*) catch variability along the southwest coast of India
 output:
   word_document: default
+  pdf_document: default
   html_document:
     fig_caption: yes
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 ---
 
-```{r setup, include=FALSE}
+```{r setup-figures, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(SardineForecast)
+# If this is being called from another Rmd (as a child), this counter will exist
+if(!exists(".rmdenvir")) .rmdenvir = environment()
 ```
 
 # Figures
@@ -25,22 +30,7 @@ Things to change
 * move the spatial correlation plot to appendix
 * Dave said that Pacific sardine uses 3-yr running mean of SST at 5-15m over whole CalCOFI region as an index of recruitment.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-# Set up
-library(SardineForecast)
-```
-
-
-```{r, out.width = "400px", fig.align='center', echo=FALSE, fig.cap="Close up of the Kerala district (see inset of India for overall location).  The boxes show the regions over which the satellite data were averaged.  The Kerala district is marked in grey and the oil sardine catch from this region is being modelled.",message=FALSE,warning=FALSE}
-figfile = system.file("docs", "kerala_study_area_with_inset.jpg", package="SardineForecast")
-knitr::include_graphics(figfile)
-```
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-```{r fig2b, echo=FALSE,fig.cap="Quarterly catch data 1956-2014 from Kerala.  The catches have a strong seasonal pattern with the highest catches in quarter 4. Note that Quarter 3 is July-Sept and that the fishery is closed July 1 to Aug 15, thus the fishery is only open 1.5 months in quarter 3. The per month catch rate is second highest in quarter 3.",fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
+```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
 ### FIGURE 2 Alternate 1
 par(mfrow=c(2,1),mar=c(5,3,1,1))
 dat=oilsardine_qtr
@@ -64,6 +54,33 @@ names(catchmeans)=paste("Q",1:4,sep="")
 barplot(catchmeans/1000,ylab="",col="grey",cex.axis=.75,cex.names=.75)
 title("Mean Qtrly Catch",cex.main=.75)
 par(oldpar)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r fig-study-area, out.width = "400px", fig.align='center', echo=FALSE, fig.cap="Close up of the Kerala district (see inset of India for overall location).  The boxes show the regions over which the satellite data were averaged.  The Kerala district is marked in grey and the oil sardine catch from this region is being modelled.",message=FALSE,warning=FALSE}
+figfile = system.file("docs", "kerala_study_area_with_inset.jpg", package="SardineForecast")
+knitr::include_graphics(figfile)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r fig-currents, out.width = "500px", fig.align='center', echo=FALSE, fig.cap="Key currents and circulation patterns in the Indian Ocean that affect winter and summer monsoon associated upwelling.", message=FALSE, warning=FALSE}
+figfile = system.file("docs", "kerala_currents.jpg", package="SardineForecast")
+knitr::include_graphics(figfile)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r fig-chl-2016, out.width = "400px", fig.align='center', echo=FALSE, fig.cap="Average Chlorophyll-a bloom intensity in 2016 by quarter. Red is high density chlorophyll-a.  Black is missing data due to cloud cover. Data from NOAA.", message=FALSE, warning=FALSE}
+figfile = system.file("docs", "2016 CHL.png", package="SardineForecast")
+knitr::include_graphics(figfile)
 ```
 
 ```{r, results="asis", echo=FALSE}
@@ -201,6 +218,29 @@ plot(mymap$x,mymap$y,type="l",bty="n",xaxt="n",yaxt="n",ylab="",xlab="")
     polygon(x,y)
   }
 par(oldpar)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r sst.mon, echo=FALSE,fig.cap="Monthly sea surface temperature 1981-2017 off the Kerala coast.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+### FIGURE SST
+oldpar=par(mfrow=c(1,2), mar=c(2,5,2,0))
+i=4
+  covname=paste("SST.",i,sep="")
+dat=seio_covariates_mon[[covname]]
+datmon=seio_covariates_mon$Month
+datts=ts(dat,start=1956, frequency=12)
+plot(datts,ylab=paste("SST Box",i),xlab="",bty="n",ylim=c(24,31),xlim=c(2000,2005), yaxs="i", xaxs="i")
+legend("topright","A", bty="n")
+
+dat=seio_covariates_mon[[covname]]
+datmon=seio_covariates_mon$Month
+catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
+names(catchmeans)=1:12
+barplot(catchmeans,ylab="",ylim=c(24,31),col="grey",offset=0,xpd=FALSE, axis.lty=1, bty="l")
+legend("topright","B", bty="n")
 ```
 
 ```{r, results="asis", echo=FALSE}
