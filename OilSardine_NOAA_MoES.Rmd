@@ -9,7 +9,16 @@ output:
   pdf_document: default
   html_document: default
   word_document: default
-header-includes: \usepackage[labelformat=empty]{caption}
+header-includes:
+- \usepackage[labelformat=empty]{caption}
+- \usepackage{setspace}
+- \onehalfspacing
+- \usepackage{etoolbox}
+- \AtBeginEnvironment{tabular}{\singlespacing}
+- \setlength\parindent{24pt}
+- \usepackage{mathptmx}
+- \usepackage[margin=1in]{geometry}
+- \usepackage[fontsize=12.5pt]{scrextend}
 ---
 
 ```{r child = 'setup.Rmd'}
