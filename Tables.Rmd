@@ -1,14 +1,14 @@
 ---
 title: "Tables"
 output:
-  word_document: default
   pdf_document: default
-fontsize: 12pt
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
-```{r setuptables, echo=FALSE}
-# If this is being called from another Rmd (as a child), this counter will exist
-if(!exists(".rmdenvir")) .rmdenvir = environment()
+```{r child = 'setup.Rmd'}
+#Generic setup code common across all Rmds
 ```
 
 

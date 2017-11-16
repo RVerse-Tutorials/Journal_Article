@@ -1,20 +1,17 @@
 ---
-title: Use of satellite data for understanding and predicting oil sardine (*Sardinella
-  longiceps*) catch variability along the southwest coast of India
-output:
-  word_document: default
-  pdf_document: default
-  html_document:
-    fig_caption: yes
+title: Use of satellite data for understanding and predicting oil sardine (*Sardinella longiceps*) catch variability along the southwest coast of India
 date: '`r format(Sys.time(), "%d %B, %Y")`'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
-```{r setup-figures, include=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-library(SardineForecast)
-# If this is being called from another Rmd (as a child), this counter will exist
-if(!exists(".rmdenvir")) .rmdenvir = environment()
+```{r child = 'setup.Rmd'}
+#Generic setup code common across all Rmds
 ```
+
 
 # Figures
 
@@ -56,6 +53,10 @@ title("Mean Qtrly Catch",cex.main=.75)
 par(oldpar)
 ```
 
+#
+
+#
+
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -64,6 +65,10 @@ cat("\\clearpage")
 figfile = system.file("docs", "kerala_study_area_with_inset.jpg", package="SardineForecast")
 knitr::include_graphics(figfile)
 ```
+
+#
+
+#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
@@ -74,6 +79,10 @@ figfile = system.file("docs", "kerala_currents.jpg", package="SardineForecast")
 knitr::include_graphics(figfile)
 ```
 
+#
+
+#
+
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -82,6 +91,10 @@ cat("\\clearpage")
 figfile = system.file("docs", "2016 CHL.png", package="SardineForecast")
 knitr::include_graphics(figfile)
 ```
+
+#
+
+#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
@@ -117,6 +130,10 @@ title("Mean Monthly Precip",cex.main=.75)
 
 par(oldpar)
 ```
+
+#
+
+#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
@@ -169,6 +186,10 @@ if(i==5) oldpar=par(fig = c(0.05+.5, .25+.5, 0.05, .25), new = T)
 par(oldpar)
 ```
 
+#
+
+#
+
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -220,6 +241,10 @@ plot(mymap$x,mymap$y,type="l",bty="n",xaxt="n",yaxt="n",ylab="",xlab="")
 par(oldpar)
 ```
 
+#
+
+#
+
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -242,6 +267,10 @@ names(catchmeans)=1:12
 barplot(catchmeans,ylab="",ylim=c(24,31),col="grey",offset=0,xpd=FALSE, axis.lty=1, bty="l")
 legend("topright","B", bty="n")
 ```
+
+#
+
+#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")

@@ -2,17 +2,13 @@
 title: "Table A2 a-c"
 output:
   pdf_document: default
+  html_document: default
   word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
-```{r setup-tableA2, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-require(SardineForecast)
-require(stringr)
-require(mgcv)
-require(knitr)
-# If this is being called from another Rmd (as a child), this counter will exist
-if(!exists(".rmdenvir")) .rmdenvir = environment()
+```{r child = 'setup.Rmd'}
+#Generic setup code common across all Rmds
 ```
 
 ```{r setup-data-tableA2, echo=FALSE}
@@ -190,7 +186,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 
 ```{r print-tableA2a, echo=FALSE}
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
-if(knitr::opts_knit$get("rmarkdown.pandoc.to")=="latex") colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
 
 thecap=paste("Model selection tests of time-dependency the $NS_t$ model using F-tests of nested models fit to log landings data.  $NS_t$ is the catch during the non-spawning period (Qtrs 3, 1 and 2: Oct-Jun) of season $t$ (Jul-Jun). $S_{t-1}$ and $NS_{t-1}$ are the catch during the prior sardine season during and after the spawning period respectively. $S_{t-2}$ and $NS_{t-2}$ are the same for two seasons prior.  Test A uses catch during the spawning period as the explanatory variable.  Test B uses catch during the non-spawning period as the explanatory variable.  Test C uses both. For Test C, the nestedness is lines 1-3 and lines 1-2 and 4.")
 fullcap=paste("Table ", ref("tabappA:nonspawner-model-time-a", pre="A"), ". ", thecap, sep="")
@@ -317,7 +313,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 
 ```{r print-table2Ab, echo=FALSE}
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
-if(knitr::opts_knit$get("rmarkdown.pandoc.to")=="latex") colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
 
 thecap=paste("Model selection tests of time-dependency the $NS_t$ model using non-linear responses instead of linear responses as in Table",ref("tabappA:nonspawner-model-time-a", pre="A"), "See Table",ref("tabappA:nonspawner-model-time-a", pre="A"), "for an explanation of the parameters and model set-up.")
 fullcap=paste("Table ", ref("tabappA:nonspawner-model-time-b", pre="A"), ". ", thecap, sep="")
@@ -405,7 +401,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 
 ```{r print-table2Ac, echo=FALSE}
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
-if(knitr::opts_knit$get("rmarkdown.pandoc.to")=="latex") colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
 
 thecap=paste("Model selection tests of time-dependency for the $NS_t$ model using 1956-2015 data.  See Table",ref("tabappA:nonspawner-model-time-a", pre="A"),"for definitions.")
 fullcap=paste("Table ", ref("tabappA:nonspawner-model-time-c", pre="A"), ". ", thecap, sep="")

@@ -1,16 +1,14 @@
 ---
 title: "Tables A1 a-b: Spawner Model Selection Tables"
-output: word_document
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
-```{r setup-tableA1, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-require(SardineForecast)
-require(stringr)
-require(mgcv)
-require(knitr)
-# If this is being called from another Rmd (as a child), this counter will exist
-if(!exists(".rmdenvir")) .rmdenvir = environment()
+```{r child = 'setup.Rmd'}
+#Generic setup code common across all Rmds
 ```
 
 ```{r setup-data-tableA1, echo=FALSE}

@@ -3,25 +3,17 @@ title: Use of satellite data for understanding and predicting oil sardine (*Sard
   longiceps*) catch variability along the southwest coast of India
 author: ''
 date: '`r format(Sys.time(), "%d %B, %Y")`'
-output:
-  pdf_document: default
-  word_document: default
 csl: '`r system.file("docs", "ecology.csl", package = "SardineForecast")`'
 bibliography: '`r system.file("docs", "Sardine.bib", package = "SardineForecast")`'
-header-includes:
-    - \usepackage[labelformat=empty]{caption}
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
-```{r setup_main, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-require(SardineForecast)
-#must label things like fig: and tab: or eqn:
-.rmdenvir = environment()
-.refctr <- c(`_` = 0)
-
-#add and recal a table number like so
-# `r ref("fig:a")`
-#it keeps track of whether the name exists.  Can be called anywhere.  First time is refed, it gets a number.
+```{r child = 'setup.Rmd'}
+#Generic setup code common across all Rmds
 ```
 
 # Introduction

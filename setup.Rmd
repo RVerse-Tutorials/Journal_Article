@@ -1,0 +1,18 @@
+---
+title: "Generic set-up for all Rmds"
+author: "EE Holmes"
+output: html_document
+---
+
+```{r message=FALSE,warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+require(SardineForecast)
+require(stringr)
+require(mgcv)
+require(knitr)
+# If this is being called from another Rmd (as a child), this counter will exist
+if(!exists(".rmdenvir")) .rmdenvir = environment()
+#detect if making latex
+knitOut=knitr::opts_knit$get("rmarkdown.pandoc.to")
+if(length(knitOut)==0) isLatex=FALSE else isLatex=(knitOut=="latex")
+```
