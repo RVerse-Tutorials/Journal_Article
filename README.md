@@ -28,7 +28,7 @@ Now you can run the Rmd files for the paper.  If the RStudio complains that it c
 
 -   Open OilSardine\_NOAA\_MoES.Rmd and knit to make the main paper. To knit, click the 'knit' button in the top navbar in RStudio.  This will use the Rmd files for the tables and insert in the main document. The citations bib file is in the SardineForecast package.
 
-The main OilSardine Rmd file, runs the Figures and Appendices, but you make these separately too.
+The main OilSardine Rmd file, runs the Figures and Appendices, but you can make these separately too.
 
 -   Open Figures.Rmd to knit the figures for the main paper. 
 -   Open Appendices.Rmd to create the appendices. This will call the Rmd files for the appendix tables.
