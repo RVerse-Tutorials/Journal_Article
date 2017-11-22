@@ -14,19 +14,44 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```
 
 
-# Appendix A: Tests for the structure of the Qtr 3 and non-Qtr 3 catch models
+# Appendix A: Tests for the structure of the catch in the spawning and non-spawning months
 
 ```{r child = 'Table App A spawner model.Rmd'}
 ```
 
+#
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = 'Table App A spawner model 1956v1982.Rmd'}
+```
+
+#
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+
 ```{r child = 'Table App A nonspawner model.Rmd'}
 ```
+#
+
+#
+
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
 # Appendix B: Model selection for the covariates
+
+#
+
+#
+
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
