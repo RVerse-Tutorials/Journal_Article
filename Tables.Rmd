@@ -14,3 +14,15 @@ header-includes: \usepackage[labelformat=empty]{caption}
 
 ```{r child = 'Table 1.Rmd'}
 ```
+
+#
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+
+
+```{r child = 'Table 2.Rmd'}
+```
+
