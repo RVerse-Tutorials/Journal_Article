@@ -8,61 +8,7 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
 ```{r child = 'setup.Rmd'}
-#Generic setup code common across all Rmds
-```
-
-```{r setup-data-table1, echo=FALSE}
-reg="Kerala"
-Qtr=3
-respdat=data.frame(
-  spawners0=oilsardine_qtr[[reg]][oilsardine_qtr$Qtr==Qtr]
-)
-catch0=filter(oilsardine_qtr[[reg]],c(1,1,1,1),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
-respdat$Catch0 = c(catch0,NA)
-respdat=log(respdat)
-
-covnames=c(
-  "log.CHL.3","log.CHL.4","log.CHL.5",
-  "log.CHL.3","log.CHL.4","log.CHL.5",
-  "log.CHL.3","log.CHL.4","log.CHL.5",
-  "SST.UPW.3","SST.UPW.4","SST.UPW.5",
-  "SST.UPW.3","SST.UPW.4","SST.UPW.5",
-  "SST.3","SST.4","SST.5",
-  "SST.3","SST.4","SST.5",
-  "SST.3","SST.4","SST.5",
-  "precip.gpcp.kerala", "precip.gpcp.kerala")
-covmon=list(
-  6:7, 6:7, 6:7,
-  7:9,7:9,7:9,
-  7:12, 7:12, 7:12,
-  7:12, 7:12, 7:12,
-  6:7,6:7,6:7,
-  9:12,9:12,9:12,
-  6:7,6:7,6:7,
-  7:9,7:9,7:9,
-  4:5,6:7)
-n=2 #max lag in cov to use
-for(i in 1:length(covnames)){
-  covname=covnames[i]
-  mon=covmon[[i]]
-  varname=paste(covname,".mon",mon[1],"to",mon[length(mon)],".0",sep="")
-  covdat=tapply(seio_covariates_mon[[covname]],seio_covariates_mon$Year,function(x){mean(x[mon],na.rm=TRUE)})
-  respdat[[varname]]=covdat
-}
-#add lags
-for(i in colnames(respdat)){
-  name=paste(str_sub(i, 1, str_length(i)-1),"1",sep="")
-  respdat[[name]]=c(NA,respdat[[i]][1:(dim(respdat)[1]-1)])
-  name=paste(str_sub(i, 1, str_length(i)-1),"2",sep="")
-  respdat[[name]] = c(NA,NA,respdat[[i]][1:(dim(respdat)[1]-2)])
-}
-respdat$Year=oilsardine_qtr$Year[oilsardine_qtr$Qtr==Qtr]
-#add Catch - spawners
-respdat$nspawners0 = respdat$Catch0 - respdat$spawners0
-respdat$nspawners1 = respdat$Catch1 - respdat$spawners1
-respdat$nspawners2 = respdat$Catch2 - respdat$spawners2
-respdat$Catch12 = log(exp(respdat$Catch1)+exp(respdat$Catch2))
-fullrespdat = respdat
+#Generic setup code common across all Rmds; if just running code, you have to open setup.Rmd and run all code there
 ```
 
 ```{r seltable1, echo=FALSE}
@@ -72,12 +18,13 @@ respdat = fullrespdat[which(fullrespdat$Year==1982):which(fullrespdat$Year==2015
 seltable = data.frame(Model=paste("Time dependency test ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 
 #5 is most complex
-m5 = gam(spawners0 ~ Catch1 + Catch2, data=respdat)
+m5 = gam(spawners0 ~ nspawners1 + nspawners2 + spawners2, data=respdat)
 m0=m5
 m1 = gam(spawners0 ~ 1, data=m0$model)
-m2 = gam(spawners0 ~ Catch1, data=m0$model)
-m3 = gam(spawners0 ~ Catch1 + Catch2, data=m0$model)
-a=anova(m1,m2,m3, test="F")
+m2 = gam(spawners0 ~ nspawners1, data=m0$model)
+m3 = gam(spawners0 ~ nspawners1 + nspawners2, data=m0$model)
+m4 = gam(spawners0 ~ nspawners1 + spawners2, data=m0$model)
+a=anova(m1,m2,m3,m4, test="F")
 
 #simple level model
 i=1; mod=paste("m",i,sep="")
@@ -89,14 +36,14 @@ seltable=rbind(seltable,tmp1,tmp2)
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(m3$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 #linear ln Catch1 + ln Catch2
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $\\beta_1 ln(N_{t-1})$ + $\\beta_2 ln(N_{t-2})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(m3$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 ## Space
@@ -104,31 +51,45 @@ tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F
 tmp2 = data.frame(Model=paste("Linearity test ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
-m3 = gam(spawners0 ~ s(Catch1, sp=0.6) + s(Catch2, sp=0.6), data=respdat)
-m0=m3
-m1 = gam(spawners0 ~ Catch1, data=m0$model)
-m2 = gam(spawners0 ~ s(Catch1, sp=0.6), data=m0$model)
+m5 = gam(spawners0 ~ nspawners1 + nspawners2 + spawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ nspawners1, data=m0$model)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6)+s(nspawners2, sp=0.6), data=m0$model)
 a=anova(m1,m2,m3, test="F")
 
 #linear ln Catch1
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(m3$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 #non-linear ln Catch1
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2) )
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(m3$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="" )
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="" )
 seltable=rbind(seltable,tmp1,tmp2)
 
 #non-linear ln Catch1 + ln Catch2
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(ln(N_{t-2}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i], digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2) )
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(m3$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="" )
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="" )
+seltable=rbind(seltable,tmp1,tmp2)
+
+m5 = gam(spawners0 ~ nspawners1 + nspawners2 + spawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ nspawners1, data=m0$model)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6)+s(spawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+#non-linear ln N1 + ln S2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(ln(S_{t-2}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i], digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2) )
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="" )
 seltable=rbind(seltable,tmp1,tmp2)
 ```
 
