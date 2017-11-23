@@ -26,6 +26,11 @@ Things to change
 * Use 1- and 2-year lags
 * Dave said that Pacific sardine uses 3-yr running mean of SST at 5-15m over whole CalCOFI region as an index of recruitment.
 
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
 ```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
 ### FIGURE 2 Alternate 1
 par(mfrow=c(2,1),mar=c(5,3,1,1))
@@ -52,22 +57,15 @@ title("Mean Qtrly Catch",cex.main=.75)
 par(oldpar)
 ```
 
-#
-
-#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-```{r fig-study-area, out.width = "400px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:studyarea")),message=FALSE,warning=FALSE}
+```{r fig-study-area, out.width = "350px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:studyarea")),message=FALSE,warning=FALSE}
 figfile = system.file("docs", "kerala_study_area_with_inset.jpg", package="SardineForecast")
 knitr::include_graphics(figfile)
 ```
-
-#
-
-#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
@@ -80,8 +78,6 @@ knitr::include_graphics(figfile)
 
 #
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -90,8 +86,6 @@ cat("\\clearpage")
 figfile = system.file("docs", "2016 CHL.png", package="SardineForecast")
 knitr::include_graphics(figfile)
 ```
-
-#
 
 #
 
@@ -129,8 +123,6 @@ title("Mean Monthly Precip",cex.main=.75)
 
 par(oldpar)
 ```
-
-#
 
 #
 
@@ -187,13 +179,11 @@ par(oldpar)
 
 #
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-```{r chl.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:CHLts"))", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+```{r chl.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:CHLts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
 ### FIGURE CHL
 oldpar=par(mfrow=c(2,2), mar=c(2,5,2,0))
 for(i in 2:5){
@@ -242,8 +232,6 @@ par(oldpar)
 
 #
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -267,7 +255,6 @@ barplot(catchmeans,ylab="",ylim=c(24,31),col="grey",offset=0,xpd=FALSE, axis.lty
 legend("topright","B", bty="n")
 ```
 
-#
 
 #
 
