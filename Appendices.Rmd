@@ -14,7 +14,7 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```
 
 
-# Appendix A: Tests for the structure of the catch in the spawning and non-spawning months
+# Appendix A: Tests for prior season catch as covariate
 
 ```{r child = 'Table App A spawner model.Rmd'}
 ```
@@ -25,30 +25,19 @@ header-includes: \usepackage[labelformat=empty]{caption}
 cat("\\clearpage")
 ```
 
-```{r child = 'Table App A spawner model 1956v1982.Rmd'}
-```
-
-#
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-
 ```{r child = 'Table App A nonspawner model.Rmd'}
 ```
-#
 
 #
-
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-# Appendix B: Model selection for the covariates
+# Appendix B: Tests for environmental variables as covariates
 
-#
+```{r child = 'Table App B spawner covariates.Rmd'}
+```
 
 #
 
