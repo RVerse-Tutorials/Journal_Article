@@ -24,7 +24,6 @@ Things to change
 * Make a cartoon of the life-history
 * Use catch anomalies
 * Use 1- and 2-year lags
-* move the spatial correlation plot to appendix
 * Dave said that Pacific sardine uses 3-yr running mean of SST at 5-15m over whole CalCOFI region as an index of recruitment.
 
 ```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
@@ -61,7 +60,7 @@ par(oldpar)
 cat("\\clearpage")
 ```
 
-```{r fig-study-area, out.width = "400px", fig.align='center', echo=FALSE, fig.cap="Close up of the Kerala district (see inset of India for overall location).  The boxes show the regions over which the satellite data were averaged.  The Kerala district is marked in grey and the oil sardine catch from this region is being modelled.",message=FALSE,warning=FALSE}
+```{r fig-study-area, out.width = "400px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:studyarea")),message=FALSE,warning=FALSE}
 figfile = system.file("docs", "kerala_study_area_with_inset.jpg", package="SardineForecast")
 knitr::include_graphics(figfile)
 ```
@@ -74,7 +73,7 @@ knitr::include_graphics(figfile)
 cat("\\clearpage")
 ```
 
-```{r fig-currents, out.width = "500px", fig.align='center', echo=FALSE, fig.cap="Key currents and circulation patterns in the Indian Ocean that affect winter and summer monsoon associated upwelling.", message=FALSE, warning=FALSE}
+```{r fig-currents, out.width = "500px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:seiocurrents")), message=FALSE, warning=FALSE}
 figfile = system.file("docs", "kerala_currents.jpg", package="SardineForecast")
 knitr::include_graphics(figfile)
 ```
@@ -87,7 +86,7 @@ knitr::include_graphics(figfile)
 cat("\\clearpage")
 ```
 
-```{r fig-chl-2016, out.width = "400px", fig.align='center', echo=FALSE, fig.cap="Average Chlorophyll-a bloom intensity in 2016 by quarter. Red is high density chlorophyll-a.  Black is missing data due to cloud cover. Data from NOAA.", message=FALSE, warning=FALSE}
+```{r fig-chl-2016, out.width = "400px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:CHL")), message=FALSE, warning=FALSE}
 figfile = system.file("docs", "2016 CHL.png", package="SardineForecast")
 knitr::include_graphics(figfile)
 ```
@@ -100,7 +99,7 @@ knitr::include_graphics(figfile)
 cat("\\clearpage")
 ```
 
-```{r rainfall.mon, echo=FALSE,fig.cap="Monthly rainfall 1956-2014 from Kerala. The upper plot shows the precipitation measured with land gauges in Kerala.  The bottom plot shows the remote sensing estimates over the coastal waters off Kerala using data from the Global Precipitation Climatology Project.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+```{r rainfall.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:precipts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
 ### FIGURE 2 Alternate 1
 par(mfrow=c(2,1), mar=c(2,5,2,2))
 dat=seio_covariates_mon$Precip.Kerala
@@ -139,7 +138,7 @@ par(oldpar)
 cat("\\clearpage")
 ```
 
-```{r upw.mon, echo=FALSE,fig.cap="Monthly Upwelling Index 1981-2012 off the Kerala coast. The upwelling index is the difference between the near-shore and off-shore sea surface temperature.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+```{r upw.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:UPWts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
 ### FIGURE Upwelling
 oldpar=par(mfrow=c(2,2), mar=c(2,5,2,0))
 for(i in 2:5){
@@ -194,8 +193,8 @@ par(oldpar)
 cat("\\clearpage")
 ```
 
-```{r chl.mon, echo=FALSE,fig.cap="Monthly Chl-a 1997-2017 off the Kerala coast. The upwelling index is the difference between the near-shore and off-shore sea surface temperature.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
-### FIGURE Upwelling
+```{r chl.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:CHLts"))", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+### FIGURE CHL
 oldpar=par(mfrow=c(2,2), mar=c(2,5,2,0))
 for(i in 2:5){
   covname=paste("CHL.",i,sep="")
@@ -249,22 +248,22 @@ par(oldpar)
 cat("\\clearpage")
 ```
 
-```{r sst.mon, echo=FALSE,fig.cap="Monthly sea surface temperature 1981-2017 off the Kerala coast.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+```{r sst.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:SSTts")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
 ### FIGURE SST
-oldpar=par(mfrow=c(1,2), mar=c(2,5,2,0))
+oldpar=par(mfrow=c(1,2), mar=c(2,4,2,0))
 i=4
   covname=paste("SST.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab=paste("SST Box",i),xlab="",bty="n",ylim=c(24,31),xlim=c(2000,2005), yaxs="i", xaxs="i")
+plot(datts,ylab="Ave Monthly SST",xlab="",bty="n",ylim=c(24,31),xlim=c(2000,2005), yaxs="i", xaxs="i")
 legend("topright","A", bty="n")
 
 dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
 catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
 names(catchmeans)=1:12
-barplot(catchmeans,ylab="",ylim=c(24,31),col="grey",offset=0,xpd=FALSE, axis.lty=1, bty="l")
+barplot(catchmeans,ylab="",ylim=c(24,31),col="grey",offset=0,xpd=FALSE, axis.lty=1, bty="l", cex.names=.75, names.arg=c("J","F","M","A","M","J","J","A","S","O","N","D"))
 legend("topright","B", bty="n")
 ```
 
