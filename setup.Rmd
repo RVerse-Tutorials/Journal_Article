@@ -31,33 +31,29 @@ respdat$nspawners0 = respdat$Catch0 - respdat$spawners0
 
 respdat=log(respdat)
 
-covnames=c(
-  "log.CHL.3","log.CHL.4","log.CHL.5",
-  "log.CHL.3","log.CHL.4","log.CHL.5",
-  "log.CHL.3","log.CHL.4","log.CHL.5",
-  "log.CHL.3","log.CHL.4","log.CHL.5",
-  "SST.UPW.3","SST.UPW.4","SST.UPW.5",
-  "SST.UPW.3","SST.UPW.4","SST.UPW.5",
-  "SST.UPW.3","SST.UPW.4","SST.UPW.5",
-  "SST.UPW.3","SST.UPW.4","SST.UPW.5",
-  "SST.3","SST.4","SST.5",
-  "SST.3","SST.4","SST.5",
-  "SST.3","SST.4","SST.5",
-  "SST.3","SST.4","SST.5")
-covmon=list(
-  1:3, 1:3, 1:3,
-  6:10, 6:10, 6:10,
-  6:7,6:7,6:7,
-  7:12, 7:12, 7:12,
-  1:3, 1:3, 1:3,
-  6:10, 6:10, 6:10,
-  6:7,6:7,6:7,
-  7:12, 7:12, 7:12,
-  1:3, 1:3, 1:3,
-  6:10, 6:10, 6:10,
-  6:7,6:7,6:7,
-  7:12, 7:12, 7:12
-  )
+  covnames=c(
+    "log.CHL.3","log.CHL.4","log.CHL.5",
+    "log.CHL.3","log.CHL.4","log.CHL.5",
+    "log.CHL.3","log.CHL.4","log.CHL.5",
+    "SST.UPW.3","SST.UPW.4","SST.UPW.5",
+    "SST.UPW.3","SST.UPW.4","SST.UPW.5",
+    "SST.UPW.3","SST.UPW.4","SST.UPW.5",
+    "SST.3","SST.4","SST.5",
+    "SST.3","SST.4","SST.5",
+    "SST.3","SST.4","SST.5",
+    "precip.gpcp.kerala", "precip.gpcp.kerala")
+  covmon=list(
+     7:9,7:9,7:9,
+     1:3,1:3,1:3,
+     10:12,10:12,10:12,
+     7:9,7:9,7:9,
+     1:3,1:3,1:3,
+     10:12,10:12,10:12,
+     7:12,7:12,7:12,
+     1:3,1:3,1:3,
+     10:12,10:12,10:12,
+     4:5,6:7)
+  
 n=2 #max lag in cov to use
 for(i in 1:length(covnames)){
   covname=covnames[i]
