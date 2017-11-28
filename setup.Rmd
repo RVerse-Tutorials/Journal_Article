@@ -38,6 +38,7 @@ respdat=log(respdat)
     "SST.UPW.3","SST.UPW.4","SST.UPW.5",
     "SST.UPW.3","SST.UPW.4","SST.UPW.5",
     "SST.UPW.3","SST.UPW.4","SST.UPW.5",
+    "SST.UPW.3","SST.UPW.4","SST.UPW.5",
     "SST.3","SST.4","SST.5",
     "SST.3","SST.4","SST.5",
     "SST.3","SST.4","SST.5",
@@ -48,10 +49,11 @@ respdat=log(respdat)
      10:12,10:12,10:12,
      7:9,7:9,7:9,
      1:3,1:3,1:3,
+     4:6,4:6,4:6,
      10:12,10:12,10:12,
      7:12,7:12,7:12,
      1:3,1:3,1:3,
-     10:12,10:12,10:12,
+     7:9,7:9,7:9,
      4:5,6:7)
   
 n=2 #max lag in cov to use
@@ -60,11 +62,12 @@ for(i in 1:length(covnames)){
   mon=covmon[[i]]
   varname=paste(covname,".mon",mon[1],"to",mon[length(mon)],".0",sep="")
   covdat=tapply(seio_covariates_mon[[covname]],seio_covariates_mon$Year,function(x){mean(x[mon],na.rm=TRUE)})
-  if(str_detect(covname, "mon1to3")){
+  if(str_detect(varname, "mon1to3")|str_detect(varname, "mon4to6")){
     respdat[[varname]]=c(covdat[-1],NA)
   }else{
     respdat[[varname]]=covdat
   }
+
 }
 #add lags
 for(i in colnames(respdat)){
