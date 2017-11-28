@@ -10,7 +10,7 @@ output:
 ```
 
 ```{r setup-covariate-data}
-covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", "SST.4.mon7to12.", "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", "SST.UPW.4.mon10to12.")
+covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", "SST.4.mon7to12.", "SST.4.mon1to3.", "SST.4.mon7to9.", "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.")
 #set up to use consistent data
 dat=fullrespdat[,c("Year","spawners0", "nspawners1", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
@@ -104,11 +104,12 @@ cat("\\clearpage")
 #set up table
 seltable = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="&nbsp;", stringsAsFactors=FALSE)
 
-for(covname in c("SST.4.mon7to12.")){
+for(covname in c("SST.4.mon7to12.", "SST.4.mon7to9.")){
 #set up table
   if(covname=="SST.4.mon10to12.") covtit = "V = Oct-Dec SST"
   if(covname=="SST.4.mon7to12.") covtit =  "V = Jul-Dec SST"
   if(covname=="SST.4.mon1to3.") covtit =  "V = Jan-Mar SST"
+  if(covname=="SST.4.mon7to9.") covtit =  "V = Jul-Sep SST"
 
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
 
@@ -189,12 +190,10 @@ cat("\\clearpage")
 seltable = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="&nbsp;", stringsAsFactors=FALSE)
 
 
-for(covname in c("SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", "SST.UPW.4.mon10to12.")){
+for(covname in c("SST.UPW.4.mon7to9.")){
 #set up table
-  if(covname=="SST.UPW.4.mon10to12.") covtit = "V = Oct-Dec Upwelling"
-  if(covname=="SST.UPW.4.mon7to9.") covtit = "V = Jul-Aug Upwelling"
-  if(covname=="SST.UPW.4.mon1to3.") covtit = "V = Jan-Mar Upwelling"
-
+  covtit = "V = Jul-Sep Upwelling current and prior seasons"
+  
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
 
 dat$cov0=dat[[paste(covname, "0", sep="")]]
@@ -207,14 +206,12 @@ m4 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
 m5 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
 a=anova(m1,m2,m3,m4,m5, test="F")
 
-if(covname=="SST.UPW.4.mon1to3."){ # Add on model 1 only once
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon$",
                 Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
-}
 
 #model 2
 i=2; mod=paste("m",i,sep="")
@@ -252,7 +249,67 @@ seltable=rbind(seltable,tmp1,tmp2)
 tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="")
 seltable=rbind(seltable,tmp1)
 }
-# Remove space at top and bottom
+# Use only prior season data because in current season these are AFTER spawning
+for(covname in c("SST.UPW.4.mon10to12.", "SST.UPW.4.mon1to3.")){
+#set up table
+  if(covname=="SST.UPW.4.mon10to12.") covtit = "V = Oct-Dec Upwelling prior season"
+  if(covname=="SST.UPW.4.mon4to6.") covtit = "V = Apr-Jun Upwelling prior season"
+  if(covname=="SST.UPW.4.mon1to3.") covtit = "V = Jan-Mar Upwelling prior season"
+
+seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
+
+dat$cov0=dat[[paste(covname, "0", sep="")]]
+dat$cov1=dat[[paste(covname, "1", sep="")]]
+#dat$cov2=dat[[paste(covname, "2", sep="")]]
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
+
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon$",
+                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#model 2
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\beta V_{t-1}$ + $\\epsilon$",
+                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#model 3
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_{t-1})$ + $\\epsilon$",
+                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
+seltable=rbind(seltable,tmp1,tmp2)
+
+# #model 4
+# i=4; mod=paste("m",i,sep="")
+# aa = summary(get(mod))
+# tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_t)$ + $V_{t-1}$ + $\\epsilon$", 
+#                 Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
+# tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
+# seltable=rbind(seltable,tmp1,tmp2)
+# 
+# #model 5
+# i=5; mod=paste("m",i,sep="")
+# aa = summary(get(mod))
+# tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_t)$ + $s(V_{t-1})$ + $\\epsilon$", 
+#                 Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
+# tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
+# seltable=rbind(seltable,tmp1,tmp2)
+
+## Space
+tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="")
+seltable=rbind(seltable,tmp1)
+}
+
 seltable=seltable[2:(dim(seltable)[1]-1),]
 ```
 
