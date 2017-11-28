@@ -4,9 +4,9 @@ title: Use of satellite data for understanding and predicting oil sardine (*Sard
 author: ''
 date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
-  word_document: default
   pdf_document: default
   html_document: default
+  word_document: default
 header-includes:
 - \usepackage[labelformat=empty]{caption}
 - \usepackage{setspace}
@@ -89,7 +89,10 @@ Quarterly fish landing data have been collected by the Central Marine Fisheries 
 
 ## Covariate data
 
-We analysed monthly composites of the following satellite data: Sea Surface Temperature (SST), chlorophyll (CHL), Sea Surface Height (SSH), upwelling (UPW) and precipitation. Specifically the following datasets were used.  For sea surface temperature, Advanced Very-High Resolution Radiometer (AVHRR) SST data.  For 1981 to 2002, we used Pathfinder Version 5.2 product on a 4km grid.  For 2003 to 2016, we used the AVHRR product from the POES.  These data are at a 0.1° spatial scale.  For he chlorophyll-a, we used SeaWiFS data on a 0.1° spatial scale.for 1981 to 2002, and MODIS data from 2003 to 2017 at 0.05° spatial scale.  The upwelling index was based on the sea-surface temperature differential between near shore and 3 degrees offshore (citation) using our sea-surface data from 1981 to 2016. The index has been validated as more reliable metric of upwelling off the coast of Kerala compared to wind-based upwelling indices (Smitha citation).  All these satellite data were retrieved from the NOAA ERDDAP server (See Appendix for full details).   The satellite data were averaged across thirteen 2.5 degree by 2.5 degree boxes which roughly parallel the bathymetry (Figure `r ref("fig:studyarea")`). The precipitation data were downloaded from two different sources.  The first was an estimate of the monthly precipitation over Kerala from land-based gauges.  This time-series is available from the start of our landing data (1956).  The second was a remote-sensing precipitation product, the NOAA Global Precipitation Climatology Project.  This provides a precipitation estimate using a global 2.5 degree grid.  We used a 2.5 degree box defined by latitude 8.75 to 11.25 and longitude 73.25 to 75.75 for the precipitation off the coast of Kerala.  These data are available from 1979 forward.  Full details on the remote-sensing data sets are available in the appendices.  
+We analysed monthly composites of the following environmental data derived from satellites: Sea Surface Temperature (SST), chlorophyll-a (CHL), upwelling (UPW) and precipitation. Sea surface temperature: For 1981 to 2002, we used Pathfinder Version 5.2 product on a 4km grid, and for 2003 to 2016, we used Advanced Very-High Resolution Radiometer (AVHRR) data at a 0.1 degree spatial scale.  Chlorophyll-a, we used SeaWiFS data on a 0.1 degree spatial scale for 1981 to 2002 and MODIS data from 2003 to 2017 at 0.05° spatial scale.  The SST and CHL data were averaged across thirteen 1 degree by 1 degree boxes which roughly parallel the bathymetry (Figure `r ref("fig:studyarea")`).  The SST and CHL satellite data were retrieved from the NOAA ERDDAP server (See the Appendices for full details).  
+For an index of coastal upwelling, we used the sea-surface temperature differential between near shore and 3 degrees offshore as described by Naidu et al. [-@Naiduetal1999] and Smitha et al. [-@Smithaetal2008].  The index is computed as the average SST in boxes 3 degrees offshore of boxes 1-5 in Figure `r ref("fig:studyarea")` minus the average SST in boxes 1-5.  For SST, we used the remote-sensing sea-surface temperature datasets described above. This SST-based upwelling index has been validated as a more reliable metric of upwelling off the coast of Kerala compared to wind-based upwelling indices [@Smithaetal2008].  
+
+The precipitation data were downloaded from two different sources.  The first was an estimate of the monthly precipitation over Kerala from land-based gauges.  This time series is available from the start of our landing data (1956).  The second was a remote-sensing precipitation product from the NOAA Global Precipitation Climatology Project.  This provides a precipitation estimate using a global 2.5 degree grid.  We used the 2.5 by 2.5 degree box defined by latitude 8.75 to 11.25 and longitude 73.25 to 75.75 for the precipitation off the coast of Kerala.  These data are available from 1979 forward.  Full details on the precipitation data sets are available in the Appendices.  
 
 # Models
 
