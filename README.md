@@ -33,17 +33,28 @@ The main OilSardine Rmd file, runs the Figures and Appendices, but you can make 
 -   Open Figures.Rmd to knit the figures for the main paper. 
 -   Open Appendices.Rmd to create the appendices. This will call the Rmd files for the appendix tables.
 
+Update 11/28/2017
+------
+Completed
+-   Added non-spawner covariate tests to App B.  
+-   Fixed bug in spawner covariate tables for App B.  
+-   Fixed inclusion of 'future' covariates in App B tables.
+-   Assigned Figure 4. Cartoon of the sardine life-cycle to Nimit/Sourav
+
+To do:
+-   See items in 11/23 status
+
 Status 11/23/2017
 ------
 
--   Next task is add non-spawner covariate tests to App B.  
--   Fix inclusion of 'future' covariates in App B tables.  So like Oct-Dec to explain Jul-Sep catch.
+-   Next task is add non-spawner covariate tests to App B.  [done]
+-   Fix inclusion of 'future' covariates in App B tables.  So like Oct-Dec to explain Jul-Sep catch. [done]
 -   Add Table 3 which will summarize the covariate results.  
--   Test chlorophyl effect.  Need more data.
--   Look at whether the effects are time-varying?
+-   Test chlorophyl effect.  Need more data. [not sure how to tackle this]
+-   Look at whether the effects are time-varying? [different paper]
 -   Make the missing figures:
 
-Figure 4. Cartoon of the sardine life-cycle in the SE Indian Ocean and how it interacts with the fishery. \[*missing*\]
+Figure 4. Cartoon of the sardine life-cycle in the SE Indian Ocean and how it interacts with the fishery. \[*missing*\] [assigned to Nimit/Sourav]
 
 Figure 10. Non-linear effect of temperature on catch during the spawning season (3rd quarter). \[*missing*\]
 
