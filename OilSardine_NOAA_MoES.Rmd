@@ -3,12 +3,10 @@ title: Use of satellite data for understanding and predicting oil sardine (*Sard
   longiceps*) catch variability along the southwest coast of India
 author: ''
 date: '`r format(Sys.time(), "%d %B, %Y")`'
-csl: '`r system.file("docs", "ecology.csl", package = "SardineForecast")`'
-bibliography: '`r system.file("docs", "Sardine.bib", package = "SardineForecast")`'
 output:
+  word_document: default
   pdf_document: default
   html_document: default
-  word_document: default
 header-includes:
 - \usepackage[labelformat=empty]{caption}
 - \usepackage{setspace}
@@ -19,6 +17,8 @@ header-includes:
 - \usepackage{mathptmx}
 - \usepackage[margin=1in]{geometry}
 - \usepackage[fontsize=12.5pt]{scrextend}
+csl: '`r system.file("docs", "ecology.csl", package = "SardineForecast")`'
+bibliography: '`r system.file("docs", "Sardine.bib", package = "SardineForecast")`'
 ---
 
 ```{r child = 'setup.Rmd'}
@@ -120,7 +120,7 @@ However, we found significant correlation between average sea surface temperatur
 
 The strongest predictor of the catch during the spawning season however was the upwelling strength during Jan-Mar (Table 3, Table `r ref("tabappB:spawner-model-upw", pre="B")`), during a period when the young of the year and age-1 fish would be found feeding in large shoals in the coastal region.  The is the time of year with the second highest catches that are dominated by small-sized fish (*citation*).  The model with lowest residual deviance included a non-linear effect of upwelling in the prior year and two years prior.  As for SST, the cost in terms of low of degrees of freedom led to this model not being the best supported.  The best supported model included only the upwelling strength in the prior year, not two years prior, and included a non-linear response (Table 3).  The $R^2$ for this model was 0.63 (Figure `r ref("fig:fittedmodel")`).
 
-*Still to do.  Test interactions between the variables that turned out to be important.*
+*Still to do.  Test interactions between the variables that turned out to be important.  Might not have enough data*
 
 *Still to do.  Same analyses for the catch in the post-spawning months.*
 
