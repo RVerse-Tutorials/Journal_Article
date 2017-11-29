@@ -8,7 +8,6 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
 ```{r child = 'setup.Rmd'}
-#Generic setup code common across all Rmds; if just running code, you have to open setup.Rmd and run all code there
 ```
 
 ```{r seltable1, echo=FALSE}
