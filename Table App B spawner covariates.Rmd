@@ -5,15 +5,15 @@ output:
   word_document: default
 ---
 
+<!-- 
+Generic setup code common across all Rmds; run code in setup.Rmd if not knitting.
+--> 
 ```{r child = 'setup.Rmd'}
-#Generic setup code common across all Rmds; run code in setup.Rmd if not knitting
 ```
 
-```{r setup-covariate-data}
-covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", "SST.4.mon7to12.", "SST.4.mon1to3.", "SST.4.mon7to9.", "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.")
-#set up to use consistent data
-dat=fullrespdat[,c("Year","spawners0", "nspawners1", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
-dat=na.omit(dat)
+```{r table-appB-spawner-dat, echo=FALSE}
+#dat.spawners defined in setup.Rmd
+dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 ```
@@ -104,12 +104,13 @@ cat("\\clearpage")
 #set up table
 seltable = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="&nbsp;", stringsAsFactors=FALSE)
 
-for(covname in c("SST.4.mon7to12.", "SST.4.mon7to9.")){
+for(covname in c("SST.4.mon7to9.", "SST.4.mon1to12.")){
 #set up table
   if(covname=="SST.4.mon10to12.") covtit = "V = Oct-Dec SST"
   if(covname=="SST.4.mon7to12.") covtit =  "V = Jul-Dec SST"
   if(covname=="SST.4.mon1to3.") covtit =  "V = Jan-Mar SST"
   if(covname=="SST.4.mon7to9.") covtit =  "V = Jul-Sep SST"
+  if(covname=="SST.4.mon1to12.") covtit =  "V = Jan-Dec SST"
 
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
 
@@ -173,12 +174,10 @@ seltable=seltable[2:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of sea surface temperature off Cochi as the explanatory variable ($V$) for the catch during spawning months (Jul-Sep) using 1981-2015 data.  See Table", ref("tabappB:spawner-model-precip", pre="B"), "for an explanation of the models.")
+thecap=paste("Model selection tests of sea surface temperature off Cochi as the explanatory variable ($V$) for the catch during spawning months (Jul-Sep) using", Yr1,"to", Yr2, "data.  See Table", ref("tabappB:spawner-model-precip", pre="B"), "for an explanation of the models.")
 fullcap=paste("Table ", ref("tabappB:spawner-model-sst", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lccccc", caption=fullcap, row.names=FALSE)
 ```
-
-#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")

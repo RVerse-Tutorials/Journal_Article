@@ -5,20 +5,21 @@ output:
   word_document: default
 ---
 
+<!-- 
+Generic setup code common across all Rmds; run code in setup.Rmd if not knitting.
+--> 
 ```{r child = 'setup.Rmd'}
-#Generic setup code common across all Rmds; run code in setup.Rmd if not knitting
 ```
 
-```{r setup-covariate-data-nonspawner}
-covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", "SST.4.mon7to12.", "SST.4.mon1to3.", "SST.4.mon7to9.", "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", "SST.UPW.4.mon10to12.")
-#set up to use consistent data
-dat=fullrespdat[,c("Year","nspawners0", "nspawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
-dat=na.omit(dat)
+```{r table-appB-nonspawner-dat, echo=FALSE}
+#dat.spawners defined in setup.Rmd
+dat=dat.nonspawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 ```
 
 ```{r table-appB-nspawner-precip, echo=FALSE}
+
 #set up table
 seltable = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="&nbsp;", stringsAsFactors=FALSE)
 
@@ -105,12 +106,13 @@ cat("\\clearpage")
 #set up table
 seltable = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="&nbsp;", stringsAsFactors=FALSE)
 
-for(covname in c("SST.4.mon7to12.", "SST.4.mon7to9.")){
+for(covname in c("SST.4.mon1to12.", "SST.4.mon7to9.")){
 #set up table
   if(covname=="SST.4.mon10to12.") covtit = "V = Oct-Dec SST"
   if(covname=="SST.4.mon7to12.") covtit =  "V = Jul-Dec SST"
   if(covname=="SST.4.mon1to3.") covtit =  "V = Jan-Mar SST"
   if(covname=="SST.4.mon7to9.") covtit = "V = Jul-Sep SST"
+  if(covname=="SST.4.mon1to12.") covtit = "V = Jan-Dec SST"
 
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
 
