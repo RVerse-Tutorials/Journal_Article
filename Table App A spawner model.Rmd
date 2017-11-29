@@ -8,11 +8,17 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
 ```{r child = 'setup.Rmd'}
-#Generic setup code common across all Rmds; run code in setup.Rmd if not knitting
+```
+
+```{r table-appA-set-spawner-years, echo=FALSE}
+#dat.spawners defined in setup-covariates.Rmd
+dat=dat.spawners
+Yr1 = min(dat$Year)
+Yr2 = max(dat$Year)
 ```
 
 ```{r seltableA1a, echo=FALSE}
-respdat = fullrespdat[which(fullrespdat$Year==1982):which(fullrespdat$Year==2015),]
+respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
 
 #set up table
 seltable = data.frame(Model=paste("Time dependency test A ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
@@ -27,6 +33,7 @@ a=anova(m1,m2,m3, test="F")
 
 #simple level model
 i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;(Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -60,6 +67,7 @@ a=anova(m1,m2,m3, test="F")
 
 #simple level model
 i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;(Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -93,6 +101,7 @@ a=anova(m1,m2,m3, test="F")
 
 #linear ln N_t
 i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -129,15 +138,13 @@ fullcap=paste("Table ", ref("tabappA:spawner-model-linear", pre="A"), ". ", thec
 kable(seltable, align="lccccc", caption=fullcap)
 ```
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
 
 ```{r seltableA1b, echo=FALSE}
-respdat = fullrespdat[which(fullrespdat$Year==1982):which(fullrespdat$Year==2015),]
+respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
 
 #set up table
 seltable = data.frame(Model=paste("Time dependency test A ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
@@ -152,6 +159,7 @@ a=anova(m1,m2,m3, test="F")
 
 #linear on S1 model
 i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $\\beta ln(S_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -185,6 +193,7 @@ a=anova(m1,m2,m3, test="F")
 
 #linear on N1
 i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -218,6 +227,7 @@ a=anova(m1,m2,m3, test="F")
 
 #nonlinear ln N_t
 i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -254,8 +264,6 @@ fullcap=paste("Table ", ref("tabappA:spawner-model-nonlinear", pre="A"), ". ", t
 kable(seltable, align="lccccc", caption=fullcap)
 ```
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -277,6 +285,7 @@ a=anova(m1,m2,m3, test="F")
 
 #simple level model
 i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -311,6 +320,7 @@ a=anova(m1,m2,m3,m4, test="F")
 
 #linear ln N_t
 i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)

@@ -8,11 +8,17 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
 ```{r child = 'setup.Rmd'}
-#Generic setup code common across all Rmds; run code in setup.Rmd if not knitting
+```
+
+```{r table-appA-set-nonspawner-years, echo=FALSE}
+#dat.spawners defined in setup-covariates.Rmd
+dat=dat.nonspawners
+Yr1 = min(dat$Year)
+Yr2 = max(dat$Year)
 ```
 
 ```{r seltableA2a, echo=FALSE}
-respdat = fullrespdat[which(fullrespdat$Year==1982):which(fullrespdat$Year==2015),]
+respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
 
 #set up table
 seltable = data.frame(Model=paste("Time dependency test A ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
@@ -27,6 +33,7 @@ a=anova(m1,m2,m3, test="F")
 
 #simple level model
 i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;(Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -60,6 +67,7 @@ a=anova(m1,m2,m3, test="F")
 
 #simple level model
 i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;(Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -93,6 +101,7 @@ a=anova(m1,m2,m3, test="F")
 
 #linear ln N_t
 i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -124,12 +133,10 @@ seltable=rbind(seltable,tmp1,tmp2)
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of time-dependency the $N_t$ model using F-tests of nested models fit to log landings data.  $N_t$ is the catch during the non-spawning period (Qtrs 4, 1 and 2: Oct-Jun) of season $t$ (Jul-Jun). $S_{t-1}$ and $N_{t-1}$ are the catch during the prior sardine season during and after the spawning period respectively. $S_{t-2}$ and $N_{t-2}$ are the same for two seasons prior.  Test A uses catch during the spawning period as the explanatory variable.  Test B uses catch during the non-spawning period as the explanatory variable.  Test C uses both. For Test C, the nestedness is lines 1-3 and lines 1-2 and 4.")
+thecap=paste("Model selection tests of time-dependency the $N_t$ model using F-tests of nested models fit to", Yr1, "to", Yr2, "log landings data.  The years are determined by the covariate data availability. $N_t$ is the catch during the non-spawning period (Qtrs 4, 1 and 2: Oct-Jun) of season $t$ (Jul-Jun). $S_{t-1}$ and $N_{t-1}$ are the catch during the prior sardine season during and after the spawning period respectively. $S_{t-2}$ and $N_{t-2}$ are the same for two seasons prior.  Test A uses catch during the spawning period as the explanatory variable.  Test B uses catch during the non-spawning period as the explanatory variable.  Test C uses both. For Test C, the nestedness is lines 1-3 and lines 1-2 and 4.")
 fullcap=paste("Table ", ref("tabappA:nonspawner-model-time-a", pre="A"), ". ", thecap, sep="")
 kable(seltable, align="lccccc", caption=fullcap)
 ```
-
-#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
@@ -137,14 +144,13 @@ cat("\\clearpage")
 
 
 ```{r seltableA2b, echo=FALSE}
-respdat = fullrespdat[which(fullrespdat$Year==1982):which(fullrespdat$Year==2015),]
+respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
+m0 = gam(nspawners0 ~ spawners1+spawners2+nspawners1+nspawners2, data=respdat)
 
 #set up table
 seltable = data.frame(Model=paste("Time dependency test A ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 
 #5 is most complex
-m5 = gam(nspawners0 ~ spawners1+spawners2, data=respdat)
-m0=m5
 m1 = gam(nspawners0 ~ spawners1, data=m0$model)
 m2 = gam(nspawners0 ~ s(spawners1, sp=0.6), data=m0$model)
 m3 = gam(nspawners0 ~ s(spawners1, sp=0.6) + s(spawners2, sp=0.6), data=m0$model)
@@ -152,6 +158,7 @@ a=anova(m1,m2,m3, test="F")
 
 #linear on S1 model
 i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $\\beta ln(S_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -176,8 +183,6 @@ tmp2 = data.frame(Model=paste("Time dependency test B ", min(respdat$Year),"-", 
 seltable=rbind(seltable,tmp1,tmp2)
 
 #5 is most complex
-m5 = gam(nspawners0 ~ nspawners1+nspawners2, data=respdat)
-m0=m5
 m1 = gam(nspawners0 ~ nspawners1, data=m0$model)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
 m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(nspawners2, sp=0.6), data=m0$model)
@@ -185,6 +190,7 @@ a=anova(m1,m2,m3, test="F")
 
 #linear on N1
 i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -209,8 +215,6 @@ tmp2 = data.frame(Model=paste("Time dependency test C ", min(respdat$Year),"-", 
 seltable=rbind(seltable,tmp1,tmp2)
 
 #5 is most complex
-m5 = gam(nspawners0 ~ nspawners1+spawners1, data=respdat)
-m0=m5
 m1 = gam(nspawners0 ~ 1, data=m0$model)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
 m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners1, sp=0.6), data=m0$model)
@@ -218,6 +222,7 @@ a=anova(m1,m2,m3, test="F")
 
 #nonlinear ln N_t
 i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -230,8 +235,6 @@ tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq,
 seltable=rbind(seltable,tmp1,tmp2)
 
 #5 is most complex
-m5 = gam(nspawners0 ~ nspawners1+spawners2, data=respdat)
-m0=m5
 m1 = gam(nspawners0 ~ 1, data=m0$model)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
 m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=m0$model)
@@ -254,11 +257,6 @@ fullcap=paste("Table ", ref("tabappA:nonspawner-model-time-b", pre="A"), ". ", t
 kable(seltable, align="lccccc", caption=fullcap)
 ```
 
-
-#
-
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -266,69 +264,106 @@ cat("\\clearpage")
 
 ```{r seltableA2c, echo=FALSE}
 respdat = fullrespdat[which(fullrespdat$Year==1956):which(fullrespdat$Year==2015),]
+#set up data to use consistent data across tests
+m0 = gam(nspawners0 ~ spawners1+spawners2+nspawners1+nspawners2, data=respdat)
 
 #set up table
-seltable = data.frame(Model=paste("Time dependency test B linear ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+seltable = data.frame(Model=paste("Time dependency test A ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 
 #5 is most complex
-m5 = gam(nspawners0 ~ nspawners1+nspawners2, data=respdat)
-m0=m5
-m1 = gam(nspawners0 ~ 1, data=m0$model)
-m2 = gam(nspawners0 ~ nspawners1, data=m0$model)
-m3 = gam(nspawners0 ~ nspawners1 + nspawners2, data=m0$model)
+m1 = gam(nspawners0 ~ spawners1, data=m0$model)
+m2 = gam(nspawners0 ~ s(spawners1, sp=0.6), data=m0$model)
+m3 = gam(nspawners0 ~ s(spawners1, sp=0.6) + s(spawners2, sp=0.6), data=m0$model)
 a=anova(m1,m2,m3, test="F")
 
-#simple level model
+#linear on S1 model
 i=1; mod=paste("m",i,sep="")
-tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
+aa = summary(get(mod))
+tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $\\beta ln(S_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 #linear ln N_t
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
+tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $s(ln(S_{t-1}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 #linear ln Catch1 + ln Catch2
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $\\beta_1 ln(N_{t-1})$ + $\\beta_2 ln(N_{t-2})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
+tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $s_1(ln(S_{t-1}))$ + $s_2(ln(S_{t-2}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 ## Space
 tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="")
-tmp2 = data.frame(Model=paste("Linearity test ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
+tmp2 = data.frame(Model=paste("Time dependency test B ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 #5 is most complex
-m5 = gam(nspawners0 ~ nspawners1+nspawners2, data=respdat)
-m0=m5
-m1 = gam(nspawners0 ~ 1, data=m0$model)
-m2 = gam(nspawners0 ~ nspawners1, data=m0$model)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
-m4 = gam(nspawners0 ~ s(nspawners1, sp=0.6)+s(nspawners2, sp=0.6), data=m0$model)
-a=anova(m1,m2,m3,m4, test="F")
+m1 = gam(nspawners0 ~ nspawners1, data=m0$model)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(nspawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
 
-#linear ln N_t
-i=2; mod=paste("m",i,sep="")
+#linear on N1
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
-#non linear ln Catch1
-i=3; mod=paste("m",i,sep="")
+#linear ln N_t
+i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 #linear ln Catch1 + ln Catch2
-i=4; mod=paste("m",i,sep="")
+i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(N_{t-2}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+## Space
+tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="")
+tmp2 = data.frame(Model=paste("Time dependency test C ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m1 = gam(nspawners0 ~ 1, data=m0$model)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners1, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#nonlinear ln N_t
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#nonlinear ln N1 + ln S1
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(S_{t-1}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
+tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m1 = gam(nspawners0 ~ 1, data=m0$model)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#linear ln N1 + ln S2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(Model="$ln(N_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(S_{t-2}))$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 ```
@@ -337,14 +372,10 @@ seltable=rbind(seltable,tmp1,tmp2)
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of time-dependency for the $N_t$ model using 1956-2015 data.  See Table",ref("tabappA:nonspawner-model-time-a", pre="A"),"for definitions.")
+thecap=paste("Table",ref("tabappA:nonspawner-model-time-b", pre="A"), "with 1956-2015 data instead of", Yr1, "to", Yr2, "data.  See Table",ref("tabappA:nonspawner-model-time-a", pre="A"), "for an explanation of the parameters and model set-up.")
 fullcap=paste("Table ", ref("tabappA:nonspawner-model-time-c", pre="A"), ". ", thecap, sep="")
 kable(seltable, align="lccccc", caption=fullcap)
 ```
-
-#
-
-#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
@@ -352,7 +383,7 @@ cat("\\clearpage")
 
 
 ```{r seltableA2d, echo=FALSE}
-respdat = fullrespdat[which(fullrespdat$Year==1982):which(fullrespdat$Year==2015),]
+respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
 
 #set up table
 seltable = data.frame(Model="Add current season spawning information", Residual.df="", Residual.dev="", AIC="", stringsAsFactors=FALSE)
@@ -401,7 +432,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}",  "AIC")
 
-thecap=paste("Model selection tests for the $N_t$ model using AIC for models fit to log landings data with catch during the spawning season $S_t$ added as a covariate. Data 1982-2015 were used.")
+thecap=paste("Model selection tests for the $N_t$ model using AIC for models fit to log landings data with catch during the spawning season $S_t$ added as a covariate. Data", Yr1, "to", Yr2, "were used.")
 fullcap=paste("Table ", ref("tabappA:nonspawner-model-time-d", pre="A"), ". ", thecap, sep="")
 kable(seltable, align="lccc", caption=fullcap, row.names=FALSE)
 ```
