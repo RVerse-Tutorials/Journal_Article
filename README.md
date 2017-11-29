@@ -33,6 +33,17 @@ The main OilSardine Rmd file, runs the Figures and Appendices, but you can make 
 -   Open Figures.Rmd to knit the figures for the main paper. 
 -   Open Appendices.Rmd to create the appendices. This will call the Rmd files for the appendix tables.
 
+Update 11/29/2017
+------
+Completed
+-   Added covariate effect figure for the most important covariates.  
+-   Changed the covariate tables' data to interpolate 1994 Oct-Dec SST.  Since those months were missing, it meant I lost 2 years of data (1995 and 1994); that's ca 10 percent of the data.  So I replaced Oct-Dec 1994 with the 5-year average for those months.
+
+To do
+-   Add Table for main text which will summarize the covariate results.  
+-   Test chlorophyl effect.  Do separately since much less data.
+-   Make figure: Fitted versus observed catch in the spawning period from the best covariate model. 
+
 Update 11/28/2017
 ------
 Completed
