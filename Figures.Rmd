@@ -262,3 +262,47 @@ legend("topright","B", bty="n")
 cat("\\clearpage")
 ```
 
+<!-- 
+Define fullrespdat.
+--> 
+```{r child = 'setup.Rmd'}
+```
+
+```{r cov-effects, echo=FALSE,fig.cap=paste("Figure",  ref("fig:cov-effects")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
+oldpar=par(mfrow=c(2,2), mar=c(4,5,2,0))
+dat=dat.spawners
+Yr1 = min(dat$Year)
+Yr2 = max(dat$Year)
+covnames=c("SST.4.mon7to9.0", "SST.UPW.4.mon1to3.1")
+covtits =  c("Jul-Sep SST current season", "Jan-Mar UPW prior season")
+dat$cov0=dat[["SST.4.mon7to9.0"]]
+dat$cov1=dat[["SST.UPW.4.mon1to3.1"]]
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
+plot(m1, select=2, xlab="coastal SST in spawning months", ylab="Effect")
+legend("topright","A", bty="n")
+abline(h=0, col="grey")
+plot(m2, select=2, xlab="Jan-Mar upwelling index in prior season", ylab="Effect")
+legend("topright","B", bty="n")
+abline(h=0, col="grey")
+
+dat=dat.nonspawners
+Yr1 = min(dat$Year)
+Yr2 = max(dat$Year)
+covnames=c("SST.4.mon7to9.0", "SST.UPW.4.mon10to12.1")
+covtits =  c("Jul-Sep SST current season", "Oct-Dec UPW prior season")
+dat$cov0=dat[["SST.4.mon7to9.0"]]
+dat$cov1=dat[["SST.UPW.4.mon10to12.1"]]
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
+plot(m1, select=3, xlab="coastal SST in spawning months", ylab="Effect")
+legend("topright","C", bty="n")
+abline(h=0, col="grey")
+plot(m2, select=3, xlab="Oct-Dec upwelling index in prior season", ylab="Effect")
+legend("topright","D", bty="n")
+abline(h=0, col="grey")
+abline(v=0, col="blue")
+text(0,-2,"upwelling\ncoast colder\nthan offshore",pos=4)
+text(0,-2,"coast warmer\nthan offshore",pos=2)
+par(oldpar)
+```
