@@ -40,9 +40,11 @@ Completed
 -   Fixed bug in spawner covariate tables for App B.  
 -   Fixed inclusion of 'future' covariates in App B tables.
 -   Assigned Figure 4. Cartoon of the sardine life-cycle to Nimit/Sourav
+-   Added man files to the R package for the SST and CHL data.  This documents exactly where the satellite data came from.  Use ?sst and ?chl from the R command line to view (after installing the SardineForecast package).  I also added copies of the ERDDAP html background files to a folder in the package to fully document where the satellite data came from.
 
 To do:
 -   See items in 11/23 status
+-   Update Sardine.bib with the references added to REFERENCES.bib
 
 Status 11/23/2017
 ------
