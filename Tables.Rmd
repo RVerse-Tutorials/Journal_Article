@@ -8,7 +8,6 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
 ```{r child = 'setup.Rmd'}
-#Generic setup code common across all Rmds
 ```
 
 
@@ -21,8 +20,14 @@ header-includes: \usepackage[labelformat=empty]{caption}
 cat("\\clearpage")
 ```
 
-
-
 ```{r child = 'Table 2.Rmd'}
 ```
 
+#
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = 'Table 3.Rmd'}
+```
