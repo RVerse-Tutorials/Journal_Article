@@ -103,7 +103,6 @@ dat.spawners=dat
 if(any(diff(dat.spawners$Year)!=1)) stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")
 ```
 
-
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
 covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", "SST.4.mon1to12.", "SST.4.mon1to9.", "SST.4.mon7to9.", "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", "SST.UPW.4.mon10to12.")
 #set up to use consistent data
@@ -111,6 +110,17 @@ dat=fullrespdat[,c("Year","nspawners0", "nspawners1", "spawners2", paste(covname
 dat=na.omit(dat)
 dat.nonspawners=dat
 if(any(diff(dat.nonspawners$Year)!=1))
+  stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")
+rm(dat) #make sure I don't accidentally forget to define dat
+```
+
+```{r message=FALSE,warning=FALSE, echo=FALSE}
+covnames = c("log.CHL.4.mon1to3.", "log.CHL.4.mon7to9.", "log.CHL.4.mon10to12.")
+#set up to use consistent data
+dat=fullrespdat[,c("Year", "spawners0", "nspawners0", "nspawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
+dat=na.omit(dat)
+dat.chl=dat
+if(any(diff(dat.chl$Year)!=1))
   stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")
 rm(dat) #make sure I don't accidentally forget to define dat
 ```
