@@ -9,11 +9,11 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
 ```{r child = 'setup.Rmd'}
-#Generic setup code common across all Rmds
 ```
 
-
 # Figures
+
+<!--
 
 Things to change
 
@@ -21,11 +21,9 @@ Things to change
 * Add SSH inshore - offshore as another upwelling index
 * When showing r2 versus time, group the upwelling indexes together or group by index that affect similar age groups
 * Check the size/age structure of the fishery by qtr
-* Make a cartoon of the life-history
-* Use catch anomalies
-* Use 1- and 2-year lags
 * Dave said that Pacific sardine uses 3-yr running mean of SST at 5-15m over whole CalCOFI region as an index of recruitment.
 
+-->
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
@@ -256,8 +254,6 @@ legend("topright","B", bty="n")
 ```
 
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -304,5 +300,68 @@ abline(h=0, col="grey")
 abline(v=0, col="blue")
 text(0,-2,"upwelling\ncoast colder\nthan offshore",pos=4)
 text(0,-2,"coast warmer\nthan offshore",pos=2)
+par(oldpar)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+<!-- 
+Define fullrespdat.
+--> 
+```{r child = 'setup.Rmd'}
+```
+
+```{r fitted, echo=FALSE,fig.cap=paste("Figure",  ref("fig:fitted")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+oldpar=par(mfrow=c(2,2), mar=c(4,6,1,0))
+dat=dat.spawners
+Yr1 = min(dat$Year)
+Yr2 = max(dat$Year)
+covnames=c("SST.4.mon7to9.0", "SST.UPW.4.mon1to3.1")
+covtits =  c("Jul-Sep SST current season", "Jan-Mar UPW prior season")
+dat$cov0=dat[["SST.4.mon7to9.0"]]
+dat$cov1=dat[["SST.UPW.4.mon1to3.1"]]
+m0 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6) + s(cov0, sp=0.6), data=dat)
+# m2$model=exp(m2$model); m2$fitted.values=exp(m2$fitted.values)
+# m0$model=exp(m0$model); m0$fitted.values=exp(m0$fitted.values)
+xmin=min(m2$model[,"spawners0"],m2$fitted.values)
+xmax=max(m2$model[,"spawners0"],m2$fitted.values)
+plot(m0$model[,"spawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
+     xlab="log catch in spawning months", ylab="predicted log catch\nwithout upwelling")
+lines(c(xmin,xmax),c(xmin,xmax))
+legend("topleft",paste("A R2 =",round(100*summary(m0)$r.sq,digits=1)), bty="n")
+plot(m2$model[,"spawners0"],m2$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
+     xlab="log catch in spawning months", ylab="predicted log catch\nwith upwelling")
+lines(c(xmin,xmax),c(xmin,xmax))
+legend("topleft",paste("B R2 =",round(100*summary(m2)$r.sq,digits=1)), bty="n")
+
+dat=dat.nonspawners
+Yr1 = min(dat$Year)
+Yr2 = max(dat$Year)
+covnames=c("SST.4.mon7to9.0", "SST.UPW.4.mon10to12.1")
+covtits =  c("Jul-Sep SST current season", "Oct-Dec UPW prior season")
+dat$cov0=dat[["SST.4.mon7to9.0"]]
+dat$cov1=dat[["SST.UPW.4.mon10to12.1"]]
+m0 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
+# m2$model=exp(m2$model); m2$fitted.values=exp(m2$fitted.values)
+# m0$model=exp(m0$model); m0$fitted.values=exp(m0$fitted.values)
+xmin=min(m0$model[,"nspawners0"],m0$fitted.values,m3$fitted.values)
+xmax=max(m0$model[,"nspawners0"],m0$fitted.values,m3$fitted.values)
+plot(m0$model[,"nspawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
+     xlab="log catch in non-spawning months", ylab="predicted log catch\nwithout covariates")
+lines(c(xmin,xmax),c(xmin,xmax))
+legend("topleft",paste("C R2 =",round(100*summary(m0)$r.sq,digits=1)), bty="n")
+plot(m3$model[,"nspawners0"],m3$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
+     xlab="log catch in non-spawning months", ylab="predicted log catch\nwith covariates")
+lines(c(xmin,xmax),c(xmin,xmax))
+legend("topleft",paste("D R2 =",round(100*summary(m3)$r.sq,digits=1)), bty="n")
+
 par(oldpar)
 ```
