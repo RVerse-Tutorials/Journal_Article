@@ -42,7 +42,6 @@ Completed
 -   Created Appendix for the chlorophyl effect.  Did separately since much less data.
 
 To do
--   Update results to refer to the new figure and tables.
 -   Need to qualify the R2 values.  That happens because catch was increasing over the 30-years.  It is a given that R2 will be high-ish.  The more important issue is covariates that improve R2.
 -   Show R2 (or MSE) of for 10-year periods using the best models fit to the 32-years of data.
 
