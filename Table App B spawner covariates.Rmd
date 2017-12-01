@@ -66,7 +66,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 #model 4
 i=4; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_t)$ + $V_{t-1}$ + $\\epsilon$", 
+tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_t)$ + $\\beta V_{t-1}$ + $\\epsilon$", 
                 Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -151,7 +151,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 #model 4
 i=4; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_t)$ + $V_{t-1}$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
+tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_t)$ + $\\beta V_{t-1}$ + $\\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
 seltable=rbind(seltable,tmp1,tmp2)
 
@@ -231,7 +231,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 #model 4
 i=4; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_t)$ + $V_{t-1}$ + $\\epsilon$", 
+tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_t)$ + $\\beta V_{t-1}$ + $\\epsilon$", 
                 Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
 tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
 seltable=rbind(seltable,tmp1,tmp2)
@@ -291,7 +291,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 # #model 4
 # i=4; mod=paste("m",i,sep="")
 # aa = summary(get(mod))
-# tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_t)$ + $V_{t-1}$ + $\\epsilon$", 
+# tmp1=data.frame(Model="$ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(V_t)$ + $\\beta V_{t-1}$ + $\\epsilon$", 
 #                 Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
 # tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
 # seltable=rbind(seltable,tmp1,tmp2)
