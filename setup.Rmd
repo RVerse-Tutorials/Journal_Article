@@ -6,10 +6,10 @@ output: html_document
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-require(SardineForecast)
-require(stringr)
-require(mgcv)
-require(knitr)
+library(SardineForecast)
+library(stringr)
+library(mgcv)
+library(knitr)
 # If this is being called from another Rmd (as a child), this counter will exist
 if(!exists(".rmdenvir")) .rmdenvir = environment()
 #detect if making latex
