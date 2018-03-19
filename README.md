@@ -2,6 +2,8 @@ README
 ================
 EE Holmes
 
+Paper centered on the GAM analysis of the environmental variables.
+
 The Rmd files create the manuscript OilSardine\_NOAA\_MoES.pdf and the Word version with .docx. Note that the tables do not look very good in Word.  Best to look at those in the pdf file.
 
 To run
