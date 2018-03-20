@@ -29,40 +29,19 @@ Things to change
 cat("\\clearpage")
 ```
 
-```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
-### FIGURE 2 Alternate 1
-par(mfrow=c(2,1),mar=c(5,3,1,1))
-dat=oilsardine_qtr
-
-#Panel 1 summary of the yearly catch
-tmp=aggregate(dat$Kerala/1000,list(Year=dat$Year),sum)
-plot(tmp,type="l",ylab="Total Catch (1000 kgs)",
-     xlim=c(1956,2014),xlab="", col=1, bty="L")
-tmp=aggregate(dat$Goa/1000,list(Year=dat$Year),sum)
-lines(tmp,lty=2, col=1)
-tmp=aggregate(dat$Karnataka/1000,list(Year=dat$Year),sum)
-lines(tmp,lty=3, col=1)
-legend("topleft",c("Kerala","Goa","Karnataka"),lty=1:3,bty="n",cex=.75)
-
-#Panel 2 Kerala quarterly
-dat=oilsardine_qtr
-plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Kerala Catch (1000 kg)",xlab="",bty="L")
-oldpar=par(fig = c(0.6, 1, 0.3, .57), new = T)  
-catchmeans=tapply(dat$Kerala, dat$Qtr, mean, na.rm=TRUE)
-names(catchmeans)=paste("Q",1:4,sep="")
-barplot(catchmeans/1000,ylab="",col="grey",cex.axis=.75,cex.names=.75)
-title("Mean Qtrly Catch",cex.main=.75)
-par(oldpar)
+```{r fig-study-area, out.width = "350px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:studyarea")),message=FALSE,warning=FALSE}
+figfile = system.file("docs", "kerala_study_area_with_inset.jpg", package="SardineForecast")
+knitr::include_graphics(figfile)
 ```
-
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-```{r fig-study-area, out.width = "350px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:studyarea")),message=FALSE,warning=FALSE}
-figfile = system.file("docs", "kerala_study_area_with_inset.jpg", package="SardineForecast")
-knitr::include_graphics(figfile)
+```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
+par(mfrow=c(1,1),mar=c(5,5,1,1))
+dat=oilsardine_qtr
+plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Kerala Catch (1000 kg)",xlab="",bty="L")
 ```
 
 ```{r, results="asis", echo=FALSE}
@@ -80,152 +59,73 @@ knitr::include_graphics(figfile)
 cat("\\clearpage")
 ```
 
-```{r fig-chl-2016, out.width = "400px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:CHL")), message=FALSE, warning=FALSE}
-figfile = system.file("docs", "2016 CHL.png", package="SardineForecast")
-knitr::include_graphics(figfile)
-```
-
-#
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-```{r rainfall.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:precipts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
-### FIGURE 2 Alternate 1
-par(mfrow=c(2,1), mar=c(2,5,2,2))
-dat=seio_covariates_mon$Precip.Kerala
-datmon=seio_covariates_mon$Month
-datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="Monthly precipitation over land (mm)",xlab="",bty="n")
-
-dat=seio_covariates_mon$precip.gpcp.kerala
-datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="Monthly precipitation off Kerala coast",xlab="",bty="n")
-
-#lines(ts(filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2)
-oldpar=par(fig = c(0.5, .93, 0.8, 1), new = T)  
-dat=seio_covariates_mon$Precip.Kerala
-catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
-names(catchmeans)=1:12
-barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75, col="grey", xaxt="n")
-title("Mean Monthly Precip",cex.main=.75)
-par(oldpar)
-
-dat=seio_covariates_mon$precip.gpcp.kerala
-oldpar=par(fig = c(0.5, .93, .3, .5), new = T)  
-catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
-names(catchmeans)=1:12
-barplot(catchmeans,ylab="", cex.axis=.75,cex.names=.75, col="grey", xaxt="n")
-title("Mean Monthly Precip",cex.main=.75)
-
-par(oldpar)
-```
-
-#
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-```{r upw.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:UPWts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+```{r cov.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:COVts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
 ### FIGURE Upwelling
 oldpar=par(mfrow=c(2,2), mar=c(2,5,2,0))
-for(i in 2:5){
-  covname=paste("SST.UPW.",i,sep="")
+i=4
+covname=paste("SST.UPW.",i,sep="")
 dat=seio_covariates_mon[[covname]]
-datmon=seio_covariates_mon$Month
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab=paste("SST Upwelling Index Box",i),xlab="",bty="n",ylim=c(-2,5),xlim=c(1960,2015))
-#lines(ts(filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2,col="red")
-}
-for(i in 2:5){
-  covname=paste("SST.UPW.",i,sep="")
+plot(datts,ylab="SST Upwelling Index", xlab="",bty="n",ylim=c(-1,5),xlim=c(1980,2020))
+legend("topright","A", bty="n")
+
+covname=paste("CHL.",i,sep="")
+dat=seio_covariates_mon[[covname]]
+datts=ts(dat,start=1956, frequency=12)
+plot(datts,ylab="Surface Chl-a", xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
+legend("topright","B", bty="n")
+
+covname=paste("SST.",i,sep="")
+dat=seio_covariates_mon[[covname]]
+datts=ts(dat,start=1956, frequency=12)
+plot(datts,ylab="SST", xlab="",bty="n",ylim=c(24,35),xlim=c(1980,2020))
+legend("topright","C", bty="n")
+
+covname="precip.gpcp.kerala"
+dat=seio_covariates_mon[[covname]]
+datts=ts(dat,start=1956, frequency=12)
+plot(datts,ylab="Precipitation", xlab="",bty="n",ylim=c(0,18),xlim=c(1980,2020))
+legend("topright","D", bty="n")
+
+par(fig = c(0.05, .25, 0.8, 1), new = T)  #panel left-top
+covname=paste("SST.UPW.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
-if(i==2) oldpar=par(fig = c(0.05, .25, 0.8, 1), new = T)  
-if(i==3) oldpar=par(fig = c(0.05+.5, .25+.5, 0.8, 1), new = T)  
-if(i==4) oldpar=par(fig = c(0.05, .25, 0.8-.5, 1-.5), new = T)  
-if(i==5) oldpar=par(fig = c(0.05+.5, .25+.5, 0.8-.5, 1-.5), new = T)  
 catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
 names(catchmeans)=1:12
-barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,2), col="grey", xaxt="n")
-title("Mean Mthly\nIndex",cex.main=.75)
-}
-library(maps)
-library(mapdata)
- mymap=map('worldHires','india',xlim=c(74.5,80),ylim=c(7,14),plot=FALSE)
-  botlats=c(12:8,12:8,9,8,8); toplats=botlats+1
-  cenlats=botlats+.5
-  tmp= c(74.2,74.9,75.3,75.5,76.3)     
-  leftlons=c(tmp,tmp-1,73.5,74.3,73.3);rightlons=leftlons+1
-  cenlons=leftlons+.5
-for(i in 2:5){
-  if(i==2) oldpar=par(fig = c(0.05, .25, .55, .75), new = T)  
-if(i==3) oldpar=par(fig = c(0.05+.5, .25+.5, .55, .75), new = T)  
-if(i==4) oldpar=par(fig = c(0.05, .25, 0.05, .25), new = T)  
-if(i==5) oldpar=par(fig = c(0.05+.5, .25+.5, 0.05, .25), new = T)  
-   plot(mymap$x,mymap$y,type="l",bty="n",xaxt="n",yaxt="n",ylab="",xlab="")
-    botlat=botlats[i]; toplat=botlat+1
-    leftlon=leftlons[i]; rightlon=leftlon+1
-    y=c(botlat,toplat,toplat,botlat,botlat)
-    x=c(leftlon,leftlon,rightlon,rightlon,leftlon)
-    polygon(x,y)
-  }
-par(oldpar)
-```
+barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,1.5), col="grey", xaxt="n")
+title("Mthly Mean",cex.main=.75)
 
-#
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-```{r chl.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:CHLts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
-### FIGURE CHL
-oldpar=par(mfrow=c(2,2), mar=c(2,5,2,0))
-for(i in 2:5){
-  covname=paste("CHL.",i,sep="")
+par(fig = c(0.05+.5, .25+.5, 0.8, 1), new = T)  # panel right-top
+covname=paste("CHL.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
-datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab=paste("Surface Chl-a Box",i),xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
-#lines(ts(filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2,col="red")
-}
-for(i in 2:5){
-  covname=paste("CHL.",i,sep="")
-dat=seio_covariates_mon[[covname]]
-datmon=seio_covariates_mon$Month
-if(i==2) oldpar=par(fig = c(0.05, .25, 0.8, 1), new = T)  
-if(i==3) oldpar=par(fig = c(0.05+.5, .25+.5, 0.8, 1), new = T)  
-if(i==4) oldpar=par(fig = c(0.05, .25, 0.8-.5, 1-.5), new = T)  
-if(i==5) oldpar=par(fig = c(0.05+.5, .25+.5, 0.8-.5, 1-.5), new = T)  
 catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
 names(catchmeans)=1:12
-barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,12),col="grey", xaxt="n")
-title("Mean Mthly\nChl-a",cex.main=.75)
-}
-library(maps)
-library(mapdata)
- mymap=map('worldHires','india',xlim=c(74.5,80),ylim=c(7,14),plot=FALSE)
-  botlats=c(12:8,12:8,9,8,8); toplats=botlats+1
-  cenlats=botlats+.5
-  tmp= c(74.2,74.9,75.3,75.5,76.3)     
-  leftlons=c(tmp,tmp-1,73.5,74.3,73.3);rightlons=leftlons+1
-  cenlons=leftlons+.5
-for(i in 2:5){
-  if(i==2) oldpar=par(fig = c(0.05, .25, .55, .75), new = T)  
-if(i==3) oldpar=par(fig = c(0.05+.5, .25+.5, .55, .75), new = T)  
-if(i==4) oldpar=par(fig = c(0.05, .25, 0.05, .25), new = T)  
-if(i==5) oldpar=par(fig = c(0.05+.5, .25+.5, 0.05, .25), new = T)  
-plot(mymap$x,mymap$y,type="l",bty="n",xaxt="n",yaxt="n",ylab="",xlab="")
-    botlat=botlats[i]; toplat=botlat+1
-    leftlon=leftlons[i]; rightlon=leftlon+1
-    y=c(botlat,toplat,toplat,botlat,botlat)
-    x=c(leftlon,leftlon,rightlon,rightlon,leftlon)
-    polygon(x,y)
-  }
+barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,12),col="grey", names.arg="")
+title("Mthly Mean",cex.main=.75)
+
+par(fig = c(0.05, .25, 0.8-.5, 1-.5), new = T)  #left-bottom
+covname=paste("SST.",i,sep="")
+dat=seio_covariates_mon[[covname]]
+datmon=seio_covariates_mon$Month
+catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
+names(catchmeans)=1:12
+barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(25,30),col="grey", xpd=FALSE, bty="l", names.arg="")
+axis(1, labels=FALSE, lwd.ticks=-1)
+title("Mthly Mean",cex.main=.75)
+
+par(fig = c(0.05+.5, .25+.5, 0.8-.5, 1-.5), new = T)  #right-bottom
+covname="precip.gpcp.kerala"
+dat=seio_covariates_mon[[covname]]
+datmon=seio_covariates_mon$Month
+catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
+names(catchmeans)=1:12
+barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,10),col="grey", names.arg="")
+title("Mthly Mean",cex.main=.75)
+
 par(oldpar)
+
 ```
 
 #
@@ -236,21 +136,13 @@ cat("\\clearpage")
 
 ```{r sst.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:SSTts")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
 ### FIGURE SST
-oldpar=par(mfrow=c(1,2), mar=c(2,4,2,0))
+oldpar=par(mfrow=c(1,1), mar=c(2,4,2,0))
 i=4
   covname=paste("SST.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
 datts=ts(dat,start=1956, frequency=12)
 plot(datts,ylab="Ave Monthly SST",xlab="",bty="n",ylim=c(24,31),xlim=c(2000,2005), yaxs="i", xaxs="i")
-legend("topright","A", bty="n")
-
-dat=seio_covariates_mon[[covname]]
-datmon=seio_covariates_mon$Month
-catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
-names(catchmeans)=1:12
-barplot(catchmeans,ylab="",ylim=c(24,31),col="grey",offset=0,xpd=FALSE, axis.lty=1, bty="l", cex.names=.75, names.arg=c("J","F","M","A","M","J","J","A","S","O","N","D"))
-legend("topright","B", bty="n")
 ```
 
 
@@ -277,10 +169,12 @@ m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
 plot(m1, select=2, xlab="coastal SST in spawning months", ylab="Effect")
 legend("topright","A", bty="n")
+legend("topleft","Model 1", bty="n")
 abline(h=0, col="grey")
 plot(m2, select=2, xlab="Jan-Mar upwelling index in prior season", ylab="Effect")
 legend("topright","B", bty="n")
 abline(h=0, col="grey")
+legend("topleft","Model 1", bty="n")
 
 dat=dat.nonspawners
 Yr1 = min(dat$Year)
@@ -293,9 +187,11 @@ m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
 plot(m1, select=3, xlab="coastal SST in spawning months", ylab="Effect")
 legend("topright","C", bty="n")
+legend("topleft","Model 2", bty="n")
 abline(h=0, col="grey")
 plot(m2, select=3, xlab="Oct-Dec upwelling index in prior season", ylab="Effect")
 legend("topright","D", bty="n")
+legend("topleft","Model 2", bty="n")
 abline(h=0, col="grey")
 abline(v=0, col="blue")
 text(0,-2,"upwelling\ncoast colder\nthan offshore",pos=4)
@@ -314,6 +210,7 @@ Define fullrespdat.
 ```
 
 ```{r fitted, echo=FALSE,fig.cap=paste("Figure",  ref("fig:fitted")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+jig=.3
 oldpar=par(mfrow=c(2,2), mar=c(4,6,1,0))
 dat=dat.spawners
 Yr1 = min(dat$Year)
@@ -329,15 +226,18 @@ m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6) + s(cov0, sp=0.6), 
 # m2$model=exp(m2$model); m2$fitted.values=exp(m2$fitted.values)
 # m0$model=exp(m0$model); m0$fitted.values=exp(m0$fitted.values)
 xmin=min(m2$model[,"spawners0"],m2$fitted.values)
-xmax=max(m2$model[,"spawners0"],m2$fitted.values)
+xmax=jig+max(m2$model[,"spawners0"],m2$fitted.values)
 plot(m0$model[,"spawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="log catch in spawning months", ylab="predicted log catch\nwithout upwelling")
-lines(c(xmin,xmax),c(xmin,xmax))
-legend("topleft",paste("A R2 =",round(100*summary(m0)$r.sq,digits=1)), bty="n")
+     xlab="Log catch in spawning months", ylab="Predicted log catch\nwithout upwelling")
+lines(c(xmin,xmax),c(xmin,xmax-jig))
+legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1)), bty="n")
+legend("topright","A", bty="n")
+
 plot(m2$model[,"spawners0"],m2$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="log catch in spawning months", ylab="predicted log catch\nwith upwelling")
-lines(c(xmin,xmax),c(xmin,xmax))
-legend("topleft",paste("B R2 =",round(100*summary(m2)$r.sq,digits=1)), bty="n")
+     xlab="Log catch in spawning months", ylab="Predicted log catch\nwith upwelling")
+lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
+legend("topleft",paste("R2 =",round(100*summary(m2)$r.sq,digits=1)), bty="n")
+legend("topright","B", bty="n")
 
 dat=dat.nonspawners
 Yr1 = min(dat$Year)
@@ -353,15 +253,18 @@ m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=
 # m2$model=exp(m2$model); m2$fitted.values=exp(m2$fitted.values)
 # m0$model=exp(m0$model); m0$fitted.values=exp(m0$fitted.values)
 xmin=min(m0$model[,"nspawners0"],m0$fitted.values,m3$fitted.values)
-xmax=max(m0$model[,"nspawners0"],m0$fitted.values,m3$fitted.values)
+xmax=jig+max(m0$model[,"nspawners0"],m0$fitted.values,m3$fitted.values)
 plot(m0$model[,"nspawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="log catch in non-spawning months", ylab="predicted log catch\nwithout covariates")
-lines(c(xmin,xmax),c(xmin,xmax))
-legend("topleft",paste("C R2 =",round(100*summary(m0)$r.sq,digits=1)), bty="n")
+     xlab="Log catch in non-spawning months", ylab="Predicted log catch\nwithout covariates")
+lines(c(xmin,xmax),c(xmin,xmax-jig))
+legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1)), bty="n")
+legend("topright","C", bty="n")
+
 plot(m3$model[,"nspawners0"],m3$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="log catch in non-spawning months", ylab="predicted log catch\nwith covariates")
-lines(c(xmin,xmax),c(xmin,xmax))
-legend("topleft",paste("D R2 =",round(100*summary(m3)$r.sq,digits=1)), bty="n")
+     xlab="Log catch in non-spawning months", ylab="Predicted log catch\nwith covariates")
+lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
+legend("topleft",paste("R2 =",round(100*summary(m3)$r.sq,digits=1)), bty="n")
+legend("topright","D", bty="n")
 
 par(oldpar)
 ```

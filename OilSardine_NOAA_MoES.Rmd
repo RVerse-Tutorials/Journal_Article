@@ -143,11 +143,17 @@ Implications.  Supports the use of SST and upwelling indices for forecasting.
 
 # Figure Legends
 
-Figure `r ref("fig:catch")`. Quarterly catch data 1956-2014 from Kerala. The catches have a strong seasonal pattern with the highest catches in quarter 4. Note that quarter 3 is July-Sept and that the fishery is closed July 1 to Aug 15, thus the fishery is only open 1.5 months in quarter 3. The per month catch rate is second highest in quarter 3 although total catch is lower in quarter 3.
-
 Figure `r ref("fig:studyarea")`. Close up of Kerala State with the latitude/longitude boxes used for the satellite data. Kerala State is marked in grey and the oil sardine catch from this region is being modeled.
 
-Figure `r ref("fig:seiocurrents")`.  Key currents and circulation patterns in the Indian Ocean that affect winter and summer monsoon associated upwelling.
+```{r catch-dat, echo=FALSE,message=FALSE,warning=FALSE}
+dat=oilsardine_qtr
+catchmeans=round(tapply(dat$Kerala, dat$Qtr, mean, na.rm=TRUE))
+names(catchmeans)=paste("Q",1:4,sep="")
+catchmeds=round(tapply(dat$Kerala, dat$Qtr, median, na.rm=TRUE))
+names(catchmeds)=paste("Q",1:4,sep="")
+```
+
+Figure `r ref("fig:catch")`. Quarterly catch data 1956-2014 from Kerala. The catches have a strong seasonal pattern with the highest catches in quarter 4  Note that quarter 3 is July-Sept and that the fishery is closed July 1 to Aug 15, thus the fishery is only open 1.5 months in quarter 3. The mean catch (metric tonnes) in quarters 1 to 4 are `r catchmeans["Q1"]`, `r catchmeans["Q2"]`, `r catchmeans["Q3"]`, and `r catchmeans["Q4"]`, respectively.
 
 Figure `r ref("fig:cartoon")`.  Cartoon of the sardine life-cycle in the SE Indian Ocean and how it interacts with the fishery.  [*missing*]
 
