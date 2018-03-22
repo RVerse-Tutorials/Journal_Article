@@ -11,8 +11,6 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r child = 'setup.Rmd'}
 ```
 
-# Figures
-
 <!--
 
 Things to change
@@ -71,25 +69,25 @@ i=4
 covname=paste("SST.UPW.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="SST Upwelling Index", xlab="",bty="n",ylim=c(-1,5),xlim=c(1980,2020))
+plot(datts,ylab="SST-derived Upwelling Index", xlab="",bty="n",ylim=c(-1,5),xlim=c(1980,2020))
 legend("topright","A", bty="n")
 
 covname=paste("CHL.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="Surface Chl-a", xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
+plot(datts,ylab="Surface Chlorophyll-a", xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
 legend("topright","B", bty="n")
 
 covname=paste("SST.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="SST", xlab="",bty="n",ylim=c(24,35),xlim=c(1980,2020))
+plot(datts,ylab="Sea surface temperature (deg C)", xlab="",bty="n",ylim=c(24,35),xlim=c(1980,2020))
 legend("topright","C", bty="n")
 
 covname="precip.gpcp.kerala"
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="Precipitation", xlab="",bty="n",ylim=c(0,18),xlim=c(1980,2020))
+plot(datts,ylab="Average daily precipitation (mm)", xlab="",bty="n",ylim=c(0,18),xlim=c(1980,2020))
 legend("topright","D", bty="n")
 
 par(fig = c(0.05, .25, 0.8, 1), new = T)  #panel left-top
