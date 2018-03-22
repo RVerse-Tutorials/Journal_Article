@@ -41,26 +41,22 @@ cat("\\clearpage")
 ```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
 par(mfrow=c(1,1),mar=c(5,5,1,1))
 dat=oilsardine_qtr
-plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Kerala Catch (1000 kg)",xlab="",bty="L")
+plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Quarterly Kerala Catch (1000 kg)",xlab="",bty="L", ylim=c(0,180))
+oldpar=par(fig = c(0.6, 1, 0.6, .97), new = T)  
+catchmeans=tapply(dat$Kerala, dat$Qtr, mean, na.rm=TRUE)
+names(catchmeans)=c("JFM","AMJ","JAS","OND")
+barplot(catchmeans/1000,ylab="",col="grey",cex.axis=.75,cex.names=.75, line=-1, yaxt="n")
+axis(2)
+title("Mean Qtrly Catch",cex.main=.75)
+par(oldpar)
 ```
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-```{r fig-currents, out.width = "500px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:seiocurrents")), message=FALSE, warning=FALSE}
-figfile = system.file("docs", "kerala_currents.jpg", package="SardineForecast")
-knitr::include_graphics(figfile)
-```
-
-#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
 ```{r cov.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:COVts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
-### FIGURE Upwelling
+### FIGURE covariates
 oldpar=par(mfrow=c(2,2), mar=c(2,5,2,0))
 i=4
 covname=paste("SST.UPW.",i,sep="")
@@ -128,13 +124,11 @@ par(oldpar)
 
 ```
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-```{r sst.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:SSTts")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
+```{r sst.mon, eval=FALSE, echo=FALSE,fig.cap=paste("Figure",  ref("fig:SSTts")), fig.width=8,fig.height=5,message=FALSE,warning=FALSE}
 ### FIGURE SST
 oldpar=par(mfrow=c(1,1), mar=c(2,4,2,0))
 i=4
@@ -143,6 +137,71 @@ dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
 datts=ts(dat,start=1956, frequency=12)
 plot(datts,ylab="Ave Monthly SST",xlab="",bty="n",ylim=c(24,31),xlim=c(2000,2005), yaxs="i", xaxs="i")
+```
+
+```{r sst.mon2, echo=FALSE,fig.cap=paste("Figure",  ref("fig:SSTts")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
+par(mfrow=c(1,1), mar=c(2,4,1,4))
+yrs=c(2010)
+nyr=3
+ymin=23; ymax=31
+desc.cex = .75
+for(start in yrs){
+  i=4
+  covname=paste("SST.",i,sep="")
+  dat=seio_covariates_mon[[covname]]
+  datts1=window(ts(dat,start=1956, frequency=12),start=c(start,1), end=c(start+nyr,12))
+  dat1=as.vector(datts1)
+  i=11
+  covname=paste("SST.",i,sep="")
+  dat=seio_covariates_mon[[covname]]
+  datts2=window(ts(dat,start=1956, frequency=12),start=c(start,1), end=c(start+nyr,12))
+  dat2=as.vector(datts2)
+  plot(dat1, ylim=c(ymin,ymax), xaxt="n",type="l",lwd=2,col="red",ylab="",xlab="")
+  #axis(1,at=seq(1,12*(nyr+1),12),labels=start:(start+nyr))
+  axis(1,at=1:length(dat1),labels=rep(str_sub(month.name,1,1),nyr+1),cex.axis=.5,line=-.75,lwd=-1,lwd.ticks=-1)
+  axis(1,at=1:length(dat1),labels=FALSE)
+  abline(v=seq(1,12*(nyr+1),12))
+  axis(1,at=seq(7,12*(nyr+1),12),labels=start:(start+nyr),cex.axis=.75,lwd=-1,lwd.ticks=-1)
+  lines(dat2, col="black", lwd=1)
+  legend(length(dat2)-11.5,ymin+3,c("SST near-shore","SST off-shore","Chl-a"), lwd=c(2,1,10),col=c("red","black","grey"),bty="n",cex=1,seg.len=1)
+  
+  lev=ymax; jit=.3
+  cols=c("black","green","blue","red")
+  j=1
+  lines(c(j+1,j+2),c(lev,lev)-jit,lwd=8,lend=2,col=adjustcolor(cols[1], alpha.f=.2)) #juv peak
+  lines(c(j+6.5,j+7.5),c(lev,lev)-jit,lwd=8,lend=2,col=cols[1]) #juv peak 2
+  text(j+6,lev,"juveniles appear in catch",cex=desc.cex)
+  
+  j=13
+  lines(c(j+7,j+9),c(lev,lev)-jit,lwd=8,col=cols[2],lend=2) #highest growth
+  text(j+6,lev,"highest somatic growth",cex=desc.cex)
+  
+  j=25
+  lines(c(j+5,j+10),c(lev,lev)-jit,lwd=8,col=adjustcolor("blue", alpha.f=.2),lend=2) #spawning
+  lines(c(j+5,j+6),c(lev,lev)-jit,lwd=8,col="blue",lend=2) #spawning
+  text(j+6,lev,"spawning",cex=desc.cex)
+  
+  j=37
+  lines(c(j+2,j+4),c(lev,lev)-jit,lwd=8,col=cols[4],lend=2) #bad
+  text(j+6,lev,"fish move offshore",cex=desc.cex)
+  
+  dat=seio_covariates_mon[["CHL.4"]]
+  datts1=window(ts(dat,start=1956, frequency=12),start=c(start,1), end=c(start+nyr,12))
+  dat1=as.vector(datts1)
+  TT=length(dat1)
+  tdat1=1:length(dat1)
+  tdat1=tdat1[!is.na(dat1)]
+  dat1=na.omit(dat1)
+  par(new=TRUE)
+  plot(tdat1,dat1,type="n",axes=FALSE,ylab="",xlab="",ylim=c(0,40))
+  polygon(
+    c(tdat1,TT,1,1), 
+    c(dat1,0,0,dat1[1]), 
+    col="grey", border=NA)
+  axis(side=4)
+  mtext(side = 4, line = 2.25, 'Chl-a')
+  mtext(side = 2, line = 2.25, 'Ave Monthly SST')
+}
 ```
 
 
