@@ -41,17 +41,19 @@ Remote sensing satellites can be used to detect changes in ocean physical, biolo
 
 In this paper, we revisit the analysis of environmental covariates that correlate with oil sardine catch using remote-sensing data and generalized additive modelling [@Wood2017].  Based on biological information concerning how environmental conditions in the coastal waters affect spawning density, exposure of sardines to the coastal fishery, and larval and juvenile sardine survival, we develop a set of hypotheses about which satellites covariates should correlate with current or future landings.  We use generalized additive modelling of the long-term landing data with long-term remote-sensing data to test for these correlations.  
 
-# Study Area
+## Study Area
 
 Being land-locked to the north, the northern Indian Ocean is the only part of the world oceans that is not connected to the polar region and lies entirely in the tropics. It also experiences exclusively the seasonally reversing monsoon that is coupled with processes in the Pacific Ocean [@Websteretal1999]. The western Arabian Sea that experiences high atmospheric pressure during most of the year, lies adjacent to the Horn of Africa as well as the Arabian peninsula. This results in the Aeolian transport (referred to as Shamal activity) to the basin as well as persistent upwelling off-Somalia and along the coast of Yemen [@Raoetal2003; @Preusseretal2002; @Singhetal2008]. High plankton biomass, resulting in elevated productivity in this region is advected towards central Arabian Sea through Ekman pumping. This process is intensified during ISM and during the early spring-bloom period in February through March. A persistent Oxygen Minimum Zone (OMZ) in the north and central Arabian Sea basin results in large net-export of CO2 from waters to the atmosphere [@Sarmaetal1998; @Naqvietal2000; @Kumaretal2001]. Often this coastal productivity affects to the OMZ and vice-a-versa [@Devoletal2006]. Monsoonal reversal of winds and, in turn, coastal currents, along with high amount of river discharge, generates high degrees of variability in the productivity induced from either mixing or upwelling in the eastern Arabian Sea [@SarupriaBhargava1993; @SrinivasDineshkumar2006; @Habeebrehmanetal2008; @Jayarametal2010; @Chauhanetal2011; @JoshiRao2012; @Guptaetal2016].
 
 In this work, we focus on the the southeastern Arabian Sea (SEAS) (Figure `r ref("fig:studyarea")`). The SEAS has relatively narrow continental shelf on the western shoreline of the Indian peninsula and is influenced by ISM as well as IWM and tidal interactions as well as discharge from multiple rivers [@Shetyeetal1995; @Oasim2003; @Menonetal2005]. This region also recurrently witnesses intense spring blooms of Trichodesmium spp. This, along with coastal current dynamics, upwelling and high rainfall, results in high coastal productivity with surface chlorophyll values up to 32-39 mg m-3 off the Kerala coast [@Madhupratapetal2001; @Jayarametal2010; @Raghavanetal2010; @Chauhanetal2011]. The SEAS also experience high chlorophyll concentration s(~40 mg m-2) and net primary productivity (~1300 mgC m-2 d-1) off Kochi during summer upwelling [@Guptaetal2016].  In the southern SEAS coastal waters off Kochi, extreme variability in productivity during the ISM (40-1225 mgCm-2d-1), post-ISM (21-263 mgCm-2d-1) and during inter-monsoon period (12-648 mgCm-2d-1) have been observed [@SarupriaBhargava1993; @SrinivasDineshkumar2006; @Habeebrehmanetal2008; @Jayarametal2010; @JoshiRao2012; @Guptaetal2016].
 
-# Hypotheses concerning correlation between covariate and catches
+## Life-history of oil sardine
+
+## Hypotheses concerning correlation between covariate and catches
 
 Spawning occurs during the summer monsoon, primarily during quarter 3.  During this time, sardines move inshore from offshore and become exposed to the primarily coastal fishery.   Factors that affect inshore migration or spawning should affect the catch in quarter 3, which is primarily of spawning fish.  The following are the major factors that are hypothesized to affect the catch in quarter 3 due to either a stronger spawning class or higher (or lower) exposure of the spawning age fish to the fishery due to higher (or lower) inshore migration.
 
-## Quarter 3 (spawning) catch correlates
+### Quarter 3 (spawning) catch correlates
 
 * Precipitation low or high during either the summer monsoon (June-July) or pre-monsoon (Apr-May) is associated with low spawning.
 
@@ -65,7 +67,7 @@ Spawning occurs during the summer monsoon, primarily during quarter 3.  During t
 
 After spawning, during the 4th quarter of the current calendar year and the 1st and 2nd quarters of the next calendar year, the length distribution of the catch shifts to smaller fish as juveniles begin shoaling inshore (citation).   The catch during the non-spawning part of the season should be correlated with factors associated with increased juvenile shoaling and survival of eggs and larvae from previous seasons’ spawning.  The former is associated with higher exposure of the non-spawning biomass to the coastal fishery and the latter is associated with a stronger (larger) non-spawning biomass.
 
-## Post-spawning catch correlates
+### Post-spawning catch correlates
 
 The post-spawning period corresponds to catch in quarter 4 of the current calendar year and quarters 1 and 2 of the next calendar year.  The main environmental covariates that should be important are those associated with egg and larval survival as these have been found to be the most important drivers of recruitment (citation) and covariates associated with shoaling and inshore migration of juvenile fish.
 
@@ -79,7 +81,7 @@ The post-spawning period corresponds to catch in quarter 4 of the current calend
 
 * Because age 2 fish also appear in the catch after quarter 3, we also expect the post-spawning catch in the previous season to be correlated with the post-spawning catch in the current season.
 
-# Data
+# Materials and methods
 
 ## Sardine landing data
 
@@ -95,7 +97,7 @@ For an index of coastal upwelling, we used the sea-surface temperature different
 
 The precipitation data were downloaded from two different sources.  The first was an estimate of the monthly precipitation over Kerala from land-based gauges.  This time series is available from the start of our landing data (1956).  The second was a remote-sensing precipitation product from the NOAA Global Precipitation Climatology Project.  This provides a precipitation estimate using a global 2.5 degree grid.  We used the 2.5 by 2.5 degree box defined by latitude 8.75 to 11.25 and longitude 73.25 to 75.75 for the precipitation off the coast of Kerala.  These data are available from 1979 forward.  Full details on the precipitation data sets are available in the Appendices.  
 
-# Models
+# Explanatory models
 
 We investigated correlations between environmental variables and sardine catch during spawning and post-spawning periods using generalized additive models [GAMs, @Wood2017].  GAMs allow one to model the effect of a covariate as a flexible non-linear function and it was known that the effects of the environmental covariates were likely to be non-linear, albeit in an unknown way.  Our approach is similar to that taken by Jacobson and MacCall [-@JacobsonMacCall1995] in a study of the effects of SST on Pacific sardine recruitment.   
 The model for catch in quarter 3 was of the form
@@ -155,17 +157,11 @@ names(catchmeds)=paste("Q",1:4,sep="")
 
 Figure `r ref("fig:catch")`. Quarterly catch data 1956-2014 from Kerala. The catches have a strong seasonal pattern with the highest catches in quarter 4  Note that quarter 3 is July-Sept and that the fishery is closed July 1 to Aug 15, thus the fishery is only open 1.5 months in quarter 3. The mean catch (metric tonnes) in quarters 1 to 4 are `r catchmeans["Q1"]`, `r catchmeans["Q2"]`, `r catchmeans["Q3"]`, and `r catchmeans["Q4"]`, respectively.
 
-Figure `r ref("fig:cartoon")`.  Cartoon of the sardine life-cycle in the SE Indian Ocean and how it interacts with the fishery.  [*missing*]
+Figure `r ref("fig:cartoon")`.  Cartoon of the sardine life-cycle in the SE Indian Ocean and how it interacts with the fishery. 
 
-Figure `r ref("fig:CHL")`.  Average Chlorophyll-a bloom intensity in 2016 by quarter. Red is high density chlorophyll-a.  Black is missing data due to cloud cover. Data from NOAA.
+Figure `r ref("fig:COVts")`.  Remote sensing covariates used in the analysis.  All data are monthly averages over Box 4 in Figure `r ref("fig:studyarea")` on the Kerala coast off of Kochi.  Panel A) Upwelling Index. The upwelling index is the difference between the near-shore sea surface temperature (SST) and the off-shore SST defined as 3 degrees longitude offshore. Panel B) Surface chlorophyll-a (Chl-a).  The Chl-a data are only available from 1997 onward.  Panel C) Sea surface temperature constructed from Advanced Very High Resolution Radiometer (AVHRR). Panel D) Average daily rainfall (mm/day) off the Kerala coast.
 
-Figure `r ref("fig:precipts")`.  Monthly rainfall 1956-2014 from Kerala.
-
-Figure `r ref("fig:UPWts")`.  Monthly Upwelling Index 1981-2012 off the Kerala coast from north to south. The boxes are shown in Figure `r ref("fig:studyarea")`.  The upwelling index is the difference between the near-shore and 3 degrees longitude offshore sea surface temperature.
-
-Figure `r ref("fig:CHLts")`.  Monthly surface chlorophyll-a (Chl-a) 1997-2017 off the Kerala coast from north to south. The boxes are shown in Figure `r ref("fig:studyarea")`.  
-
-Figure `r ref("fig:SSTts")`.  Monthly average sea surface temperature (SST) off the Kerala coast (box 4 only in Figure `r ref("fig:studyarea")`.  ).  Panel A) shows the monthly average SST from 2000 to 2005.  Panel B) shows the monthly average SST over all available years 1981-2015.
+Figure `r ref("fig:SSTts")`.  Key oil sardine life-history events overlaid on the monthly SST in the near-shore and off-shore and the near-shore Chl-a.
 
 Figure `r ref("fig:cov-effects")`.  Effects of covariates estimated from the GAM models. Panel A) Effect of SST during the spawning months (Jul-Sep) on catch during the spawning months.  Low SST is associated with lower that expected catch during the spawning months.  Panel B) Effect of upwelling (inshore/off-shore SST differential) during Jan-Mar of the prior season on catch during the next spawning months (Jul-Sep).  The index is the difference between offshore and inshore SST, thus a negative value indicates warmer coastal surface water than off-shore.  Warm coastal water during Jan-Mar when sardines are foraging along the coast, is associated with lower catch during the next spawning season.  Panel C) Effect of SST during the spawning months (Jul-Sep) on catch during the subsequent non-spawning months (Oct-Jun).  Low SST is associated with lower that expected catch during the following non-spawning months.  Panel D) Effect of upwelling (inshore/off-shore SST differential) during Oct-Dec of the prior season on catch during the non-spawning months (Oct-Jun) the next season.  Strong upwelling (positive upwelling index) in the early larval and juvenile period (Oct-Dec) is associated with higher than expected catch in the next season.
 
