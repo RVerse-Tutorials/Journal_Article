@@ -22,8 +22,7 @@ if(length(knitOut)==0) isLatex=FALSE else isLatex=(knitOut=="latex")
 Qtr=3 # start of season
 reg="Kerala"
 respdat=data.frame(
-  spawners0=oilsardine_qtr[[reg]][oilsardine_qtr$Qtr==3],
-  catchq4.0=oilsardine_qtr[[reg]][oilsardine_qtr$Qtr==4]
+  spawners0=oilsardine_qtr[[reg]][oilsardine_qtr$Qtr==3]
   )
 catch0=filter(oilsardine_qtr[[reg]],c(1,1,1,1),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
 respdat$Catch0 = c(catch0,NA)
@@ -36,25 +35,25 @@ respdat=log(respdat)
     "log.CHL.3","log.CHL.4","log.CHL.5",
     "log.CHL.3","log.CHL.4","log.CHL.5",
     "log.CHL.3","log.CHL.4","log.CHL.5",
-    "SST.UPW.3","SST.UPW.4","SST.UPW.4",
-    "SST.UPW.3","SST.UPW.4","SST.UPW.4",
-    "SST.UPW.3","SST.UPW.4","SST.UPW.4",
-    "SST.UPW.3","SST.UPW.4","SST.UPW.4",
-    "SST.4","SST.4","SST.4",
-    "SST.4","SST.4","SST.4",
-    "SST.4","SST.4","SST.4",
+    "SST.UPW.5","SST.UPW.4","SST.UPW.4",
+    "SST.UPW.5","SST.UPW.4","SST.UPW.4",
+    "SST.UPW.5","SST.UPW.4","SST.UPW.4",
+    "SST.UPW.5","SST.UPW.4","SST.UPW.4",
+    "SST.5","SST.4","SST.4",
+    "SST.5","SST.4","SST.4",
+    "SST.5","SST.4","SST.4",
     "precip.gpcp.kerala", "precip.gpcp.kerala")
   covmon=list(
      7:9,7:9,7:9,
      1:3,1:3,1:3,
-     10:12,10:12,11:12,
-     7:9,7:9,6:7,
-     1:3,1:3,5:6,
-     4:6,4:6,10:11,
-     6:7,10:12,11:12,
-     9:10,1:9,7:12,
-     5:6,11:12,3:5,
-     8:9,7:9,7:9,
+     10:12,10:12,10:12,
+     7:9,7:9,7:9,
+     1:3,1:3,1:3,
+     4:6,4:6,4:6,
+     10:12,10:12,10:12,
+     1:3,1:9,1:3,
+     10:12,10:12,4:6,
+     7:9,7:9,1:12,
      4:5,6:7)
 
 #fix problem in seio_covariates_mon with SST in 1994.
@@ -74,13 +73,13 @@ for(i in 1:length(covnames)){
   covname=covnames[i]
   mon=covmon[[i]]
   varname=paste(covname,".mon",mon[1],"to",mon[length(mon)],".0",sep="")
-  covdat=tapply(seio_covariates_mon2[[covname]],seio_covariates_mon2$Year,function(x){mean(x[mon],na.rm=TRUE)})
+  covdat=tapply(seio_covariates_mon2[[covname]],seio_covariates_mon2$Year,function(x){max(x[mon],na.rm=TRUE)})
+  covdat[is.infinite(covdat)]=NA
   if(str_detect(varname, "mon1to3")|str_detect(varname, "mon4to6")){
     respdat[[varname]]=c(covdat[-1],NA)
   }else{
     respdat[[varname]]=covdat
   }
-
 }
 
 #add lags
@@ -96,42 +95,47 @@ fullrespdat = respdat
 ```
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
-covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.",
-             "SST.4.mon1to12.", "SST.4.mon1to9.", "SST.4.mon7to9.", 
-             "SST.4.mon8to9.", "SST.4.mon9to10.", 
-             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.",
-             "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.")
+covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", "SST.4.mon1to12.", "SST.4.mon1to9.", "SST.4.mon7to9.", "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.")
 #set up to use consistent data
-dat=fullrespdat[,c("Year","spawners0", "catchq4.0", "nspawners1", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
+dat=fullrespdat[,c("Year","spawners0", "nspawners1", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
 dat.spawners=dat
 if(any(diff(dat.spawners$Year)!=1)) stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")
 ```
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
-covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.",
-             "SST.4.mon11to12.", "SST.4.mon1to9.", 
-             "SST.4.mon7to9.", "SST.4.mon7to12.", "SST.4.mon8to9.",
-             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.",
-             "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
-             "SST.UPW.4.mon11to12.", "SST.UPW.4.mon10to11.",
-             "SST.UPW.4.mon5to6.")
+covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", 
+             "SST.4.mon1to12.", "SST.4.mon1to9.", "SST.4.mon7to9.", 
+             "SST.4.mon4to6.","SST.4.mon1to3.",
+             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", 
+             "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.")
 #set up to use consistent data
-dat=fullrespdat[,c("Year","nspawners0", "catchq4.0", "Catch1", "Catch2",
-                   "nspawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
+dat=fullrespdat[,c("Year","nspawners0", "nspawners1", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
 dat.nonspawners=dat
 if(any(diff(dat.nonspawners$Year)!=1))
   stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")
+rm(dat) #make sure I don't accidentally forget to define dat
+
+dat=fullrespdat[,c("Year","nspawners0", "nspawners1", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
+dat.nonspawners.nocov=dat[dat$Year<2015,]
 rm(dat) #make sure I don't accidentally forget to define dat
 ```
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
 covnames = c("log.CHL.4.mon1to3.", "log.CHL.4.mon7to9.", "log.CHL.4.mon10to12.",
              "log.CHL.3.mon1to3.", "log.CHL.3.mon7to9.", "log.CHL.3.mon10to12.",
-             "log.CHL.5.mon1to3.", "log.CHL.5.mon7to9.", "log.CHL.5.mon10to12.")
+             "log.CHL.5.mon1to3.", "log.CHL.5.mon7to9.", "log.CHL.5.mon10to12.",
+             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", 
+             "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
+             "SST.UPW.5.mon1to3.", "SST.UPW.5.mon7to9.", 
+             "SST.UPW.5.mon10to12.", "SST.UPW.5.mon4to6.",
+             "SST.4.mon7to9.", 
+             "SST.4.mon10to12.", 
+             "SST.5.mon7to9.", 
+             "SST.5.mon10to12.")
 #set up to use consistent data
-dat=fullrespdat[,c("Year", "spawners0", "catchq4.0", "nspawners0", "nspawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
+dat=fullrespdat[,c("Year", "spawners0", "nspawners0", "nspawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
 dat.chl=dat
 if(any(diff(dat.chl$Year)!=1))

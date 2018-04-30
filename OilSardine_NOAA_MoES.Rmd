@@ -3,8 +3,8 @@ title: Influence of temperature and upwelling intensity on oil sardine (*Sardine
 author: ''
 date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
   html_document: default
 header-includes:
 - \usepackage[labelformat=empty]{caption}
@@ -58,7 +58,6 @@ As the success of commercial fishery for each season is determined by the number
 
 
 
-
 <!-- SST is known to be important in Pacific sardine -->
 [@JacobsonMacCall1995; @Checkleyetal2009; @McClatchieetal2010; @LindegrenCheckley2012; @Checkleyetal2017]
 
@@ -67,56 +66,53 @@ Remote sensing satellites can be used to detect changes in ocean physical, biolo
 -->
 
 
-Based on biological information concerning how environmental conditions affect sardine survival and recruitment and affect exposure of sardines to the coastal fishery, we develop a set of hypotheses about which remote-sensing covariates in which months should correlate with landings in specific quarters. 
+Based on biological information concerning how environmental conditions affect sardine survival and recruitment and affect exposure of sardines to the coastal fishery, we developed a set of hypotheses about which remote-sensing covariates in which months should correlate with landings in specific quarters. 
 
 ### Quarter 3 July-Sept catch correlates
 
-0-yr fish appear in catch.
+Quarter 3 is during the summer monsoon, with the peak in June and continuing at a lower level into October.  During this time, sardines move inshore from offshore and become exposed to the primarily coastal fishery.   Factors that affect inshore migration or spawning should affect the catch in quarter 3, which is primarily of mature fish although small (40mm) juveniles from the June spawning often appear befiefly in the catch during August.  The following are the major factors that are hypothesized to affect the catch in quarter 3 due to either a stronger spawning class or higher (or lower) exposure of the spawning age fish to the fishery due to higher (or lower) inshore migration.
 
-Quarter 3 is during the summer monsoon, with the peak in June and continuing at a lower level into October.  During this time, sardines move inshore from offshore and become exposed to the primarily coastal fishery.   Factors that affect inshore migration or spawning should affect the catch in quarter 3, which is primarily of mature fish.  The following are the major factors that are hypothesized to affect the catch in quarter 3 due to either a stronger spawning class or higher (or lower) exposure of the spawning age fish to the fishery due to higher (or lower) inshore migration.
+1. Precipitation low or high during either the summer monsoon (June-July) or pre-monsoon (Apr-May) is associated with low spawning.
 
+1. Low sea surface temperature is associated with delayed and limited spawning in Pacific sardines [@JacobsonMacCall1995].  The reasons for this may be behavioral as low temperature as associated with poor survival of larvae.  Larval mortality rates may be higher in colder water due to increased zooplankton predation and upwelling (associated with cold surface temperatures) advects larvae into offshore waters.
 
-* Precipitation low or high during either the summer monsoon (June-July) or pre-monsoon (Apr-May) is associated with low spawning.
+1. In addition to advection of larvae offshore, upwelling brings low oxygen water to the surface which discourages inshore migration to coastal spawning areas.  Thus due to both lower SST and lower dissolved oxygen, strong upwelling during the spawning season is expected to be negatively associated with the spawning biomass in the near-shore region.
 
-* Low sea surface temperature is associated with delayed and limited spawning in Pacific sardines [@JacobsonMacCall1995].  The reasons for this may be behavioral as low temperature as associated with poor survival of larvae.  Larval mortality rates may be higher in colder water due to increased zooplankton predation and upwelling (associated with cold surface temperatures) advects larvae into offshore waters.
+1. Salinity is also associated with spawning initiation; however we do not have long-term salinity data.
 
-* In addition to advection of larvae offshore, upwelling brings low oxygen water to the surface which discourages inshore migration to coastal spawning areas.  Thus due to both lower SST and lower dissolved oxygen, strong upwelling during the spawning season is expected to be negatively associated with the spawning biomass in the near-shore region.
-
-* Salinity is also associated with spawning initiation; however we do not have long-term salinity data.
-
-* Spawners are age 2+ fish, thus the biomass in the previous two seasons should be correlated with the biomass of spawners this year.  This should especially be the case for the biomass in quarters 4, 1 and 2 of the previous season as these were age 1-2 fish.  A stronger cohort of age 1-2 fish in the previous year should be associated with a stronger spawner class in the current year.  Note that it could also be the case that higher catch of age 1-2 fish in the previous season would be associated with lower spawners in the current year due to depletion.  However during the majority of our study period, the fishery was largely artisanal and is not thought to be sufficient to deplete the population.
-
-After spawning, during the 4th quarter of the current calendar year and the 1st and 2nd quarters of the next calendar year, the length distribution of the catch shifts to smaller fish as juveniles begin shoaling inshore (citation).   The catch during the non-spawning part of the season should be correlated with factors associated with increased juvenile shoaling and survival of eggs and larvae from previous seasons’ spawning.  The former is associated with higher exposure of the non-spawning biomass to the coastal fishery and the latter is associated with a stronger (larger) non-spawning biomass.
+1. Spawners are age 2+ fish, thus the biomass in the previous two seasons should be correlated with the biomass of spawners this year.  This should especially be the case for the biomass in quarters 4, 1 and 2 of the previous season as these were age 1-2 fish.  A stronger cohort of age 1-2 fish in the previous year should be associated with a stronger spawner class in the current year.  Note that it could also be the case that higher catch of age 1-2 fish in the previous season would be associated with lower spawners in the current year due to depletion.  However during the majority of our study period, the fishery was largely artisanal and is not thought to be sufficient to deplete the population.
 
 ### Post-summer monsoon catch correlates
 
-The post-spawning period corresponds to catch in quarter 4 of the current calendar year and quarters 1 and 2 of the next calendar year.  The main environmental covariates that should be important are those associated with egg and larval survival as these have been found to be the most important drivers of recruitment (citation) and covariates associated with shoaling and inshore migration of juvenile fish.
+After spawning, during the 4th quarter of the current calendar year and the 1st and 2nd quarters of the next calendar year, the length distribution of the catch first shifts to smaller fish as 0-year juveniles begin shoaling inshore.   The catch during the post-monsoon part of the season should be correlated with factors associated with increased survival of eggs and larvae the current and previous years.  
 
-* Sea surface temperature is associated with egg and larval survival [@JacobsonMacCall1995].
+1. Sea surface temperature is associated with egg and larval survival [@JacobsonMacCall1995].
 
-* Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  Thus the strength of upwelling during the post-spawning quarters should be associated with higher non-spawning biomass in subsequent years.  
+1. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  Thus the strength of upwelling during the post-spawning quarters should be associated with higher non-spawning biomass in subsequent years.  
 
-* Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  Thus the bloom intensity in prior years should be associated with future non-spawning biomass.  In addition, juveniles shoal in response to chlorophyll blooms (citation) and thus the near shore chlorophyll bloom intensity in the current season should be associated with higher post-spawning catches due to higher exposure of the non-spawning biomass to the coastal fishery.
+1. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  Thus the bloom intensity in prior years should be associated with future non-spawning biomass.  In addition, juveniles shoal in response to chlorophyll blooms (citation) and thus the near shore chlorophyll bloom intensity in the current season should be associated with higher post-spawning catches due to higher exposure of the non-spawning biomass to the coastal fishery.
 
-* Fish age 1-2 should be correlated with spawners in the previous two seasons, since a larger spawner class should be associated with higher recruitment.  Thus catch in quarter 3 the previous two calendar years is expected to be correlated with the catch after the summer monsoon (quarter 4 of the current calendar year with quarter 1 and 2 of the next calendar year).
+1 Abundance of 1-year and 2-year fish should be correlated with strength of the cohorts from the previous two seasons.  We do not have have direct measures of recruitment or spawners. However the catch in quarter 3 is dominated by mature fish, thus catch in quarter 3 in the previous two calendar years is expected to be correlated with the post-monsoon catch after the summer monsoon (quarter 4 of the current calendar year with quarter 1 and 2 of the next calendar year).
 
-* Because age 2 fish also appear in the catch after quarter 3, we also expect the post-spawning catch in the previous season to be correlated with the post-spawning catch in the current season.
+1. Because age 2 fish also appear in the catch after quarter 3, we also expect the post-monsoon catch in the previous season to be correlated with the post-spawning catch in the current season.
 
-# Materials and methods
+# Methods and data
 
 ## Sardine landing data
 
-Quarterly fish landing data have been collected by the Central Marine Fisheries Research Institute (CMFRI) in Kochi, India, since the early 1950s using a stratified multi-stage sample design that takes into account landing centers, number of fishing days, and boat net combinations in fishing operations. These data are used to produce the quarterly total landings estimates with a precision of ±5% (*CMFRI, 1969-1994; Bal and Rao, 1990, Srinath, 2005*). The quarterly landing data were log-transformed to stabilize the seasonal variance. 
+Quarterly fish landing data have been collected by the Central Marine Fisheries Research Institute (CMFRI) in Kochi, India, since the early 1950s using a stratified multi-stage sample design that takes into account landing centers, number of fishing days, and boat net combinations in fishing operations [@Srinathetal2005]. The quarterly landings for oil sardine landed from all gears in Kerala were obtained from CMFRI reports (1956-1984) and online database (1985-2015). [@CMFRI1969; @Pillai1982; @Jacobetal1987; @CMFRI1995; @CMFRI2016]. The quarterly landing data were log-transformed to stabilize the seasonal variance. 
 
+<!--
 *Add discussion of the composition of the fishery since the early 1950s.   Fishery largely artisanal until recently.  Add discussion of why researchers consider the catch to be an index of total biomass and that fishery is not having a large impact on the standing biomass (because fishery has been traditionally coastal and non-motorized).*
+-->
 
-## Covariate data
+## Remote-sensing data
 
-We analysed monthly composites of the following environmental data derived from satellites: Sea Surface Temperature (SST), chlorophyll-a (CHL), upwelling (UPW) and precipitation. Sea surface temperature: For 1981 to 2002, we used Pathfinder Version 5.2 product on a 4km grid, and for 2003 to 2016, we used Advanced Very-High Resolution Radiometer (AVHRR) data at a 0.1 degree spatial scale.  Chlorophyll-a, we used SeaWiFS data on a 0.1 degree spatial scale for 1981 to 2002 and MODIS data from 2003 to 2017 at 0.05° spatial scale.  The SST and CHL data were averaged across thirteen 1 degree by 1 degree boxes which roughly parallel the bathymetry (Figure `r ref("fig:studyarea")`).  The SST and CHL satellite data were retrieved from the NOAA ERDDAP server (See the Appendices for full details).  
+We analysed monthly composites of the following environmental data derived from satellites: Sea Surface Temperature (SST), chlorophyll-a (CHL), upwelling (UPW) and precipitation. Sea surface temperature: For 1981 to 2002, we used Pathfinder Version 5.2 product on a 4km grid, and for 2003 to 2016, we used Advanced Very-High Resolution Radiometer (AVHRR) data at a 0.1 degree spatial scale.  Chlorophyll-a, we used SeaWiFS data on a 0.1 degree spatial scale for 1981 to 2002 and MODIS data from 2003 to 2017 at 0.05° spatial scale.  The SST and CHL data were averaged across thirteen 1 degree by 1 degree boxes which roughly parallel the bathymetry (Figure `r ref("fig:studyarea")`).  The SST and CHL satellite data were retrieved from the NOAA ERDDAP server.  
 
 For an index of coastal upwelling, we used the sea-surface temperature differential between near shore and 3 degrees offshore as described by Naidu et al. [-@Naiduetal1999] and Smitha et al. [-@Smithaetal2008].  The index is computed as the average SST in boxes 3 degrees offshore of boxes 1-5 in Figure `r ref("fig:studyarea")` minus the average SST in boxes 1-5.  For SST, we used the remote-sensing sea-surface temperature data sets described above. This SST-based upwelling index has been validated as a more reliable metric of upwelling off the coast of Kerala compared to wind-based upwelling indices [@Smithaetal2008].  
 
-The precipitation data were downloaded from two different sources.  The first was an estimate of the monthly precipitation over Kerala from land-based gauges.  This time series is available from the start of our landing data (1956).  The second was a remote-sensing precipitation product from the NOAA Global Precipitation Climatology Project.  This provides a precipitation estimate using a global 2.5 degree grid.  We used the 2.5 by 2.5 degree box defined by latitude 8.75 to 11.25 and longitude 73.25 to 75.75 for the precipitation off the coast of Kerala.  These data are available from 1979 forward.  Full details on the precipitation data sets are available in the Appendices.  
+Precipitation data were obtained from two different sources.  The first was an estimate of the monthly precipitation (mm) over Kerala from land-based rain gauges [@KothawaleRajeevan2017].  This time series is available from the start of our landing data (1956).  The second was a remote-sensing precipitation product from the NOAA Global Precipitation Climatology Project [@Adleretal2016].  This provides estimate of precipitation over the ocean using a global 2.5 degree grid.  We used the 2.5 by 2.5 degree box defined by latitude 8.75 to 11.25 and longitude 73.25 to 75.75 for the precipitation off the coast of Kerala.  These data are available from 1979 forward [@NCEI2017].  
 
 # Explanatory models
 
@@ -152,11 +148,6 @@ For catch in the non-spawning months (Oct-Jun), sea surface temperature during t
 Chlorophyll-a density is speculated to be an important predictor of larval sardine survival  and growth.  In addition, sardines shoal in response to coastal chlorophyll blooms, which brings them in contact with the coastal fisheries.  Thus Cholorophyll-a density is assumed to be an important either covariate or driver of future or current sardine catches.  However, we had chlorophyll-a remote-sensing data only from 1998 onward. Our simplest covariate model required 5 degrees of freedom, thus we were limited in the analyses we could conduct.  In addition, the years, 1998-2014, have relatively low variability in catch sizes; the logged catch sizes during this period range from 10-11 during the spawning months and 11-12 during the nonspawning months.  Second degree polynomial models were fit (Appendix C) to the average log chlorophyll-a density in the current and prior season from quarters 3 (Jul-Sep), 4 (Oct-Dec), and 1 (Jan-Mar).  Chlorophyll-a density was not a significant predictor for the spawning catch for any of the tested combinations of current or prior season and quarter.  The only significant effect was seen for non-spawner catches using chlorophyll-a density in Oct-Dec of the current and prior season (Table `r ref("tabappC:nonspawner-model", pre="C")`).  This matches results which found that the upwelling index in Oct-Dec of the prior season was a predictor for the non-spawning months' catch.  The upwelling index and chlorophyll-a density are both indices of low-trophic level productivity.
 
 # Discussion
-
-Needs to be written.  The results make sense biologically and are supported by other studies.
-
-Discuss why precipitation did not come up.
-Implications.  Supports the use of SST and upwelling indices for forecasting.
 
 # References
 
