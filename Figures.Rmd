@@ -276,7 +276,7 @@ Define fullrespdat.
 ```
 
 ```{r fitted, echo=FALSE,fig.cap=paste("Figure",  ref("fig:fitted")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
-jig=.3
+jig=.3 #keep of the legend
 oldpar=par(mfrow=c(2,2), mar=c(4,6,1,0))
 dat=dat.spawners
 Yr1 = min(dat$Year)
@@ -301,7 +301,7 @@ legend("topright","A", bty="n")
 
 plot(m2$model[,"spawners0"],m2$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
      xlab="Log catch in spawning months", ylab="Predicted log catch\nwith upwelling")
-lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
+lines(c(xmin,xmax-jig),c(xmin,xmax-jig)) # -jig to keep off legend
 legend("topleft",paste("R2 =",round(100*summary(m2)$r.sq,digits=1)), bty="n")
 legend("topright","B", bty="n")
 
@@ -322,7 +322,7 @@ xmin=min(m0$model[,"nspawners0"],m0$fitted.values,m3$fitted.values)
 xmax=jig+max(m0$model[,"nspawners0"],m0$fitted.values,m3$fitted.values)
 plot(m0$model[,"nspawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
      xlab="Log catch in non-spawning months", ylab="Predicted log catch\nwithout covariates")
-lines(c(xmin,xmax),c(xmin,xmax-jig))
+lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
 legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1)), bty="n")
 legend("topright","C", bty="n")
 
@@ -334,3 +334,4 @@ legend("topright","D", bty="n")
 
 par(oldpar)
 ```
+
