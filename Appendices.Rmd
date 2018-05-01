@@ -183,7 +183,7 @@ par(oldpar)
 cat("\\clearpage")
 ```
 
-```{r chl.mon, echo=FALSE,fig.cap="Figure E2. Chlorophyll-a."), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+```{r chl.mon, echo=FALSE,fig.cap="Figure E2. Chlorophyll-a.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
 ### FIGURE CHL
 oldpar=par(mfrow=c(2,2), mar=c(2,5,2,0))
 for(i in 2:5){
@@ -274,7 +274,7 @@ par(oldpar)
 cat("\\clearpage")
 ```
 
-```{r rainfall.mon, echo=FALSE,fig.cap="Figure F2. Monthly precipitation measured over land via land gauges versus the precipitation measured via remote sensing over the ocean.", fig.width=6,fig.height=6,message=FALSE,warning=FALSE}
+```{r rainfall.mon.comparison, echo=FALSE,fig.cap="Figure F2. Monthly precipitation measured over land via land gauges versus the precipitation measured via remote sensing over the ocean.", fig.width=6,fig.height=6,message=FALSE,warning=FALSE}
 plot(seio_covariates_mon$Precip.Kerala, seio_covariates_mon$precip.gpcp.kerala, ylab="land precipitation",
 xlab="ocean precipitation")
 ```
