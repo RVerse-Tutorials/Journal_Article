@@ -29,14 +29,14 @@ bibliography: '`r system.file("docs", "Sardine.bib", package = "SardineForecast"
 <!-- indian oil sardine is important -->
 The Indian oil sardine (*Sardinella longiceps* Valenciennes, 1847) is one of the most commercially important fish resources along the southwest coast of India (Figure `r ref("fig:studyarea")`) and comprises ca 25% of the catch biomass [@Vivekanandanetal2003].  Landings of the Indian oilsardine are highly seasonal and peak during and after the summer monsoon period (June through September), in conjunction with the onset and early relaxation of coastal upwelling. However, the landings of this small pelagic finfish are also highly variable from year to year.  Small pelagics often exhibit high variability due to the effects of environmental conditions on survival and recruitment [@Checkleyetal2009].  In addition, the Indian oil sardine fishery is largely coastal and artisanal thus migration of fish schools in and out of the coastal zone greatly affects exposure to the fishery.
 
+<!-- review of looking at env vars -->
 Researchers have examined a variety of environmental variables for their correlation with landings of the Indian oil sardine.  Precipitation during the southwest monsoon [@MurtyEdelman1966; @AntonyRaja1969; @AntonyRaja1972; @Jayaprakash2002] and the day of the monsoon arrival [@Jayaprakash2002] have been widely examined and correlations found, but the reported effects are positive in some studies and negative in others. Precipitation is correlated with monsoon winds which trigger upwelling but may also affect salinity and act as a direct or indirect cue for spawning.  Researchers have also found correlations with various metrics of upwelling intensity during the post-monsoon period [@LonghurstWooster1990; @Madhupratapetal1994; @Jayaprakash2002; @Krishnakumaretal2008; @Thara2011] and with direct measures of productivity, such as nearshore zooplankton and phytoplankton abundance [@Hornell1910; @Nair1952; @NairSubrahmanyan1955; @Madhupratapetal1994; @Georgeetal2012].  Researchers have also found correlations with sea surface temperature (SST); SST  can affect both somatic growth rates and juvenile survival but also can cause fish to move off-shore and away from the shore-based fishery [@Annigeri1969; @PrabhuDhulkhed1970; @Pillai1991].
+In this paper, we revisit the analysis of environmental covariates that correlate with oil sardine catch using environmental convariates measured via remote-sensing.  Remote-sensing data give us a longer time-series of environmental data and over a wide spatial extent and at a daily and monthly resolution.  A better understanding of how and whether remote sensing data explains variation in seasonal catch will help us understand both how the environment affects population dynamics and how remote sensing can be used to help predict favorable and unfavorable years for landings.
 
-<!-- objective of the paper -->
-In this paper, we revisit the analysis of environmental covariates that correlate with oil sardine catch using data from 1983 to 2015 on seasonal landings and environmental conditions from remote-sensing.  Based on biological information concerning how environmental conditions in the coastal waters affect spawning density, exposure of sardines to the coastal fishery, and larval and juvenile sardine survival, we develop a set of hypotheses about which remote-sensing covariates should correlate with current or future landings.  We use generalized additive modelling of the landing data with remote-sensing covariates to test for these correlations.  
+<!-- Based on biological information concerning how environmental conditions in the coastal waters affect spawning density, exposure of sardines to the coastal fishery, and larval and juvenile sardine survival, we develop a set of hypotheses about which remote-sensing covariates should correlate with current or future landings.  We use generalized additive modelling of the landing data with remote-sensing covariates to test for these correlations.  -->
+<!-- closing is objective of the paper -->
 
-## Study area and oil sardine life history
-
-<!-- study area -->
+<!-- ## Study area and oil sardine life history -->
 Our analysis focuses on the Kerala coast (Figure `r ref("fig:studyarea")`) region of India, where the majority of the Indian oil sardines are landed and where oil sardines comprise ca. 40% of the marine fish catch [@Srinath1998; @Vivekanandanetal2003]. This area is in the Southeast Arabian Sea (SEAS), one of world’s major upwelling zones, with seasonal peaks in primary productivity driven by upwelling caused by winds during the Indian summer monsoon [@Madhupratapetal2001; @Habeebrehmanetal2008] between June and September. Within the SEAS, the coastal zone off Kerala between 9$^\circ$N to 13$^\circ$N has especially intense upwelling due to the combined effects of wind stress and remote forcing [@Smitha2010; @Smithaetal2008].  The result is a strong temperature differential between the near-shore and off-shore and high primary productivty and chlorophyll in this region [@Madhupratapetal2001;  @Habeebrehmanetal2008; @Jayarametal2010; @Smitha2010; @Raghavanetal2010; @Chauhanetal2011].  The primary productivity peaks subside after September while mesozooplankton abundances increase and remain high in the inter-monsoon period [@Madhupratapetal2001].
 
 <!-- life cycle of the oil sardine -->
@@ -54,19 +54,31 @@ Catch is reported quarterly not monthly. Along the west coast, the length compos
 As the success of commercial fishery for each season is determined by the number of juveniles recruited at the beginning of the same season, rainfall, which affects spawning success, has been used to forecast the strength of juvenile brood entering the fishery. Though earlier studies have shown that most of spawning activity occurs in the near-shore area or in the mouths of estuaries, there are observations of eggs and larvae in the shelf region even at 200m depth (citation). Also, studies from other upwelling ecosystems (citation), have shown that the planktonic stage larvae accumulate in frontal zones as well as in river plumes. Studies from Bakun (citation), Bakun and English (citation), Cury and Roy (citation) etc. explain the linkage to the atmospheric and oceanic processes based on number of hypothesis like Optimal environment window, Match-mismatch hypothesis etc. Also, the changes in the fishery in either short term or long term is explained for other similar theories such as population expansion (Mac Call's hypothesis) and the Wasp waist hypothesis.
 -->
 
+
+# Materials and Methods
+
+## Sardine landing data
+
+Quarterly fish landing data have been collected by the Central Marine Fisheries Research Institute (CMFRI) in Kochi, India, since the early 1950s using a stratified multi-stage sample design that takes into account landing centers, number of fishing days, and boat net combinations in fishing operations [@Srinathetal2005]. The quarterly landings for oil sardine landed from all gears in Kerala were obtained from CMFRI reports (1956-1984) and online database (1985-2015). [@CMFRI1969; @Pillai1982; @Jacobetal1987; @CMFRI1995; @CMFRI2016]. The quarterly landing data were log-transformed to stabilize the seasonal variance. 
+
+## Remote-sensing data
+
+We analysed monthly composites of the following environmental data derived from satellites: Sea Surface Temperature (SST), chlorophyll-a (CHL), upwelling (UPW) and precipitation. Sea surface temperature: For 1981 to 2002, we used Pathfinder Version 5.2 product on a 4km grid, and for 2003 to 2016, we used Advanced Very-High Resolution Radiometer (AVHRR) data at a 0.1 degree spatial scale.  Chlorophyll-a, we used SeaWiFS data on a 0.1 degree spatial scale for 1981 to 2002 and MODIS data from 2003 to 2017 at 0.05° spatial scale.  The SST and CHL data were averaged across thirteen 1 degree by 1 degree boxes which roughly parallel the bathymetry (Figure `r ref("fig:studyarea")`).  The SST and CHL satellite data were retrieved from the NOAA ERDDAP server.  
+
+For an index of coastal upwelling, we used the sea-surface temperature differential between near shore and 3 degrees offshore as described by Naidu et al. [-@Naiduetal1999] and Smitha et al. [-@Smithaetal2008].  The index is computed as the average SST in boxes 3 degrees offshore of boxes 1-5 in Figure `r ref("fig:studyarea")` minus the average SST in boxes 1-5.  For SST, we used the remote-sensing sea-surface temperature data sets described above. This SST-based upwelling index has been validated as a more reliable metric of upwelling off the coast of Kerala compared to wind-based upwelling indices [@Smithaetal2008].  
+
+Precipitation data were obtained from two different sources.  The first was an estimate of the monthly precipitation (mm) over Kerala from land-based rain gauges [@KothawaleRajeevan2017].  This time series is available from the start of our landing data (1956).  The second was a remote-sensing precipitation product from the NOAA Global Precipitation Climatology Project [@Adleretal2016].  This provides estimate of precipitation over the ocean using a global 2.5 degree grid.  We used the 2.5 by 2.5 degree box defined by latitude 8.75 to 11.25 and longitude 73.25 to 75.75 for the precipitation off the coast of Kerala.  These data are available from 1979 forward [@NCEI2017].  
+
 ## Hypotheses
 
+Environmental variability is known to be a key driver of population variability in small forage fish [@Bakun1996, @Curyetal2000, @Checkleyetal2017]. Based on biological information concerning how environmental conditions affect sardine survival and recruitment and affect exposure of sardines to the coastal fishery, we developed a set of hypotheses (Table `r ref("tab:spawner_model_selection")` about which remote-sensing covariates in which months should correlate with landings in specific quarters.  Our hypotheses focus mainly on two drivers: productivity driven by upwelling and ocean temperature.  We are also testing hypotheses concerning precipition as this has historically been an environmental covariate considered important for determining catch.
 
+### Upwelling
 
-<!-- SST is known to be important in Pacific sardine -->
+### Temperature
 
+### Precipitation
 
-<!--
-Remote sensing satellites can be used to detect changes in ocean physical, biological and chemical properties, such as surface temperature, winds, surface height, surface waves, rainfall and surface salinity, as well as the ecosystem and water quality changes. These tools are relevant for fisheries management (IOCCG 2009; citation?) as well as development of predictive capabilities.  Add more discussion regarding prior work/references on using satellite data to predict oil sardine catch.  Satellite chlorophyll, SST and SSH have been used to estimate sardine habitat of the west coast of the USA [@Zwolinskietal2011]. In the last few years, satellite measurements of chlorophyll have been used to predict high densities of oil sardines.  This is used a functional tool for producing forecasts for fisherman and has lead to increases in their efficiency (catch per unit effort) (citation)
--->
-
-
-Based on biological information concerning how environmental conditions affect sardine survival and recruitment and affect exposure of sardines to the coastal fishery, we developed a set of hypotheses about which remote-sensing covariates in which months should correlate with landings in specific quarters. 
 
 ### Quarter 3 July-Sept catch correlates
 
@@ -78,7 +90,9 @@ Quarter 3 is during the summer monsoon, with the peak in June and continuing at 
 
 1. In addition to advection of larvae offshore, upwelling brings low oxygen water to the surface which discourages inshore migration to coastal spawning areas.  Thus due to both lower SST and lower dissolved oxygen, strong upwelling during the spawning season is expected to be negatively associated with the spawning biomass in the near-shore region.
 
-1. Salinity is also associated with spawning initiation; however we do not have long-term salinity data.
+and small pelagics in upwelling systems such as that off the coast of SW India coast are  particular influenced by upwelling intensity [].  Upwelling drives both the productivity in these systems (sardine food) and temperature with affects survival and somatic growth.  
+
+
 
 1. Spawners are age 2+ fish, thus the biomass in the previous two seasons should be correlated with the biomass of spawners this year.  This should especially be the case for the biomass in quarters 4, 1 and 2 of the previous season as these were age 1-2 fish.  A stronger cohort of age 1-2 fish in the previous year should be associated with a stronger spawner class in the current year.  Note that it could also be the case that higher catch of age 1-2 fish in the previous season would be associated with lower spawners in the current year due to depletion.  However during the majority of our study period, the fishery was largely artisanal and is not thought to be sufficient to deplete the population.
 
@@ -96,25 +110,16 @@ After spawning, during the 4th quarter of the current calendar year and the 1st 
 
 1. Because age 2 fish also appear in the catch after quarter 3, we also expect the post-monsoon catch in the previous season to be correlated with the post-spawning catch in the current season.
 
-# Methods and data
-
-## Sardine landing data
-
-Quarterly fish landing data have been collected by the Central Marine Fisheries Research Institute (CMFRI) in Kochi, India, since the early 1950s using a stratified multi-stage sample design that takes into account landing centers, number of fishing days, and boat net combinations in fishing operations [@Srinathetal2005]. The quarterly landings for oil sardine landed from all gears in Kerala were obtained from CMFRI reports (1956-1984) and online database (1985-2015). [@CMFRI1969; @Pillai1982; @Jacobetal1987; @CMFRI1995; @CMFRI2016]. The quarterly landing data were log-transformed to stabilize the seasonal variance. 
-
 <!--
 *Add discussion of the composition of the fishery since the early 1950s.   Fishery largely artisanal until recently.  Add discussion of why researchers consider the catch to be an index of total biomass and that fishery is not having a large impact on the standing biomass (because fishery has been traditionally coastal and non-motorized).*
 -->
 
-## Remote-sensing data
+## Other
 
-We analysed monthly composites of the following environmental data derived from satellites: Sea Surface Temperature (SST), chlorophyll-a (CHL), upwelling (UPW) and precipitation. Sea surface temperature: For 1981 to 2002, we used Pathfinder Version 5.2 product on a 4km grid, and for 2003 to 2016, we used Advanced Very-High Resolution Radiometer (AVHRR) data at a 0.1 degree spatial scale.  Chlorophyll-a, we used SeaWiFS data on a 0.1 degree spatial scale for 1981 to 2002 and MODIS data from 2003 to 2017 at 0.05° spatial scale.  The SST and CHL data were averaged across thirteen 1 degree by 1 degree boxes which roughly parallel the bathymetry (Figure `r ref("fig:studyarea")`).  The SST and CHL satellite data were retrieved from the NOAA ERDDAP server.  
+1. Salinity is also associated with spawning initiation; however we do not have long-term salinity data.
 
-For an index of coastal upwelling, we used the sea-surface temperature differential between near shore and 3 degrees offshore as described by Naidu et al. [-@Naiduetal1999] and Smitha et al. [-@Smithaetal2008].  The index is computed as the average SST in boxes 3 degrees offshore of boxes 1-5 in Figure `r ref("fig:studyarea")` minus the average SST in boxes 1-5.  For SST, we used the remote-sensing sea-surface temperature data sets described above. This SST-based upwelling index has been validated as a more reliable metric of upwelling off the coast of Kerala compared to wind-based upwelling indices [@Smithaetal2008].  
 
-Precipitation data were obtained from two different sources.  The first was an estimate of the monthly precipitation (mm) over Kerala from land-based rain gauges [@KothawaleRajeevan2017].  This time series is available from the start of our landing data (1956).  The second was a remote-sensing precipitation product from the NOAA Global Precipitation Climatology Project [@Adleretal2016].  This provides estimate of precipitation over the ocean using a global 2.5 degree grid.  We used the 2.5 by 2.5 degree box defined by latitude 8.75 to 11.25 and longitude 73.25 to 75.75 for the precipitation off the coast of Kerala.  These data are available from 1979 forward [@NCEI2017].  
-
-# Explanatory models
+## Explanatory models
 
 We investigated correlations between environmental variables and sardine catch during spawning and post-spawning periods using generalized additive models [GAMs, @Wood2017].  GAMs allow one to model the effect of a covariate as a flexible non-linear function and it was known that the effects of the environmental covariates were likely to be non-linear, albeit in an unknown way.  Our approach is similar to that taken by Jacobson and MacCall [-@JacobsonMacCall1995] in a study of the effects of SST on Pacific sardine recruitment.   
 The model for catch in quarter 3 was of the form
@@ -160,6 +165,11 @@ There were three outlier years when catch were much lower than expected based on
 Discuss density-dependence.  The fact that the prior year catch had a strong explainatory value.
 
 Finish off with implications.  In California Current system, SST is used as an indicator for recruitment and is used in management of harvest.
+
+<!--
+Remote sensing satellites can be used to detect changes in ocean physical, biological and chemical properties, such as surface temperature, winds, surface height, surface waves, rainfall and surface salinity, as well as the ecosystem and water quality changes. These tools are relevant for fisheries management (IOCCG 2009; citation?) as well as development of predictive capabilities.  Add more discussion regarding prior work/references on using satellite data to predict oil sardine catch.  Satellite chlorophyll, SST and SSH have been used to estimate sardine habitat of the west coast of the USA [@Zwolinskietal2011]. In the last few years, satellite measurements of chlorophyll have been used to predict high densities of oil sardines.  This is used a functional tool for producing forecasts for fisherman and has lead to increases in their efficiency (catch per unit effort) (citation)
+-->
+
 
 # References
 

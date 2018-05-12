@@ -1,0 +1,130 @@
+---
+title: 'Table 0: Hypotheses'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
+---
+
+```{r child = 'setup.Rmd'}
+```
+```{r print-table-hyp, echo=FALSE}
+colnames(seltable)=c("Life-history stage", "Time period", "Hypothesis", "Responses", "Explanatory Variables")
+
+thecap = "Hypotheses for covariates affecting landings.  See text for details."
+
+fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
+
+DD1 = data.frame(
+  Life="Age 2+",
+  Time="Jun-Sep",
+  Hyp="HDD1.  Q3 catch is dominated by mature age 2+ fish, thus abundance of the 1-yr and 2-yr ages in the prior season should be correlated with the abundance of spawners this year.",
+  Response="Catch Q3 year t",
+  Cov="Catch Q4 year t-1 and Q1-2 year t",
+  stringsAsFactors=FALSE)
+
+DD2 = data.frame(
+  Life="Age 1-2",
+  Time="Oct-May",
+  Hyp="HDD2.  Abundance of 1-year and 2-year fish should be correlated with strength of the cohorts from the previous two seasons.  We do not have have direct measures of recruitment or spawners. However the catch in Q3 is dominated by mature fish, thus catch in Q3 in the previous two calendar years is expected to be correlated with the current season's post-monsoon catch.",
+  Response="Catch Q4 year t and Q1-2 year t+1",
+  Cov="Catch Q3 year t-1 and year t-2",
+  stringsAsFactors=FALSE)
+
+DD3 = data.frame(
+  Life="Age 2+",
+  Time="Oct-May",
+  Hyp="HDD3.  Because age 2 fish also appear in the post-monsoon catch, we also expect the post-monsoon catch in the previous season to be correlated with the post-monsoon catch in the current season.",
+  Response="Catch Q4 year t and Q1-2 year t+1",
+  Cov="Catch Q4 year t-1 and Q1-2 year t",
+  stringsAsFactors=FALSE)
+
+HS1 = data.frame(
+  Life="Spawning",
+  Time="Jun-Sep",
+  Hyp="HS1.  The onset of monsoon with heavy precipitation triggers movement of adults from offshore to more inshore spawn regions either due to changes in salinity, turbulence or noise. After spawning, spent adult migrate inshore and are exposed to the fishery.",
+  Response="Catch Q3 year t",
+  Cov="Seasonal precipitation anomaly during Jun-Jul in year t",
+  stringsAsFactors=FALSE)
+
+HS2 = data.frame(
+  Life="",
+  Time="",
+  Hyp="HS2.  The level of precipitation in pre-monsoon predicts spawning strength.",
+  Response="Catch Q3 year t",
+  Cov="Seasonal precipitation anomaly during Apr-May in year t",
+  stringsAsFactors=FALSE)
+
+HS3 = data.frame(
+  Life="",
+  Time="",
+  Hyp="HS3.  Low sea surface temperature is associated with delayed and limited spawning [@JacobsonMacCall1995] as a behavioral response by adults to avoid exposing larvae to low temperatures associated with poor survival.",
+  Response="Catch Q3 year t",
+  Cov="Average SST during Jun-Sep in year t",
+  stringsAsFactors=FALSE)
+
+HS4 = data.frame(
+  Life="",
+  Time="",
+  Hyp="HS4.  Extremely high upwelling brings poorly oxygenated water to the surface causing sardines to move offshore [@Pillaietal1991].",
+  Response="Catch Q3 year t",
+  Cov="Average upwelling index Jun-Sep, Max upwelling index Jun-Sep in year t",
+  stringsAsFactors=FALSE)
+
+HS5 = data.frame(
+  Life="",
+  Time="",
+  Hyp="HS5. Salinity changes due to precipitation or river run-off trigger spawning.",
+  Response="Catch Q3 year t",
+  Cov="Average Salinity during Jun-Sep in year t",
+  stringsAsFactors=FALSE)
+
+HL1 = data.frame(
+  Life="Larvae",
+  Time="July-Oct",
+  Effect="Catch Oct-Jun next year (1-yr), Catch Aug-Jun current year (0-yr)",
+  Hyp="HL1.  Larval mortality is higher in colder water due to low motility causing increased predation and slower somatic growth. Low SST is also associated with strong upwelling which advects larvae into offshore waters and brings poorly oxygenated water to the surface.",
+  Response="Catch Q4 year t and Q1-2 year t+1",
+  Cov="Average SST during Jun-Sep, Cum DD Jun-Sep in year t-1",
+  stringsAsFactors=FALSE)
+
+HL2 = data.frame(
+  Life="Larvae",
+  Time="",
+  Effect="",
+  Hyp="HL2. Extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore.",
+  Response="Catch Q4 year t and Q1-2 year t+1",
+  Cov="Average upwelling index Jun-Sep, max upwelling index Jun-Sep in year t-1",
+  stringsAsFactors=FALSE)
+
+HJ1 = data.frame(
+  Life="Juvenile",
+  Time="",
+  Effect="",
+  Hyp="HJ1. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  Thus the strength of upwelling during the monsoon should be associated with higher biomass in subsequent years.",
+  Response="Catch Q4 year t and Q1-2 year t+1",
+  Cov="Average upwelling index Jun-Sep, max upwelling index Jun-Sep in year t-1 and t-2",
+  stringsAsFactors=FALSE)
+
+HJ2 = data.frame(
+  Life="Juvenile",
+  Time="",
+  Effect="",
+  Hyp="HJ2. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  Chlorophyll bloom intensity in prior years should be associated with future sardine biomass.",
+  Response="Catch Q4 year t and Q1-2 year t+1",
+  Cov="Average Chl-a density Jun-Dec, Chl-a density Jun-Dec in year t-1 and t-2",
+  stringsAsFactors=FALSE)
+
+HA1 = data.frame(
+  Life="All ages",
+  Time="Mar-Apr",
+  Effect="",
+  Hyp="HA1. During the Mar-Apr, the sea temperatures are high and sardines migrate offshore to avoid high temperatures.",
+  Response="Catch Q2 year t",
+  Cov="Average SST Q2 year t, max SST Q2 year t",
+  stringsAsFactors=FALSE)
+
+hyptable = rbind(DD1,DD2,DD3, HS1,HS2,HS3,HS4,HS5, HL1,HL2, HJ1,HJ2, HA1)
+kable(hyptable, align="lccccc", caption=fullcap)
+```

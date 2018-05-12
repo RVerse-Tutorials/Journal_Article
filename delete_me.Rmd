@@ -1,0 +1,35 @@
+---
+title: Influence of temperature and upwelling intensity on oil sardine (*Sardinella longiceps*) landings along the southwest coast of India
+author: ''
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+header-includes:
+- \usepackage[labelformat=empty]{caption}
+- \usepackage{setspace}
+- \onehalfspacing
+- \usepackage{etoolbox}
+- \AtBeginEnvironment{tabular}{\singlespacing}
+- \setlength\parindent{24pt}
+- \usepackage{mathptmx}
+- \usepackage[margin=1in]{geometry}
+- \usepackage[fontsize=12.5pt]{scrextend}
+csl: '`r system.file("docs", "ecology.csl", package = "SardineForecast")`'
+bibliography: '`r system.file("docs", "Sardine.bib", package = "SardineForecast")`'
+---
+
+```{r child = 'setup.Rmd'}
+#Generic setup code common across all Rmds
+```
+
+# Introduction
+
+<!-- indian oil sardine is important -->
+The Indian oil sardine (*Sardinella longiceps* Valenciennes, 1847) is one of the most commercially important fish resources along the southwest coast of India (Figure `r ref("fig:studyarea")`) and comprises ca 25% of the catch biomass [@Adleretal2016]
+
+
+# References
+
+<div id="refs"></div>
