@@ -90,8 +90,6 @@ for(i in colnames(respdat)){
   respdat[[name]] = c(NA,NA,respdat[[i]][1:(dim(respdat)[1]-2)])
 }
 respdat$Year=oilsardine_qtr$Year[oilsardine_qtr$Qtr==Qtr]
-respdat$spawner0mnspawner1=respdat$spawner0-respdat$nspawner1
-respdat$nspawner0mnspawner1=respdat$nspawner0-respdat$nspawner1
 
 fullrespdat = respdat
 ```
