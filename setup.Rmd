@@ -26,6 +26,11 @@ respdat=data.frame(
   )
 catch0=filter(oilsardine_qtr[[reg]],c(1,1,1,1),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
 respdat$Catch0 = c(catch0,NA)
+CatchWin=filter(oilsardine_qtr[[reg]],c(0,1,1,0),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
+respdat$CatchWin0 = c(CatchWin,NA)
+CatchSum=filter(oilsardine_qtr[[reg]],c(1,0,0,1),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
+respdat$CatchSum0 = c(CatchSum,NA)
+
 #add Catch - spawners
 respdat$nspawners0 = respdat$Catch0 - respdat$spawners0
 
@@ -135,7 +140,10 @@ covnames = c("log.CHL.4.mon1to3.", "log.CHL.4.mon7to9.", "log.CHL.4.mon10to12.",
              "SST.5.mon7to9.", 
              "SST.5.mon10to12.")
 #set up to use consistent data
-dat=fullrespdat[,c("Year", "spawners0", "nspawners0", "nspawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
+dat=fullrespdat[,c("Year", "spawners0", "nspawners0",
+                   "nspawners1", "spawners2",
+                   "CatchWin0", "CatchWin1", "CatchWin2",
+                   paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
 dat.chl=dat
 if(any(diff(dat.chl$Year)!=1))
