@@ -1,0 +1,249 @@
+---
+title: 'Table 1: 3 Catch Model'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
+---
+
+```{r child = 'setup.Rmd'}
+```
+
+```{r seltable1, echo=FALSE}
+respdat = fullrespdat[which(fullrespdat$Year==1982):which(fullrespdat$Year==2014),]
+ # respdat$Catch0 = respdat$CatchWin0
+ # respdat$Catch1 = respdat$CatchWin1
+ # respdat$Catch2 = respdat$CatchWin2
+ respdat$Catch0 = respdat$nspawners0
+ respdat$Catch1 = respdat$nspawners1
+ respdat$Catch2 = respdat$nspawners2
+ # respdat$Catch0 = respdat$CatchSum0
+ # respdat$Catch1 = respdat$CatchSum1
+ # respdat$Catch2 = respdat$CatchSum2
+#naive model error
+NE=mean(abs(respdat$Catch0-respdat$Catch1))
+
+xape = function(x){
+  round(max(abs(100*residuals(x)/respdat$Catch0)),digits=1)
+}
+mape = function(x){
+  round(median(abs(100*residuals(x)/respdat$Catch0)),digits=1)
+}
+mase = function(x){
+  round(mean(abs(residuals(get(mod))))/NE,digits=3)
+}
+
+#set up table
+seltable = data.frame(
+  Model=paste("Naive Model ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MAPE="",
+  XAPE="",
+  Adj.R2="", F="", p.value="", 
+  AIC="", stringsAsFactors=FALSE)
+
+mne = lm(Catch0 ~ -1 + offset(Catch1), data=respdat)
+
+#naive model
+mod="mne"
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$ln(S_t)$ = $ln(S_{t-1})$ + $\\epsilon$", 
+  Residual.df=round(aa$df[2],digits=1), 
+  MAPE=mape(get(mod)),
+  XAPE=xape(get(mod)),
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="&nbsp;", 
+  Residual.df="&nbsp;", 
+  MAPE="&nbsp;", 
+  XAPE="&nbsp;",
+  Adj.R2="",
+  F="&nbsp;",
+  p.value="&nbsp;", 
+  AIC="", stringsAsFactors=FALSE)
+tmp2 = data.frame(
+  Model="AR-1 Model", 
+  Residual.df="", 
+  MAPE="",
+  XAPE="",
+  Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+seltable=rbind(seltable,tmp1,tmp2)
+
+ar1 = lm(Catch0 ~ Catch1, data=respdat)
+
+#naive model
+mod="ar1"
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$ln(S_t)$ = $\\alpha$ + $\\beta ln(S_{t-1})$ + $\\epsilon$", 
+  Residual.df=round(aa$df[2],digits=1), 
+  MAPE=mape(get(mod)),
+  XAPE=xape(get(mod)),
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="&nbsp;", 
+  Residual.df="&nbsp;", 
+  MAPE="&nbsp;",
+  XAPE="&nbsp;",
+  Adj.R2="",
+  F="&nbsp;",
+  p.value="&nbsp;", 
+  AIC="", stringsAsFactors=FALSE)
+tmp2 = data.frame(
+  Model="Time dependency test", 
+  Residual.df="", 
+  MAPE="",
+  XAPE="",
+  Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m0 = gam(Catch0 ~ Catch1 + Catch2, data=respdat)
+m1 = gam(Catch0 ~ offset(Catch1), data=m0$model)
+m2 = gam(Catch0 ~ Catch1, data=m0$model)
+m3 = gam(Catch0 ~ Catch1 + Catch2, data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#simple random walk model
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $ln(N_{t-1})$ + $\\epsilon$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MAPE=mape(get(mod)),
+  XAPE=xape(get(mod)),
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+#linear ln Catch1
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MAPE=mape(get(mod)),
+  XAPE=xape(get(mod)),
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), 
+  p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+#linear ln Catch1 + ln Catch2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha$ + $\\beta_1 ln(N_{t-1})$ + $\\beta_2 ln(N_{t-2})$ + $\\epsilon$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MAPE=mape(get(mod)),
+  XAPE=xape(get(mod)),
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), 
+  p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="&nbsp;", 
+  Residual.df="&nbsp;", 
+  MAPE="&nbsp;",
+  XAPE="&nbsp;",
+  Adj.R2="",
+  F="&nbsp;",
+  p.value="&nbsp;", 
+  AIC="")
+tmp2 = data.frame(
+  Model="Linearity test", 
+  Residual.df="", 
+  MAPE="",
+  XAPE="",
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+m0 = gam(Catch0 ~ Catch1 + Catch2, data=respdat)
+m1 = gam(Catch0 ~ Catch1, data=m0$model)
+m2 = gam(Catch0 ~ s(Catch1, sp=0.6), data=m0$model)
+m3 = gam(Catch0 ~ s(Catch1, sp=0.6)+s(Catch2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MAPE=mape(get(mod)),
+  XAPE=xape(get(mod)),
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+#non-linear ln Catch1
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+    Model="2. $ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon$", 
+    Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+    MAPE=mape(get(mod)),
+    XAPE=xape(get(mod)),
+    Adj.R2=100*round(aa$r.sq, digits=3), 
+    F=round(a$F[i],digits=2), 
+    p.value=round(a[["Pr(>F)"]][i], digits=3), 
+    AIC=round(AIC(get(mod)), digits=2)
+    )
+seltable=rbind(seltable,tmp1)
+
+#non-linear ln Catch1 + ln Catch2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(ln(N_{t-2}))$ + $\\epsilon$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MAPE=mape(get(mod)),
+  XAPE=xape(get(mod)),
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), 
+  p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+```
+
+```{r print-table1, echo=FALSE}
+colnames(seltable)=c("Model", "Residual df", "MAPE", "XAPE", "Adj.R2", "F", "p value", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}","MAPE", "XAPE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
+
+thecap = "Model selection tests of time-dependency and linearity for the $S_t$ model using F-tests of nested models fit to log landings data.  $S_t$ is the catch during Qtr 3 (Jul-Sep) of season $t$. $N_{t-1}$ is the catch in the prior sardine season during the post-monsoon period (Oct-Jun, of the previous sardine season). $N_{t-2}$ is the same for two seasons prior.  $s()$ is a non-linear function of the response variable."
+
+fullcap = paste("Table ", ref("tab:spawner_model_selection"), ". ", thecap, sep="")
+
+kable(seltable, align="lccccc", caption=fullcap)
+```
