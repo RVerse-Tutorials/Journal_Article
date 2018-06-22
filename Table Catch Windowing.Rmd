@@ -11,10 +11,10 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```
 
 ```{r seltable1, echo=FALSE}
-window = 20
+window = 25
 respdat = fullrespdat[which(fullrespdat$Year==1956):which(fullrespdat$Year==2016),]
-yr1 = fullrespdata$Year[1]
-yr2 = max(fullrespdata$Year)-window
+yr1 = respdat$Year[1]
+yr2 = max(respdat$Year)-window
  # respdat$Catch0 = respdat$CatchWin0
  # respdat$Catch1 = respdat$CatchWin1
  # respdat$Catch2 = respdat$CatchWin2
@@ -44,18 +44,20 @@ seltable = data.frame(
   MAPE="",
   XAPE="",
   Adj.R2="", F="", p.value="", 
-  AIC="", stringsAsFactors=FALSE)
+  AIC="", stringsAsFactors=FALSE
+  )
 
-for(t in y1:y2){
+for(t in yr1:yr2){
   w1 = t; w2 = t+window-1
   dat=respdat[which(respdat$Year==w1):which(respdat$Year==w2),]
   m0 = gam(Catch0 ~ Catch1 + Catch2, data=dat)
-  mne = lm(Catch0 ~ -1 + offset(Catch1), data=m0$model)
-  ar1 = lm(Catch0 ~ offset(Catch1), data=m0$model)
-  l1 = gam(Catch0 ~ Catch1, data=m0$model)
-  l2 = gam(Catch0 ~ Catch1 + Catch2, data=m0$model)
-  g1 = gam(Catch0 ~ s(Catch1, sp=0.6), data=m0$model)
-  g2 = gam(Catch0 ~ s(Catch1, sp=0.6)+s(Catch2, sp=0.6), data=m0$model)
+  mod = list()
+  mod[[1]] = lm(Catch0 ~ -1 + offset(Catch1), data=m0$model)
+  mod[[2]]  = lm(Catch0 ~ offset(Catch1), data=m0$model)
+  mod[[3]] = gam(Catch0 ~ Catch1, data=m0$model)
+  mod[[4]]  = gam(Catch0 ~ Catch1 + Catch2, data=m0$model)
+  mod[[5]]  = gam(Catch0 ~ s(Catch1, sp=0.6), data=m0$model)
+  mod[[6]]  = gam(Catch0 ~ s(Catch1, sp=0.6)+s(Catch2, sp=0.6), data=m0$model)
 }
 #naive model
 mod="mne"
