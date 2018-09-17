@@ -26,7 +26,7 @@ Install SardineForecast and rmarkdown from GitHub.  While you can install rmarkd
         install_github("eeholmes/SardineForecast")
         install_github("rstudio/rmarkdown")
 
-Now you can run the Rmd files for the paper.  If the RStudio complains that it cannot make a pdf, then click the little arrow next to the 'knitr' button at top (in RStudio) and you will see 'Knit to Word'.  Click that.
+This requires pandoc with pandoc-citeproc installed.  That should come by default but if you get a pandoc error, try installing from http://pandoc.org/installing.html. Now you can run the Rmd files for the paper.  If the RStudio complains that it cannot make a pdf, then click the little arrow next to the 'knitr' button at top (in RStudio) and you will see 'Knit to Word'.  Click that.
 
 -   Open OilSardine\_NOAA\_MoES.Rmd and knit to make the main paper. To knit, click the 'knit' button in the top navbar in RStudio.  This will use the Rmd files for the tables and insert in the main document. The citations bib file is in the SardineForecast package.
 
