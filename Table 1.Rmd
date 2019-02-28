@@ -41,12 +41,12 @@ seltable=rbind(seltable,tmp1)
 
 ## Space
 tmp1 = data.frame(
-  Model="&nbsp;", 
-  Residual.df="&nbsp;", 
-  MASE="&nbsp;", 
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
   Adj.R2="",
-  F="&nbsp;",
-  p.value="&nbsp;", 
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
   AIC="", stringsAsFactors=FALSE)
 tmp2 = data.frame(
   Model="AR-1 Model", 
@@ -73,12 +73,12 @@ seltable=rbind(seltable,tmp1)
 
 ## Space
 tmp1 = data.frame(
-  Model="&nbsp;", 
-  Residual.df="&nbsp;", 
-  MASE="&nbsp;", 
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
   Adj.R2="",
-  F="&nbsp;",
-  p.value="&nbsp;", 
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
   AIC="", stringsAsFactors=FALSE)
 tmp2 = data.frame(
   Model="Time dependency test", 
@@ -158,12 +158,12 @@ seltable=rbind(seltable,tmp1)
 
 ## Space
 tmp1 = data.frame(
-  Model="&nbsp;", 
-  Residual.df="&nbsp;", 
-  MASE="&nbsp;", 
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
   Adj.R2="",
-  F="&nbsp;",
-  p.value="&nbsp;", 
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
   AIC="")
 tmp2 = data.frame(
   Model="Linearity test", 
@@ -251,5 +251,5 @@ thecap = "Model selection tests of time-dependency and linearity for the $S_t$ m
 
 fullcap = paste("Table ", ref("tab:spawner_model_selection"), ". ", thecap, sep="")
 
-kable(seltable, align="lccccc", caption=fullcap)
+kable(seltable, align="lccccc", caption=fullcap, escape=FALSE)
 ```

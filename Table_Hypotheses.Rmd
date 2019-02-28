@@ -1,7 +1,7 @@
 ---
-title: 'Table 0: Hypotheses'
 output:
-  pdf_document: default
+  pdf_document: 
+    keep_tex: true
   html_document: default
   word_document: default
 header-includes: \usepackage[labelformat=empty]{caption}
@@ -9,7 +9,8 @@ header-includes: \usepackage[labelformat=empty]{caption}
 
 ```{r child = 'setup.Rmd'}
 ```
-```{r print-table-hyp, echo=FALSE}
+
+```{r print-table-hyp, echo=FALSE, warning=FALSE}
 
 thecap = "Hypotheses for covariates affecting landings.  See text for details."
 
@@ -26,7 +27,7 @@ DD1 = data.frame(
 DD2 = data.frame(
   Life="Age 1-2",
   Time="Oct-May",
-  Hyp="HDD2.  Abundance of 1-year and 2-year fish should be correlated with strength of the cohorts from the previous two seasons.  We do not have have direct measures of recruitment or spawners. However the catch in Q3 is dominated by mature fish, thus catch in Q3 in the previous two calendar years is expected to be correlated with the current season's post-monsoon catch.",
+  Hyp="HDD2.  Abundance of 1-yr and 2-yr fish should be correlated with strength of the cohorts from the previous two seasons.  The catch in Q3 is dominated by mature fish, thus catch in Q3 in the prior two years is expected to be correlated with post-monsoon catch.",
   Response="Catch Q4 year t and Q1-2 year t+1",
   Cov="Catch Q3 year t-1 and year t-2",
   stringsAsFactors=FALSE)
@@ -40,9 +41,9 @@ DD3 = data.frame(
   stringsAsFactors=FALSE)
 
 HS1 = data.frame(
-  Life="Spawning",
+  Life="Spawn",
   Time="Jun-Sep",
-  Hyp="HS1.  The onset of monsoon with heavy precipitation triggers movement of adults from offshore to more inshore spawn regions either due to changes in salinity, turbulence or noise. After spawning, spent adult migrate inshore and are exposed to the fishery.",
+  Hyp="HS1.  The onset of monsoon precipitation triggers movement of adults from offshore to spawning areas due to changes in salinity, turbulence or noise. Spent adults migrate inshore and are exposed to the fishery.",
   Response="Catch Q3 year t",
   Cov="Seasonal precipitation anomaly during Jun-Jul in year t",
   stringsAsFactors=FALSE)
@@ -58,7 +59,7 @@ HS2 = data.frame(
 HS3 = data.frame(
   Life="",
   Time="",
-  Hyp="HS3.  Low sea surface temperature is associated with delayed and limited spawning [@JacobsonMacCall1995] as a behavioral response by adults to avoid exposing larvae to low temperatures associated with poor survival.",
+  Hyp="HS3.  Low SST is associated with delayed and limited spawning [@JacobsonMacCall1995] as a behavioral response by adults to avoid exposing larvae to low temperatures associated with poor survival.",
   Response="Catch Q3 year t",
   Cov="Average SST during Jun-Sep in year t",
   stringsAsFactors=FALSE)
@@ -74,7 +75,7 @@ HS4 = data.frame(
 HS5 = data.frame(
   Life="",
   Time="",
-  Hyp="HS5. Salinity changes due to precipitation or river run-off trigger spawning.",
+  Hyp="HS5. Salinity changes due to precipitation or river run-off trigger spawning.  After spawning, spent adult move to inshore waters and are exposed to fishery.",
   Response="Catch Q3 year t",
   Cov="Average Salinity during Jun-Sep in year t",
   stringsAsFactors=FALSE)
@@ -82,7 +83,7 @@ HS5 = data.frame(
 HL1 = data.frame(
   Life="Larvae",
   Time="Jul-Oct",
-  Hyp="HL1.  Larval mortality is higher in colder water due to low motility causing increased predation and slower somatic growth. Low SST is also associated with strong upwelling which advects larvae into offshore waters and brings poorly oxygenated water to the surface.",
+  Hyp="HL1.  Larval mortality is higher in colder water due to low motility causing increased predation and slower somatic growth. Low SST is also associated with strong upwelling which advects larvae into offshore waters.",
   Response="Catch Q4 year t and Q1-2 year t+1",
   Cov="Average SST during Jun-Sep, Cum DD Jun-Sep in year t-1",
   stringsAsFactors=FALSE)
@@ -92,35 +93,63 @@ HL2 = data.frame(
   Time="",
   Hyp="HL2. Extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore.",
   Response="Catch Q4 year t and Q1-2 year t+1",
-  Cov="Average upwelling index Jun-Sep, max upwelling index Jun-Sep in year t-1",
+  Cov="Ave. upwelling index Jun-Sep, max upwelling index Jun-Sep in year t-1",
   stringsAsFactors=FALSE)
 
 HJ1 = data.frame(
-  Life="Juvenile",
+  Life="Juv.",
   Time="",
   Hyp="HJ1. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  Thus the strength of upwelling during the monsoon should be associated with higher biomass in subsequent years.",
   Response="Catch Q4 year t and Q1-2 year t+1",
-  Cov="Average upwelling index Jun-Sep, max upwelling index Jun-Sep in year t-1 and t-2",
+  Cov="Ave. upwelling index Jun-Sep, max upwelling index Jun-Sep in year t-1 and t-2",
   stringsAsFactors=FALSE)
 
 HJ2 = data.frame(
-  Life="Juvenile",
+  Life="Juv.",
   Time="",
-  Hyp="HJ2. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  Chlorophyll bloom intensity in prior years should be associated with future sardine biomass.",
+  Hyp="HJ2. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  Bloom intensity in prior years should be associated with future sardine biomass.",
   Response="Catch Q4 year t and Q1-2 year t+1",
-  Cov="Average Chl-a density Jun-Dec, Chl-a density Jun-Dec in year t-1 and t-2",
+  Cov="Ave. Chl-a density Jun-Dec, Chl-a density Jun-Dec in year t-1 and t-2",
   stringsAsFactors=FALSE)
 
 HA1 = data.frame(
   Life="All ages",
   Time="Mar-Apr",
-  Hyp="HA1. During the Mar-Apr, the sea temperatures are high and sardines migrate offshore to avoid high temperatures.",
+  Hyp="HA1. During the Mar-Apr, the sea temperatures are high and sardines migrate offshore to avoid high temp.",
   Response="Catch Q2 year t",
-  Cov="Average SST Q2 year t, max SST Q2 year t",
+  Cov="Ave. SST Q2 year t, max SST Q2 year t",
   stringsAsFactors=FALSE)
 
-hyptable = rbind(DD1,DD2,DD3, HS1,HS2,HS3,HS4,HS5, HL1,HL2, HJ1,HJ2, HA1)
-colnames(hyptable)=c("Life-history stage", "Time period", "Hypothesis", "Responses", "Explanatory variables")
+hyptable = rbind(DD1,DD2,DD3, HS1,HS2,HS3,HS4,HS5)
+colnames(hyptable)=c("Stage", "Time", "Hypothesis", "Responses", "Covariates")
 
-kable(hyptable, align="lccccc", caption=fullcap)
+kable(hyptable, "latex", caption=fullcap) %>%
+  kableExtra::kable_styling(full_width=FALSE) %>%
+  kableExtra::column_spec(3, width="8.5cm") %>%
+  kableExtra::column_spec(1, width="1cm") %>%
+  kableExtra::column_spec(2, width=".5cm") %>%
+  kableExtra::column_spec(4, width="2cm") %>%
+  kableExtra::column_spec(5, width="3cm")
+```
+
+#
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r}
+thecap = "Continued."
+
+fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
+hyptable = rbind(HL1,HL2, HJ1,HJ2, HA1)
+colnames(hyptable)=c("Stage", "Time", "Hypothesis", "Responses", "Covariates")
+
+kable(hyptable, "latex", caption=fullcap) %>%
+  kableExtra::kable_styling(full_width=FALSE) %>%
+  kableExtra::column_spec(3, width="8.5cm") %>%
+  kableExtra::column_spec(1, width="1cm") %>%
+  kableExtra::column_spec(2, width=".5cm") %>%
+  kableExtra::column_spec(4, width="2cm") %>%
+  kableExtra::column_spec(5, width="3cm")
 ```

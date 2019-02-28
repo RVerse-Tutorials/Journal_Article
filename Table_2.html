@@ -123,81 +123,169 @@ $(document).ready(function () {
 
 
 <table>
-<caption>Table 1. Model selection tests for the <span class="math inline">\(N_t\)</span> model using AIC for models fit to log landings data. <span class="math inline">\(S_t\)</span> is the catch during the spawning season. <span class="math inline">\(N_t\)</span> is the catch during the non-spawning period (Qtrs 4, 1 and 2: Oct-Jun) of season <span class="math inline">\(t\)</span> (Jul-Jun). <span class="math inline">\(S_{t-1}\)</span> and <span class="math inline">\(N_{t-1}\)</span> are the catch during the prior sardine season during and after the spawning period respectively. <span class="math inline">\(S_{t-2}\)</span> and <span class="math inline">\(N_{t-2}\)</span> are the same for two seasons prior.</caption>
+<caption>
+Table 1. Model selection tests for the <span class="math inline">\(N_t\)</span> model using AIC for models fit to log landings data. <span class="math inline">\(S_t\)</span> is the catch during the spawning season. <span class="math inline">\(N_t\)</span> is the catch during the non-spawning period (Qtrs 4, 1 and 2: Oct-Jun) of season <span class="math inline">\(t\)</span> (Jul-Jun). <span class="math inline">\(S_{t-1}\)</span> and <span class="math inline">\(N_{t-1}\)</span> are the catch during the prior sardine season during and after the spawning period respectively. <span class="math inline">\(S_{t-2}\)</span> and <span class="math inline">\(N_{t-2}\)</span> are the same for two seasons prior.
+</caption>
 <thead>
-<tr class="header">
-<th align="left">Model</th>
-<th align="center">Residual df</th>
-<th align="center">Residual deviance</th>
-<th align="center">F</th>
-<th align="center">p value</th>
-<th align="center">AIC</th>
+<tr>
+<th style="text-align:left;">
+Model
+</th>
+<th style="text-align:center;">
+Residual df
+</th>
+<th style="text-align:center;">
+Residual deviance
+</th>
+<th style="text-align:center;">
+F
+</th>
+<th style="text-align:center;">
+p value
+</th>
+<th style="text-align:center;">
+AIC
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left"><span class="math inline">\(ln(N_t)\)</span> = <span class="math inline">\(\alpha\)</span> + <span class="math inline">\(\beta ln(N_{t-1})\)</span> + <span class="math inline">\(\epsilon\)</span></td>
-<td align="center">31</td>
-<td align="center">27.42</td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center">93.54</td>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(ln(N_t)\)</span> = <span class="math inline">\(\alpha\)</span> + <span class="math inline">\(\beta ln(N_{t-1})\)</span> + <span class="math inline">\(\epsilon\)</span>
+</td>
+<td style="text-align:center;">
+31
+</td>
+<td style="text-align:center;">
+27.42
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+93.54
+</td>
 </tr>
-<tr class="even">
-<td align="left">   (<span class="math inline">\(R^2 adj\)</span> = 39%, Var(<span class="math inline">\(\epsilon\)</span>) = 0.88)</td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
+<tr>
+<td style="text-align:left;">
+3em (<span class="math inline">\(R^2 adj\)</span> = 39<span class="math inline">\(\%\)</span>, Var(<span class="math inline">\(\epsilon\)</span>) = 0.88)
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
 </tr>
-<tr class="odd">
-<td align="left"><span class="math inline">\(ln(N_t)\)</span> = <span class="math inline">\(\alpha\)</span> + <span class="math inline">\(s(ln(N_{t-1}))\)</span> + <span class="math inline">\(\epsilon\)</span></td>
-<td align="center">29.5</td>
-<td align="center">23.04</td>
-<td align="center">5.2</td>
-<td align="center">0.02</td>
-<td align="center">89.79</td>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(ln(N_t)\)</span> = <span class="math inline">\(\alpha\)</span> + <span class="math inline">\(s(ln(N_{t-1}))\)</span> + <span class="math inline">\(\epsilon\)</span>
+</td>
+<td style="text-align:center;">
+29.5
+</td>
+<td style="text-align:center;">
+23.04
+</td>
+<td style="text-align:center;">
+5.2
+</td>
+<td style="text-align:center;">
+0.02
+</td>
+<td style="text-align:center;">
+89.79
+</td>
 </tr>
-<tr class="even">
-<td align="left">   (<span class="math inline">\(R^2 adj\)</span> = 47%, Var(<span class="math inline">\(\epsilon\)</span>) = 0.77)</td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
+<tr>
+<td style="text-align:left;">
+3em (<span class="math inline">\(R^2 adj\)</span> = 47<span class="math inline">\(\%\)</span>, Var(<span class="math inline">\(\epsilon\)</span>) = 0.77)
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
 </tr>
-<tr class="odd">
-<td align="left"><span class="math inline">\(ln(N_t)\)</span> = <span class="math inline">\(\alpha\)</span> + <span class="math inline">\(s_1(ln(N_{t-1}))\)</span> + <span class="math inline">\(s_2(ln(N_{t-2}))\)</span> + <span class="math inline">\(\epsilon\)</span></td>
-<td align="center">27.2</td>
-<td align="center">19.95</td>
-<td align="center">2.28</td>
-<td align="center">0.115</td>
-<td align="center">88.81</td>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(ln(N_t)\)</span> = <span class="math inline">\(\alpha\)</span> + <span class="math inline">\(s_1(ln(N_{t-1}))\)</span> + <span class="math inline">\(s_2(ln(N_{t-2}))\)</span> + <span class="math inline">\(\epsilon\)</span>
+</td>
+<td style="text-align:center;">
+27.2
+</td>
+<td style="text-align:center;">
+19.95
+</td>
+<td style="text-align:center;">
+2.28
+</td>
+<td style="text-align:center;">
+0.115
+</td>
+<td style="text-align:center;">
+88.81
+</td>
 </tr>
-<tr class="even">
-<td align="left">   (<span class="math inline">\(R^2 adj\)</span> = 51%, Var(<span class="math inline">\(\epsilon\)</span>) = 0.71)</td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
+<tr>
+<td style="text-align:left;">
+3em (<span class="math inline">\(R^2 adj\)</span> = 51<span class="math inline">\(\%\)</span>, Var(<span class="math inline">\(\epsilon\)</span>) = 0.71)
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
 </tr>
-<tr class="odd">
-<td align="left"><span class="math inline">\(ln(N_t)\)</span> = <span class="math inline">\(\alpha\)</span> + <span class="math inline">\(s_1(ln(N_{t-1}))\)</span> + <span class="math inline">\(s_2(ln(S_{t-2}))\)</span> + <span class="math inline">\(\epsilon\)</span></td>
-<td align="center">26.5</td>
-<td align="center">15.97</td>
-<td align="center">10</td>
-<td align="center">0.008</td>
-<td align="center">82.62</td>
+<tr>
+<td style="text-align:left;">
+<span class="math inline">\(ln(N_t)\)</span> = <span class="math inline">\(\alpha\)</span> + <span class="math inline">\(s_1(ln(N_{t-1}))\)</span> + <span class="math inline">\(s_2(ln(S_{t-2}))\)</span> + <span class="math inline">\(\epsilon\)</span>
+</td>
+<td style="text-align:center;">
+26.5
+</td>
+<td style="text-align:center;">
+15.97
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+0.008
+</td>
+<td style="text-align:center;">
+82.62
+</td>
 </tr>
-<tr class="even">
-<td align="left">   (<span class="math inline">\(R^2 adj\)</span> = 60%, Var(<span class="math inline">\(\epsilon\)</span>) = 0.58)</td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
-<td align="center"></td>
+<tr>
+<td style="text-align:left;">
+3em (<span class="math inline">\(R^2 adj\)</span> = 60<span class="math inline">\(\%\)</span>, Var(<span class="math inline">\(\epsilon\)</span>) = 0.58)
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
 </tr>
 </tbody>
 </table>

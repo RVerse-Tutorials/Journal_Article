@@ -54,20 +54,20 @@ seltable=rbind(tmp1,tmp2,tmp3)
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="I-M0: $ln(S_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2), stringsAsFactors=FALSE)
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+tmp2=data.frame(Model=paste("\\kern 3em($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "$\\%$, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="II: $ln(S_t) = M0 + s(V_t)$", 
                 Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+tmp2=data.frame(Model=paste("\\kern 3em($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "$\\%$, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="III: $ln(S_t) = M0 + s(V_t) + s(W_{t-1})$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+tmp2=data.frame(Model=paste("\\kern 3em($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "$\\%$, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
@@ -77,11 +77,11 @@ a=anova(m1,m2, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="II: $ln(S_t) = M0 + s(W_{t-1})$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+tmp2=data.frame(Model=paste("\\kern 3em($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "$\\%$, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 ## Space
-tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="", stringsAsFactors = FALSE)
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", Residual.dev="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="", stringsAsFactors = FALSE)
 seltable=rbind(seltable,tmp1)
 
 dat=dat.nonspawners
@@ -105,20 +105,20 @@ seltable=rbind(seltable,tmp1,tmp2,tmp3)
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="I-M1: $ln(N_t) = \\alpha + s(ln(N_{t-1})) + s(ln(S_{t-2})) + \\epsilon$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2), stringsAsFactors=FALSE)
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+tmp2=data.frame(Model=paste("\\kern 3em($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "$\\%$, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="II: $ln(N_t) = M1 + s(V_t)$", 
                 Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+tmp2=data.frame(Model=paste("\\kern 3em($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "$\\%$, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="III: $ln(N_t) = M1 + s(V_t) + \\beta W_{t-1}$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+tmp2=data.frame(Model=paste("\\kern 3em($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "$\\%$, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
@@ -128,7 +128,7 @@ a=anova(m1,m2, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(Model="II: $ln(N_t) = M1 + s(W_{t-1})$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
+tmp2=data.frame(Model=paste("\\kern 3em($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "$\\%$, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value ="", AIC="")
 seltable=rbind(seltable,tmp1,tmp2)
 ```
 
@@ -139,5 +139,5 @@ if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\sho
 
 thecap=paste("Top covariates for the spawner ($S_t$) and non-spawner ($N_t$) models. The models are nested; the roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M0 or M1) at top.  The full set of covariate models tested are given in Appendix B. The fitted versus observed catches from the covariate models are shown in Figure ", ref("fig:fitted"), ".", sep="")
 fullcap=paste("Table ", ref("tab:covariate-models"), ". ", thecap, sep="")
-kable(seltable, align="lccccc", caption=fullcap)
+kable(seltable, align="lccccc", caption=fullcap, escape=FALSE)
 ```

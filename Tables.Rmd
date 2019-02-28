@@ -2,8 +2,8 @@
 title: "Tables"
 output:
   pdf_document: default
-  html_document: default
   word_document: default
+  html_document: default
 header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
@@ -11,7 +11,7 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```
 
 
-```{r child = 'Table_Hypotheses.Rmd'}
+```{r child = 'Table_Hypotheses.tex'}
 ```
 
 #
@@ -19,7 +19,6 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
-
 
 ```{r child = 'Table 1.Rmd'}
 ```
@@ -40,4 +39,9 @@ cat("\\clearpage")
 ```
 
 ```{r child = 'Table 3.Rmd'}
+```
+
+
+```{r, include=FALSE}
+library(kableExtra)
 ```

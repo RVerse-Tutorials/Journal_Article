@@ -3,8 +3,8 @@ title: Influence of temperature and upwelling intensity on oil sardine (*Sardine
 author: ''
 date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
   html_document: default
 header-includes:
 - \usepackage[labelformat=empty]{caption}
@@ -226,6 +226,7 @@ cat("\\clearpage")
 cat("\\clearpage")
 ```
 
+
 # Appendices
 
 ```{r, results="asis", echo=FALSE}
@@ -234,4 +235,5 @@ cat("\\clearpage")
 
 ```{r child = 'Appendices.Rmd', echo=FALSE}
 ```
+
 
