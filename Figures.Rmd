@@ -37,9 +37,14 @@ cat("\\clearpage")
 ```
 
 ```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
-par(mfrow=c(1,1),mar=c(5,5,1,1))
+par(mfrow=c(1,1),mar=c(5,5,1,5))
 dat=oilsardine_qtr
 plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Quarterly Kerala Catch (1000 kg)",xlab="",bty="L", ylim=c(0,180))
+tmp <- ringseine[!is.na(ringseine$HP),]
+par(new = T)
+plot(tmp$Year, tmp$Length.net, axes=FALSE, xlab=NA, ylab=NA, type="l", xlim=c(1956,2015), ylim=c(0,3000), lwd=3, col="grey")
+axis(side = 4)
+mtext(side = 4, line = 3, 'Ring Seine Net Length (m)')
 oldpar=par(fig = c(0.6, 1, 0.6, .97), new = T)  
 catchmeans=tapply(dat$Kerala, dat$Qtr, mean, na.rm=TRUE)
 names(catchmeans)=c("JFM","AMJ","JAS","OND")
