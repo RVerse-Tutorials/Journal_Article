@@ -247,7 +247,7 @@ seltable=rbind(seltable,tmp1)
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Adj.\\\\R2}", "MASE", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap = "Model selection tests of time-dependency and linearity for the $S_t$ model using F-tests of nested models fit to log landings data.  $S_t$ is the catch during Qtr 3 (Jul-Sep) of season $t$. $N_{t-1}$ is the catch in the prior sardine season during the post-monsoon period (Oct-Jun, of the previous sardine season). $N_{t-2}$ is the same for two seasons prior.  $s()$ is a non-linear function of the response variable."
+thecap = "Model selection tests of time-dependency and linearity for the $S_t$ model using F-tests of nested models fit to log of landings data.  $S_t$ is the catch during Qtr 3 (Jul-Sep) of season $t$. $N_{t-1}$ is the catch in the prior sardine season during the post-monsoon period (Oct-Jun, of the previous sardine season). $N_{t-2}$ is the same for two seasons prior.  $s()$ is a non-linear function of the response variable."
 
 fullcap = paste("Table ", ref("tab:spawner_model_selection"), ". ", thecap, sep="")
 

@@ -46,7 +46,7 @@ m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), 
 a=anova(m1,m2,m3, test="F")
 
 ## Header
-tmp1 = data.frame(Model="Spawner catch models with covariates", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
+tmp1 = data.frame(Model="Oct-Jun catch models with covariates", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
 tmp2 = data.frame(Model="$V_t$ = Jul-Sep SST current season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
 tmp3 = data.frame(Model="$W_{t-1}$ = Jan-Mar upwelling prior season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
 seltable=rbind(tmp1,tmp2,tmp3)
@@ -97,7 +97,7 @@ m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=
 a=anova(m1,m2,m3, test="F")
 
 ## Header
-tmp1 = data.frame(Model="Spawner catch models with covariates", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
+tmp1 = data.frame(Model="Jul-Sep catch models with covariates", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
 tmp2 = data.frame(Model="$V_t$ = Jul-Sep SST current season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
 tmp3 = data.frame(Model="$W_{t-1}$ = Oct-Dec upwelling prior season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
 seltable=rbind(seltable,tmp1,tmp2,tmp3)
@@ -137,7 +137,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Top covariates for the spawner ($S_t$) and non-spawner ($N_t$) models. The models are nested; the roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M0 or M1) at top.  The full set of covariate models tested are given in Appendix B. The fitted versus observed catches from the covariate models are shown in Figure ", ref("fig:fitted"), ".", sep="")
+thecap=paste("Top covariates for the $S_t$ (Jul-Sep catch) and $N_t$ (Oct-Jun catch) models. The models are nested; the roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M0 or M1) at top.  The full set of covariate models tested are given in Appendix B. The fitted versus observed catches from the covariate models are shown in Figure ", ref("fig:fitted"), ".", sep="")
 fullcap=paste("Table ", ref("tab:covariate-models"), ". ", thecap, sep="")
 kable(seltable, align="lccccc", caption=fullcap, escape=FALSE)
 ```
