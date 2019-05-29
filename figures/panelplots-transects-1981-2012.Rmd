@@ -1,0 +1,697 @@
+---
+title: "Creating a plot of SST along a transect line"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, results="hide", message=FALSE, fig.align="center")
+```
+
+The goal is to make a plot of SST along transect lines.  The motivation behind this is to show the spatio-temporal pattern of the SST fronts off the coast of Kochi.
+
+## Set up the transects
+
+Four transect lines are set up.
+
+```{r}
+# This will use the **data.table**, **geotools** and **geosphere** 
+# packages to create equispaced points between two lat/lon points.
+library(data.table)
+df1 <- data.frame(
+  Latitude=c(9.9413972, 9.2),
+  Longitude=c(76.2, 74)
+  )
+df2 <- data.frame(Latitude=c(8.261301, 8.261301+diff(df1$Latitude)),
+            Longitude=c(77.116, 77.130156+diff(df1$Longitude)))
+df3 <- data.frame(
+  Latitude=c(8.077, 5.8),
+  Longitude=c(77.4, 77.4)
+  )
+df4 <- data.frame(
+  Latitude=c(7.75, 8.459, 9.0568, 9.903, 11.176, 11.943, 12.723),
+  Longitude=c(77.4, 76.61, 76.253, 76.063, 75.534, 74.944, 74.542)
+  )
+
+
+data.table::setDT(df1)
+data.table::setDT(df2)
+data.table::setDT(df3)
+data.table::setDT(df4)
+
+dist.between = 10000 #in meters so 10km
+
+library(geotools)
+library(geosphere)    # for distHaversine
+get.dist <- function(lon, lat) 
+  geosphere::distHaversine(tail(cbind(lon,lat),-1), head(cbind(lon,lat),-1))
+interp.dist <- function(var,dist) approx(dist,var,xout=seq(min(dist),max(dist),by=dist.between))$y
+
+# The := function is in data.table
+df1[,dist:=c(0,cumsum(get.dist(Longitude,Latitude)))]
+transect1 <- data.table::setDT(df1)[,lapply(.SD,interp.dist,dist=dist), 
+                    .SDcols=c("Latitude","Longitude","dist")]
+df2[,dist:=c(0,cumsum(get.dist(Longitude,Latitude)))]
+transect2 <- data.table::setDT(df2)[,lapply(.SD,interp.dist,dist=dist), 
+                    .SDcols=c("Latitude","Longitude","dist")]
+df3[,dist:=c(0,cumsum(get.dist(Longitude,Latitude)))]
+transect3 <- data.table::setDT(df3)[,lapply(.SD,interp.dist,dist=dist), 
+                    .SDcols=c("Latitude","Longitude","dist")]
+df4[,dist:=c(0,cumsum(get.dist(Longitude,Latitude)))]
+transect4 <- data.table::setDT(df4)[,lapply(.SD,interp.dist,dist=dist), 
+                    .SDcols=c("Latitude","Longitude","dist")]
+```
+
+```{r}
+# We use the **marmap** package to download bathymetry data and plot.
+library(marmap)
+library(ggplot2)
+xlims <- c(73,80)
+ylims <- c(6,15)
+bathydata<- getNOAA.bathy(xlims[1], xlims[2], ylims[1], ylims[2])
+
+autoplot(bathydata, geom=c("r", "c")) + 
+  scale_fill_etopo() +
+  ylim(6,13) +
+  xlim(73,79)+
+  geom_point(aes(x=Longitude, y=Latitude), data=transect1, alpha=1) +
+  geom_point(aes(x=Longitude, y=Latitude), data=transect2, alpha=1) +
+  geom_point(aes(x=Longitude, y=Latitude), data=transect3, alpha=1) +
+  geom_point(aes(x=Longitude, y=Latitude), data=transect4, alpha=1) +
+  annotate("text", label = "transect 1", 
+           x = transect1$Longitude[26], 
+           y = transect1$Latitude[26], size = 4, colour = "red") +
+  annotate("text", label = "transect 2", 
+           x = transect2$Longitude[26], 
+           y = transect2$Latitude[26], size = 4, colour = "red") +
+  annotate("text", label = "transect 3", 
+           x = transect3$Longitude[20], 
+           y = transect3$Latitude[20], size = 4, colour = "red") +
+  annotate("text", label = "transect 4", 
+           x = transect4$Longitude[56], 
+           y = transect4$Latitude[56], size = 4, colour = "red")
+```
+
+
+```{r}
+# Create a matrix like `meanmat` but with color for each value in `meanmat`.
+cuts <- seq(22,34,.25)
+ncuts <- length(cuts)
+my.colors <- colorRampPalette(c("dark blue", "yellow", "orange", "red"))
+```
+
+## Create SST plots for the whole year: Transect 1
+
+This is a plot of the SST gradient throughout the year. I downloaded the SST data for the transect at each month in the year.  The plot shows color bars for each 1-month window. In the plot, we can see the formation of the cold temperature in September close to the coast. We can also see where the temperature front (sharp temperature gradient) occurs.
+
+
+```{r}
+thedate <- seq(as.Date("1981-01-15"), as.Date("2012-12-16"), by="1 month")
+filename="transect1-1981-2012-ylen-p3.RData"
+load(filename)
+xcoord <- transect1$Longitude
+ycoord <- transect1$Latitude
+alldata <- data.frame(transect1)
+alldata$km <- alldata$dist/1000
+
+sstcuts <- as.numeric(cut(c(as.vector(meanmat)),breaks = cuts))
+
+# take those levels and associate with the colorpalette
+cols <- my.colors(ncuts)[sstcuts]
+
+# reassemble into a matrix like meammat
+colmat <- matrix(cols, length(xcoord), length(thedate))
+```
+
+```{r fig.height=4, fig.width=7}
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- c(thedate, seq(max(thedate),by="1 month", length=2)[2])-30
+n <- length(xaxs)
+plot(xaxs, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance from coast (km)")
+for(j in 1:length(thedate)){
+  for(i in 1:dim(alldata)[1]){
+  rect(xaxs[j], alldata$km[i], xaxs[j+1], alldata$km[i+1], col = colmat[i,j],
+       border=NA) 
+  }
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(c(as.vector(meanmat)),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs[1]), as.numeric(xaxs[n])), 
+  cby=c(-100, -130), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+title("SST off the coast: Transect 1")
+```
+
+## Create colorbars for the whole year: Transect 2
+
+
+```{r fig.height=4, fig.width=7}
+thedate <- seq(as.Date("1981-01-15"), as.Date("2012-12-16"), by="1 month")
+filename="transect2-1981-2012-ylen-p3.RData"
+load(filename)
+transect <- transect2
+xcoord <- transect$Longitude
+ycoord <- transect$Latitude
+alldata <- data.frame(transect)
+alldata$km <- alldata$dist/1000
+meanmat <- as.matrix(meanmat[, -1*c(1,2,3,4)])
+
+# Create a matrix like `meanmat` but with color for each value in `meanmat`.
+sstcuts <- as.numeric(cut(as.vector(meanmat),breaks = cuts))
+
+# take those levels and associate with the colorpalette
+cols <- my.colors(ncuts)[sstcuts]
+
+# reassemble into a matrix like meammat
+colmat <- matrix(cols, length(xcoord), length(thedate))
+
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- c(thedate, seq(max(thedate),by="1 month", length=2)[2])-30
+n <- length(xaxs)
+plot(xaxs, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance from coast (km)")
+for(j in 1:length(thedate)){
+  for(i in 1:dim(alldata)[1]){
+  rect(xaxs[j], alldata$km[i], xaxs[j+1], alldata$km[i+1], col = colmat[i,j],
+       border=NA) 
+  }
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(c(22,as.vector(meanmat),34),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs[1]), as.numeric(xaxs[n])), 
+  cby=c(-100, -130), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+title("SST off the coast: Transect 2")
+```
+
+### Colormap for summer monsoon: Transect 2
+
+Here I show the temperatures for just the summer months.  You see colder tempeatures near the coast in the early years.
+
+```{r fig.height=4, fig.width=7}
+library(stringr)
+summonsoon <- sapply(colnames(meanmat), function(x){any(str_detect(x, c("-07-","-08-","-09-")))})
+tmpm <- meanmat[,summonsoon]
+tmpcolmat <- colmat[,summonsoon]
+
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- as.Date(colnames(tmpm))
+xaxs <- c(xaxs, seq(max(xaxs),by="1 month", length=2)[2])
+n <- length(xaxs)
+xaxs2 <- 1:n
+plot(xaxs2, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance off coast (km)",
+     xaxt="n")
+for(j in 1:(length(xaxs)-1)){
+  for(i in 1:dim(alldata)[1]){
+  #rect(xaxs[j], alldata$km[i], seq(xaxs[j],by="1 month", length=2)[2], alldata$km[i+1], col = colmat[i,j], border=NA) 
+  rect(xaxs2[j], alldata$km[i], xaxs2[j+1], alldata$km[i+1], col = tmpcolmat[i,j],
+       border=NA) 
+  }
+}
+for(j in 1:(length(xaxs)-1)){
+if(month(xaxs[j])==(max(month(xaxs))-1)) abline(v=xaxs2[j+1])
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(as.vector(meanmat),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs2[1]), as.numeric(xaxs2[n])), 
+  cby=c(-100, -130), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+mons <- month.abb[unique(month(as.Date(colnames(tmpm))))]
+title(paste("SST off the coast in", paste(mons, collapse=", ")))
+axis(side=1, at=seq(3,length(xaxs),3)-0.5, labels=unique(year(xaxs)), las=2)
+```
+
+In some months, such as Aug 2011, there was a strong temperature gradient. While in other summer months, there is no gradient.
+
+```{r fig.height=4, fig.width=7}
+par(mfrow=c(1,2))
+thedate <- seq(as.Date("1981-01-15"), as.Date("2012-12-16"), by="1 month")
+filename="transect2-1981-2012-ylen-p3.RData"
+load(filename)
+transect <- transect2
+xcoord <- transect$Longitude
+ycoord <- transect$Latitude
+alldata <- data.frame(transect)
+alldata$km <- alldata$dist/1000
+meanmat <- as.matrix(meanmat[, -1*c(1,2,3,4)])
+yr11 <- str_detect(colnames(meanmat),"2011-08-")
+plot(alldata$km, meanmat[,yr11], ylim=c(23,29), type="l",
+     xlab="km from coast", ylab="deg Celcius")
+title("Aug 2011")
+
+yr06 <- str_detect(colnames(meanmat),"1997-08-")
+plot(alldata$km, meanmat[,yr06], ylim=c(23,29), type="l",
+     xlab="km from coast", ylab="deg Celcius")
+title("Aug 1997")
+
+```
+
+## Create colorbars for the whole year: Transect 3
+
+
+```{r fig.height=4, fig.width=7}
+thedate <- seq(as.Date("1981-01-15"), as.Date("2012-12-16"), by="1 month")
+filename="transect3-1981-2012-ylen-p3.RData"
+load(filename)
+transect <- transect3
+xcoord <- transect$Longitude
+ycoord <- transect$Latitude
+alldata <- data.frame(transect)
+alldata$km <- alldata$dist/1000
+meanmat <- as.matrix(meanmat[, -1*c(1,2,3,4)])
+
+# Create a matrix like `meanmat` but with color for each value in `meanmat`.
+sstcuts <- as.numeric(cut(as.vector(meanmat),breaks = cuts))
+
+# take those levels and associate with the colorpalette
+cols <- my.colors(ncuts)[sstcuts]
+
+# reassemble into a matrix like meammat
+colmat <- matrix(cols, length(xcoord), length(thedate))
+
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- c(thedate, seq(max(thedate),by="1 month", length=2)[2])-30
+n <- length(xaxs)
+plot(xaxs, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance from coast (km)")
+for(j in 1:length(thedate)){
+  for(i in 1:dim(alldata)[1]){
+  rect(xaxs[j], alldata$km[i], xaxs[j+1], alldata$km[i+1], col = colmat[i,j],
+       border=NA) 
+  }
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(as.vector(meanmat),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs[1]), as.numeric(xaxs[n])), 
+  cby=c(-100, -130), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+title("SST off the coast: Transect 3")
+```
+
+### Colormap for summer monsoon: Transect 3
+
+In the far south (transect 3), you can see that the cold SST extended much farther offshore in the early years and more recently has been confined closer to the coast.
+
+```{r colormap-trans3-summer, fig.height=4, fig.width=7}
+library(stringr)
+summonsoon <- sapply(colnames(meanmat), function(x){any(str_detect(x, c("-07-","-08-","-09-")))})
+tmpm <- meanmat[,summonsoon]
+tmpcolmat <- colmat[,summonsoon]
+
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- as.Date(colnames(tmpm))
+xaxs <- c(xaxs, seq(max(xaxs),by="1 month", length=2)[2])
+n <- length(xaxs)
+xaxs2 <- 1:n
+plot(xaxs2, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance off coast (km)",
+     xaxt="n")
+for(j in 1:(length(xaxs)-1)){
+  for(i in 1:dim(alldata)[1]){
+  #rect(xaxs[j], alldata$km[i], seq(xaxs[j],by="1 month", length=2)[2], alldata$km[i+1], col = colmat[i,j], border=NA) 
+  rect(xaxs2[j], alldata$km[i], xaxs2[j+1], alldata$km[i+1], col = tmpcolmat[i,j],
+       border=NA) 
+  }
+}
+for(j in 1:(length(xaxs)-1)){
+if(month(xaxs[j])==(max(month(xaxs))-1)) abline(v=xaxs2[j+1])
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(as.vector(meanmat),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs2[1]), as.numeric(xaxs2[n])), 
+  cby=c(-100, -130), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+mons <- month.abb[unique(month(as.Date(colnames(tmpm))))]
+title(paste("SST off the coast in", paste(mons, collapse=", ")))
+axis(side=1, at=seq(3,length(xaxs),3)-0.5, labels=unique(year(xaxs)), las=2)
+```
+
+## Create colorbars for the whole year: Transect 4
+
+This is a plot of the SST along the coast from the tip of India to the top of Kerala.
+
+```{r fig.height=4, fig.width=7}
+thedate <- seq(as.Date("1981-01-15"), as.Date("2012-12-16"), by="1 month")
+filename="transect4-1981-2012-ylen-p3.RData"
+load(filename)
+transect <- transect4
+xcoord <- transect$Longitude
+ycoord <- transect$Latitude
+alldata <- data.frame(transect)
+alldata$km <- alldata$dist/1000
+meanmat <- as.matrix(meanmat[, -1*c(1,2,3,4)])
+
+# Create a matrix like `meanmat` but with color for each value in `meanmat`.
+sstcuts <- as.numeric(cut(as.vector(meanmat),breaks = cuts))
+
+# take those levels and associate with the colorpalette
+cols <- my.colors(ncuts)[sstcuts]
+
+# reassemble into a matrix like meammat
+colmat <- matrix(cols, length(xcoord), length(thedate))
+
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- c(thedate, seq(max(thedate),by="1 month", length=2)[2])-30
+n <- length(xaxs)
+plot(xaxs, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance along coast from tip (km)")
+for(j in 1:length(thedate)){
+  for(i in 1:dim(alldata)[1]){
+  rect(xaxs[j], alldata$km[i], xaxs[j+1], alldata$km[i+1], col = colmat[i,j],
+       border=NA) 
+  }
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(as.vector(meanmat),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs[1]), as.numeric(xaxs[n])), 
+  cby=c(-180, -220), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+title("SST off the coast: Transect 4")
+```
+
+### Colormap for summer monsoon: Transect 4
+
+In most summers, the cold water only extends 200 km from the tip of India.
+
+```{r fig.height=4, fig.width=7}
+library(stringr)
+summonsoon <- sapply(colnames(meanmat), function(x){any(str_detect(x, c("-07-","-08-","-09-")))})
+tmpm <- meanmat[,summonsoon]
+tmpcolmat <- colmat[,summonsoon]
+
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- as.Date(colnames(tmpm))
+xaxs <- c(xaxs, seq(max(xaxs),by="1 month", length=2)[2])
+n <- length(xaxs)
+xaxs2 <- 1:n
+plot(xaxs2, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance along coast (km)",
+     xaxt="n")
+for(j in 1:(length(xaxs)-1)){
+  for(i in 1:dim(alldata)[1]){
+  #rect(xaxs[j], alldata$km[i], seq(xaxs[j],by="1 month", length=2)[2], alldata$km[i+1], col = colmat[i,j], border=NA) 
+  rect(xaxs2[j], alldata$km[i], xaxs2[j+1], alldata$km[i+1], col = tmpcolmat[i,j],
+       border=NA) 
+  }
+}
+for(j in 1:(length(xaxs)-1)){
+if(month(xaxs[j])==(max(month(xaxs))-1)) abline(v=xaxs2[j+1])
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(as.vector(meanmat),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs2[1]), as.numeric(xaxs2[n])), 
+  cby=c(-250, -310), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+mons <- month.abb[unique(month(as.Date(colnames(tmpm))))]
+title(paste("SST along the coast in", paste(mons, collapse=", ")))
+axis(side=1, at=seq(3,length(xaxs),3)-0.5, labels=unique(year(xaxs)), las=2)
+```
+
+
+## Temperatures along the coast 
+
+In the first 3 months (Jan-Mar), the coast is uniformly warm with little variability between years.
+
+```{r fig.height=4, fig.width=7}
+library(stringr)
+summonsoon <- sapply(colnames(meanmat), 
+                     function(x){any(str_detect(x, c("-01-","-02-","-03-")))})
+tmpm <- meanmat[,summonsoon]
+tmpcolmat <- colmat[,summonsoon]
+
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- as.Date(colnames(tmpm))
+xaxs <- c(xaxs, seq(max(xaxs),by="1 month", length=2)[2])
+n <- length(xaxs)
+xaxs2 <- 1:n
+plot(xaxs2, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance along coast (km)",
+     xaxt="n")
+for(j in 1:(length(xaxs)-1)){
+  for(i in 1:dim(alldata)[1]){
+  #rect(xaxs[j], alldata$km[i], seq(xaxs[j],by="1 month", length=2)[2], alldata$km[i+1], col = colmat[i,j], border=NA) 
+  rect(xaxs2[j], alldata$km[i], xaxs2[j+1], alldata$km[i+1], col = tmpcolmat[i,j],
+       border=NA) 
+  }
+}
+for(j in 1:(length(xaxs)-1)){
+if(month(xaxs[j])==(max(month(xaxs))-1)) abline(v=xaxs2[j+1])
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(as.vector(meanmat),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs2[1]), as.numeric(xaxs2[n])), 
+  cby=c(-250, -310), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+mons <- month.abb[unique(month(as.Date(colnames(tmpm))))]
+title(paste("SST along the coast in", paste(mons, collapse=", ")))
+axis(side=1, at=seq(3,length(xaxs),3)-0.5, labels=unique(year(xaxs)), las=2)
+```
+
+The mean temperature has been 29 deg Celcius with some years colder and others warmer. Temperatures have been generally increasing.
+
+```{r}
+tmp2 <- apply(tmpm,2,mean,na.rm=TRUE)
+yrs <- lubridate::year(as.Date(names(tmp2)))
+meantmp <- tapply(tmp2, yrs, mean,na.rm=TRUE)
+plot(unique(yrs), tapply(tmp2, yrs, mean,na.rm=TRUE), type="l",
+     ylab="deg Celcius", xlab="year",
+     ylim=c(25,30))
+title("Jan-Mar SST near shore")
+fit <- lm(meantmp~unique(yrs))
+abline(fit, lty=2, col="blue")
+```
+
+In the next 3 months (Apr-May), the coast is warmer and then makes a sudden shift to cooler temperatures.
+
+```{r fig.height=4, fig.width=7}
+library(stringr)
+summonsoon <- sapply(colnames(meanmat), 
+                     function(x){any(str_detect(x, c("-04-","-05-","-06-")))})
+tmpm <- meanmat[,summonsoon]
+tmpcolmat <- colmat[,summonsoon]
+
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- as.Date(colnames(tmpm))
+xaxs <- c(xaxs, seq(max(xaxs),by="1 month", length=2)[2])
+n <- length(xaxs)
+xaxs2 <- 1:n
+plot(xaxs2, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance along coast (km)",
+     xaxt="n")
+for(j in 1:(length(xaxs)-1)){
+  for(i in 1:dim(alldata)[1]){
+  #rect(xaxs[j], alldata$km[i], seq(xaxs[j],by="1 month", length=2)[2], alldata$km[i+1], col = colmat[i,j], border=NA) 
+  rect(xaxs2[j], alldata$km[i], xaxs2[j+1], alldata$km[i+1], col = tmpcolmat[i,j],
+       border=NA) 
+  }
+}
+for(j in 1:(length(xaxs)-1)){
+if(month(xaxs[j])==(max(month(xaxs))-1)) abline(v=xaxs2[j+1])
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(as.vector(meanmat),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs2[1]), as.numeric(xaxs2[n])), 
+  cby=c(-250, -310), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+mons <- month.abb[unique(month(as.Date(colnames(tmpm))))]
+title(paste("SST along the coast in", paste(mons, collapse=", ")))
+axis(side=1, at=seq(3,length(xaxs),3)-0.5, labels=unique(year(xaxs)), las=2)
+```
+
+Here are the mean monthly nearshore temperatures. You can see the sudden cooling in June.
+
+```{r}
+mons <- lubridate::month(as.Date(colnames(meanmat)))
+tmp2 <- apply(meanmat, 2, mean, na.rm=TRUE)
+tmp2 <- tapply(tmp2,mons,mean,na.rm=TRUE)
+plot(1:12, tmp2, type="b", xlab="month", ylab="deg Celcius")
+title("Monthly mean SST near shore")
+```
+
+After the summer monsoon, (Oct-Nov), the coast is uniformly warm again with little variability between years.
+
+```{r fig.height=4, fig.width=7}
+library(stringr)
+summonsoon <- sapply(colnames(meanmat), 
+                     function(x){any(str_detect(x, c("-10-","-11-","-12-")))})
+tmpm <- meanmat[,summonsoon]
+tmpcolmat <- colmat[,summonsoon]
+
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- as.Date(colnames(tmpm))
+xaxs <- c(xaxs, seq(max(xaxs),by="1 month", length=2)[2])
+n <- length(xaxs)
+xaxs2 <- 1:n
+plot(xaxs2, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance along coast (km)",
+     xaxt="n")
+for(j in 1:(length(xaxs)-1)){
+  for(i in 1:dim(alldata)[1]){
+  #rect(xaxs[j], alldata$km[i], seq(xaxs[j],by="1 month", length=2)[2], alldata$km[i+1], col = colmat[i,j], border=NA) 
+  rect(xaxs2[j], alldata$km[i], xaxs2[j+1], alldata$km[i+1], col = tmpcolmat[i,j],
+       border=NA) 
+  }
+}
+for(j in 1:(length(xaxs)-1)){
+if(month(xaxs[j])==(max(month(xaxs))-1)) abline(v=xaxs2[j+2])
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(as.vector(meanmat),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs2[1]), as.numeric(xaxs2[n])), 
+  cby=c(-250, -310), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+mons <- month.abb[unique(month(as.Date(colnames(tmpm))))]
+title(paste("SST along the coast in", paste(mons, collapse=", ")))
+axis(side=1, at=seq(2,length(xaxs)+1,3)+.5, labels=unique(year(xaxs)), las=2)
+```
+
+The mean temperature has been 29 deg Celcius with some years colder and others warmer. Temperatures have been generally increasing.
+
+```{r}
+tmp2 <- apply(tmpm,2,mean,na.rm=TRUE)
+yrs <- lubridate::year(as.Date(names(tmp2)))
+plot(unique(yrs), tapply(tmp2, yrs, mean,na.rm=TRUE), type="l",
+     ylab="deg Celcius", xlab="year",
+     ylim=c(25,30))
+title("Oct-Dec SST near shore")
+```
+
+The summer monsoon, (Jul-Sep), is the period with great year to year variability in the near shore temperature and extent (up the coast) of the cold water.
+
+```{r fig.height=4, fig.width=7}
+library(stringr)
+summonsoon <- sapply(colnames(meanmat), 
+                     function(x){any(str_detect(x, c("-07-","-08-","-09-")))})
+tmpm <- meanmat[,summonsoon]
+tmpcolmat <- colmat[,summonsoon]
+
+par(mar=c(8,5,2,2))
+wid=8
+xaxs <- as.Date(colnames(tmpm))
+xaxs <- c(xaxs, seq(max(xaxs),by="1 month", length=2)[2])
+n <- length(xaxs)
+xaxs2 <- 1:n
+plot(xaxs2, rep(0,n), 
+     ylim=c(0,max(alldata$km)), type= "n", xlab = "", ylab = "Distance along coast (km)",
+     xaxt="n")
+for(j in 1:(length(xaxs)-1)){
+  for(i in 1:dim(alldata)[1]){
+  #rect(xaxs[j], alldata$km[i], seq(xaxs[j],by="1 month", length=2)[2], alldata$km[i+1], col = colmat[i,j], border=NA) 
+  rect(xaxs2[j], alldata$km[i], xaxs2[j+1], alldata$km[i+1], col = tmpcolmat[i,j],
+       border=NA) 
+  }
+}
+for(j in 1:(length(xaxs)-1)){
+if(month(xaxs[j])==(max(month(xaxs))-1)) abline(v=xaxs2[j+1])
+}
+
+colb <- my.colors(ncuts) # our custom colors
+# this bit of code gets the break points
+tmp<-levels(cut(as.vector(meanmat),breaks = cuts))
+tmp<-sapply(strsplit(tmp, "\\(|,|]"), function(x) as.numeric(x[-1]))
+zlims<-tmp[1,]
+oceanmap::set.colorbar(
+  cbx=c(as.numeric(xaxs2[1]), as.numeric(xaxs2[n])), 
+  cby=c(-250, -310), 
+  pal=colb,
+  zlim=zlims)
+mtext("SST (deg C)", side=1, line=5)
+mons <- month.abb[unique(month(as.Date(colnames(tmpm))))]
+title(paste("SST along the coast in", paste(mons, collapse=", ")))
+axis(side=1, at=seq(3,length(xaxs)+1,3)-.5, labels=unique(year(xaxs)), las=2)
+```
+
+The mean temperature has been 29 deg Celcius with some years colder and others warmer. Temperatures have been generally increasing.
+
+```{r}
+tmp2 <- apply(tmpm,2,mean,na.rm=TRUE)
+yrs <- lubridate::year(as.Date(names(tmp2)))
+meantmp <- tapply(tmp2, yrs, mean,na.rm=TRUE)
+plot(unique(yrs), tapply(tmp2, yrs, mean,na.rm=TRUE), type="l",
+     ylab="deg Celcius", xlab="year",
+     ylim=c(25,30))
+title("Average Jul-Sep SST near shore")
+fit <- lm(meantmp~unique(yrs))
+abline(fit, lty=2, col="blue")
+```

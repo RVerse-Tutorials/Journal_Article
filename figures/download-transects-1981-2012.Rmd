@@ -96,19 +96,75 @@ require(rerddap)
 require(rerddapXtracto)
 ```
 
-## Transect 2
+## Transect 1
 
 ```{r}
 # For convenience, make shorter names for the latitude and longitude data.
 xcoord <- transect2$Longitude
 ycoord <- transect2$Latitude
-alldata <- data.frame(transect2)
+alldata <- data.frame(transect1)
 alldata$km <- alldata$dist/1000
+# search box
+xlen <- 0.1  #11 km so approx 22km
+ylen <- 0.3
 ```
 
-I define the search box in the x (lon) and y (lat) directions as 0.1, in units of degrees. This is approx 11km. The distance between our transect points is 10km, so this is slight overlap. 
+## Download
+
+First set the dates to use. 
 
 ```{r}
+filename="transect1-1981-2012-ylen-p3.RData"
+thedate <- seq(as.Date("1981-01-15"), as.Date("2012-12-16"), by="1 month")
+```
+
+We want to get the SST data for the transect at each date.  We will store this in a matrix.
+
+```{r echo=FALSE}
+load(filename)
+```
+
+```{r eval=FALSE}
+dataset <- 'erdPH2sstdmday'
+dataInfo <- rerddap::info(dataset)
+parameter <-'sea_surface_temperature' 
+meanmat <- matrix(NA, length(xcoord), length(thedate))
+colnames(meanmat) <- as.character(thedate)
+for(i in 1:length(thedate)){
+  tcoord <- rep(thedate[i], length(xcoord))
+  dat <- try(rxtracto(dataInfo, 
+                  parameter=parameter, 
+                  xcoord=xcoord, ycoord=ycoord,
+                  tcoord=tcoord, xlen=xlen, ylen=ylen))
+  if(inherits(dat, "try-error")){
+    cat(as.character(thedate[i]), " did not download.\n")
+    next
+  }
+  if(month(as.Date(dat$`satellite date`))[1]!=month(thedate[i])){
+    cat(as.character(thedate[i]), " missing data for this month.\n")
+    next
+  }
+  names(dat)[names(dat)=="mean sea_surface_temperature"] <- "mean"
+  meanmat[,i] <- dat$mean
+  cat(dat$`satellite date`[1], "\n")
+  if(i %% 12) save(meanmat, file=filename)
+}
+save(meanmat, file=filename)
+meanmat <- cbind(alldata,meanmat)
+colnames(meanmat) <- c(colnames(alldata), as.character(thedate))
+save(meanmat, file=filename)
+```
+
+## Transect 2
+
+```{r}
+filename="transect2-1981-2012-ylen-p3.RData"
+# For convenience, make shorter names for the latitude and longitude data.
+xcoord <- transect2$Longitude
+ycoord <- transect2$Latitude
+alldata <- data.frame(transect2)
+alldata$km <- alldata$dist/1000
+# search box
 xlen <- 0.1  #11 km so approx 22km
 ylen <- 0.3
 ```
@@ -123,7 +179,11 @@ thedate <- seq(as.Date("1981-01-15"), as.Date("2012-12-16"), by="1 month")
 
 We want to get the SST data for the transect at each date.  We will store this in a matrix.
 
-```{r}
+```{r echo=FALSE}
+load(filename)
+```
+
+```{r eval=FALSE}
 dataset <- 'erdPH2sstdmday'
 dataInfo <- rerddap::info(dataset)
 parameter <-'sea_surface_temperature' 
@@ -146,26 +206,23 @@ for(i in 1:length(thedate)){
   names(dat)[names(dat)=="mean sea_surface_temperature"] <- "mean"
   meanmat[,i] <- dat$mean
   cat(dat$`satellite date`[1], "\n")
-  if(i %% 12) save(meanmat, file="transect2-1981-2012-ylen-p3.RData")
+  if(i %% 12) save(meanmat, file=filename)
 }
-save(meanmat, file="transect2-1981-2012-ylen-p3.RData")
+save(meanmat, file=filename)
 meanmat <- cbind(alldata,meanmat)
 colnames(meanmat) <- c(colnames(alldata), as.character(thedate))
-save(meanmat, file="transect2-1981-2012-ylen-p3.RData")
+save(meanmat, file=filename)
 ```
 
 ## Transect 3
 
 ```{r}
+filename="transect3-1981-2012-ylen-p3.RData"
 xcoord <- transect3$Longitude
 ycoord <- transect3$Latitude
 alldata <- data.frame(transect3)
 alldata$km <- alldata$dist/1000
-```
-
-I define the search box in the x (lon) and y (lat) directions as 0.1, in units of degrees. This is approx 11km. The distance between our transect points is 10km, so this is slight overlap. 
-
-```{r}
+# search box
 xlen <- 0.3  #same size box but going down
 ylen <- 0.1
 ```
@@ -180,7 +237,11 @@ thedate <- seq(as.Date("1981-01-15"), as.Date("2012-12-16"), by="1 month")
 
 We want to get the SST data for the transect at each date.  We will store this in a matrix.
 
-```{r}
+```{r echo=FALSE}
+load(filename)
+```
+
+```{r eval=FALSE}
 dataset <- 'erdPH2sstdmday'
 dataInfo <- rerddap::info(dataset)
 parameter <-'sea_surface_temperature' 
@@ -203,26 +264,23 @@ for(i in 1:length(thedate)){
   names(dat)[names(dat)=="mean sea_surface_temperature"] <- "mean"
   meanmat[,i] <- dat$mean
   cat(dat$`satellite date`[1], "\n")
-  if(i %% 12) save(meanmat, file="transect3-1981-2012-ylen-p3.RData")
+  if(i %% 12) save(meanmat, file=filename)
 }
-save(meanmat, file="transect3-1981-2012-ylen-p3.RData")
+save(meanmat, file=filename)
 meanmat <- cbind(alldata,meanmat)
 colnames(meanmat) <- c(colnames(alldata), as.character(thedate))
-save(meanmat, file="transect3-1981-2012-ylen-p3.RData")
+save(meanmat, file=filename)
 ```
 
 ## Transect 4
 
 ```{r}
+filename="transect4-1981-2012-ylen-p3.RData"
 xcoord <- transect4$Longitude
 ycoord <- transect4$Latitude
 alldata <- data.frame(transect4)
 alldata$km <- alldata$dist/1000
-```
-
-I define the search box in the x (lon) and y (lat) directions as 0.1, in units of degrees. This is approx 11km. The distance between our transect points is 10km, so this is slight overlap. 
-
-```{r}
+# search box
 xlen <- 0.3  
 ylen <- 0.1
 ```
@@ -237,6 +295,10 @@ thedate <- seq(as.Date("1981-01-15"), as.Date("2012-12-16"), by="1 month")
 
 We want to get the SST data for the transect at each date.  We will store this in a matrix.
 
+```{r echo=FALSE}
+load(filename)
+```
+
 ```{r}
 dataset <- 'erdPH2sstdmday'
 dataInfo <- rerddap::info(dataset)
@@ -260,11 +322,11 @@ for(i in 1:length(thedate)){
   names(dat)[names(dat)=="mean sea_surface_temperature"] <- "mean"
   meanmat[,i] <- dat$mean
   cat(dat$`satellite date`[1], "\n")
-  if(i %% 12) save(meanmat, file="transect4-1981-2012-ylen-p3.RData")
+  if(i %% 12) save(meanmat, file=filename)
 }
-save(meanmat, file="transect4-1981-2012-ylen-p3.RData")
+save(meanmat, file=filename)
 meanmat <- cbind(alldata,meanmat)
 colnames(meanmat) <- c(colnames(alldata), as.character(thedate))
-save(meanmat, file="transect4-1981-2012-ylen-p3.RData")
+save(meanmat, file=filename)
 ```
 
