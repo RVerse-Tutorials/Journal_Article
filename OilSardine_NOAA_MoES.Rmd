@@ -226,14 +226,6 @@ cat("\\clearpage")
 cat("\\clearpage")
 ```
 
-```{r child = 'Figures.Rmd', echo=FALSE}
-```
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-
 # Appendices
 
 ```{r, results="asis", echo=FALSE}
@@ -242,5 +234,24 @@ cat("\\clearpage")
 
 ```{r child = 'Appendices.Rmd', echo=FALSE}
 ```
+
+```{r, include=FALSE}
+#kableExtra is needed for the hypotheses table but 
+#needs to be after all the other tables. Otherwise it adds lines to them.
+library(kableExtra)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = 'Figures.Rmd', echo=FALSE}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+
 
 
