@@ -12,7 +12,6 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r child = 'setup.Rmd'}
 ```
 
-
 # Appendix A: Tests for prior season catch as covariate
 
 ```{r child = 'Table App A spawner model.Rmd'}
@@ -287,6 +286,5 @@ knitr::include_graphics(figfile)
 ```
 
 #
-
 
 
