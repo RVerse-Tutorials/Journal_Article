@@ -41,7 +41,8 @@ cat("\\clearpage")
 ```{r child = 'Table 3.Rmd'}
 ```
 
-
 ```{r, include=FALSE}
-library(kableExtra)
+#kableExtra is adding lines to tables in Appendix
+#this line needed to prepare the hypotheses table.
+#library(kableExtra)
 ```
