@@ -259,5 +259,5 @@ thecap = "Model selection tests of time-dependency and linearity for the $S_t$ m
 
 fullcap = paste("Table ", ref("tab:spawner_model_selection"), ". ", thecap, sep="")
 
-kable(seltable, align="lccccc", caption=fullcap)
+kable(seltable, align="lccccc", caption=fullcap, escape=FALSE)
 ```

@@ -4,6 +4,7 @@ author: ''
 date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
   pdf_document: default
+  md_document: default
   word_document: default
   html_document: default
 header-includes:
