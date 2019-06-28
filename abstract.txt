@@ -1,0 +1,17 @@
+The present study aimed to evaluate the variation over time of the abundance of the populations of
+five demersal species in the Tyrrhenian Sea (NW Mediterranean) analysing data obtained from trawl
+surveys and commercial landing monitoring. The influence of some environmental variables (sea surface
+temperature, wind speed, NAO index) and some fishing effort indices (fishing days, mean size and mean
+engine power of the trawl vessels) was analysed as well. The species considered for the study were Eledone
+cirrhosa, Merluccius merluccius, Mullus barbatus, Nephrops norvegicus and Parapenaeus longirostris. From
+1991 to 2006, the mean monthly landing rates were computed from the data collected at the auction of
+Porto Santo Stefano, the most important fishing harbour in the area.
+A second data set was represented by trawl survey data: two experimental trawl surveys per year have
+been carried out in the framework of national and international programs on the assessment of demersal
+resources. The mean biomass (kg/km2) indices were calculated. The time series analyses were carried out
+by means of Min/Max Auto-correlation Factor Analysis (MAFA) and Dynamic Factor Analysis (DFA). The
+two techniques provided coherent results, indicating that the two most important trends in the response
+variables are an increase in terms of both LPUE and survey biomass index, and a fluctuating pattern,
+even though characterized by a general increasing tendency. What drove these trends is less clear, even
+though the available evidence suggests that the reduction of fishing effort has been more important than
+environmental factors.
