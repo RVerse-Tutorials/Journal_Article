@@ -20,7 +20,9 @@ seltable = data.frame(
   Model=paste("Naive Model ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
   Residual.df="", 
   MASE="",
-  Adj.R2="", F="", p.value="", 
+  Adj.R2="", 
+  F="", 
+  p.value="", 
   AIC="", stringsAsFactors=FALSE)
 
 mne = lm(spawners0 ~ -1 + offset(spawners1), data=respdat)
@@ -251,5 +253,5 @@ thecap = "Model selection tests of time-dependency and linearity for the $S_t$ m
 
 fullcap = paste("Table ", ref("tab:spawner_model_selection"), ". ", thecap, sep="")
 
-kable(seltable, align="lccccc", caption=fullcap, escape=FALSE)
+kable(seltable, align="lcccccc", caption=fullcap, escape=FALSE)
 ```
