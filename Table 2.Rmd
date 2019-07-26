@@ -76,7 +76,7 @@ seltable=rbind(seltable,tmp1)
 
 ```{r print-table2, echo=FALSE}
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
-if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Adj.\\\\R2}", "MASE", "F", "\\shortstack{p\\\\value}", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
 thecap=paste("Model selection tests for the $N_t$ model using AIC for models fit to log landings data.  $S_t$ is the catch during the spawning season (Jul-Sep). $N_t$ is the catch during the non-spawning period (Oct-Jun) of season $t$; note the fishing season is defined as Jul-Jun not calendar year. $S_{t-1}$ and $N_{t-1}$ are the catch during the prior sardine season during and after the spawning period respectively. $S_{t-2}$ and $N_{t-2}$ are the same for two seasons prior.")
 fullcap=paste("Table ", ref("tab:nonspawner-models"), ". ", thecap, sep="")
