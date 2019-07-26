@@ -20,7 +20,12 @@ seltable = data.frame(
   Model=paste("Naive Model ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
   Residual.df="", 
   MASE="",
+<<<<<<< HEAD
   Adj.R2="", F="", 
+=======
+  Adj.R2="", 
+  F="", 
+>>>>>>> 680bd5ce1f03f7312baa4a97b8127f93e79d8338
   p.value="", 
   AIC="", stringsAsFactors=FALSE)
 
@@ -246,11 +251,15 @@ seltable=rbind(seltable,tmp1)
 
 ```{r print-table1, echo=FALSE}
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
+<<<<<<< HEAD
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE","\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
+=======
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
+>>>>>>> 680bd5ce1f03f7312baa4a97b8127f93e79d8338
 
 thecap = "Model selection tests of time-dependency and linearity for the quarter 3 (Jul-Sep) catch model using F-tests of nested models fit to log of landings data.  $S_t$ is the quarter 3 catch of season $t$. $N_{t-1}$ is the post-monsoon Oct-Mar catch in the prior sardine season. $N_{t-2}$ is the same for two seasons prior.  $s()$ is a non-linear function of the response variable. MASE is mean absolute squared error of the residuals. The tests are nested and the numbers before the models indicates the nest level. In the list with numbers 1, 2, 3a, 3b, two nested tests were done, one on 1, 2, 3a and one on 1, 2, 3b.  See tables in Appendix A for the full set of time-dependency and linearity tests."
 
 fullcap = paste("Table ", ref("tab:spawner_model_selection"), ". ", thecap, sep="")
 
-kable(seltable, align="lccccc", caption=fullcap, escape=FALSE)
+kable(seltable, align="lcccccc", caption=fullcap, escape=FALSE)
 ```
