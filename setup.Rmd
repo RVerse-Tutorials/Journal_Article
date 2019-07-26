@@ -33,6 +33,7 @@ respdat$CatchSum0 = c(CatchSum,NA)
 
 #add Catch - spawners
 respdat$nspawners0 = respdat$Catch0 - respdat$spawners0
+respdat$nspawners0 = respdat$CatchWin0
 
 respdat=log(respdat)
 
