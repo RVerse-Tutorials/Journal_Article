@@ -15,6 +15,47 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r seltable2, echo=FALSE}
 respdat = fullrespdat[which(fullrespdat$Year==1982):which(fullrespdat$Year==2015),]
 
+#set up table
+seltable = data.frame(
+  Model=paste("Naive Model ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", F="", 
+  p.value="", 
+  AIC="", stringsAsFactors=FALSE)
+
+mne = lm(nspawners0 ~ -1 + offset(nspawners1), data=respdat)
+
+#naive model
+mod="mne"
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$ln(N_t)$ = $ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(aa$df[2],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", stringsAsFactors=FALSE)
+tmp2 = data.frame(
+  Model="AR-1 Model", 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+seltable=rbind(seltable,tmp1,tmp2)
+
 #5 is most complex
 m5 = gam(nspawners0 ~ nspawners1+nspawners2+spawners2, data=respdat)
 m0=m5
@@ -28,19 +69,19 @@ a=anova(m1,m2,m3,m4, test="F")
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="$ln(N_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon$", 
+  Model="$ln(N_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon_t$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=2), 
   F="", p.value="", 
   AIC=round(AIC(get(mod)), digits=2), stringsAsFactors=FALSE)
-seltable=tmp1
+seltable=rbind(seltable, tmp1)
 
 #linear ln N_t
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="$ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon$", 
+  Model="$ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=2), 
@@ -52,7 +93,7 @@ seltable=rbind(seltable,tmp1)
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="$ln(N_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(N_{t-2}))$ + $\\epsilon$", 
+  Model="$ln(N_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(N_{t-2}))$ + $\\epsilon_t$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=2), 
@@ -64,7 +105,7 @@ seltable=rbind(seltable,tmp1)
 i=4; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="$ln(N_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(S_{t-2}))$ + $\\epsilon$", 
+  Model="$ln(N_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(S_{t-2}))$ + $\\epsilon_t$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=2), 

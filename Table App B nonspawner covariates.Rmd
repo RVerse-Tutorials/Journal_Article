@@ -21,7 +21,7 @@ Yr2 = max(dat$Year)
 ```{r table-appB-nspawner-precip, echo=FALSE}
 #set up table
 seltable = data.frame(
-  Model=paste("M1 ", Yr1,"-", Yr2, " data", sep=""), 
+  Model=paste("base model (M) ", Yr1,"-", Yr2, " data", sep=""), 
   Residual.df="", 
   MASE="",
   Adj.R2="", 
@@ -38,13 +38,13 @@ m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=
 m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 a=anova(m1,m2,m3, test="F")
 
-# header M1 for all models
+# header M for all models
 
 #model 1
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. $ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(ln(S_{t-2}))$ + $\\epsilon$",
+  Model="1. $ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(ln(S_{t-2}))$ + $\\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -76,7 +76,7 @@ seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="2. $ln(N_t)$ = M1 + $\\beta V_t$ + $\\epsilon$",
+  Model="2. $ln(N_t)$ = M + $\\beta V_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -88,7 +88,7 @@ seltable=rbind(seltable,tmp1)
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="3. $ln(N_t)$ = M1 + $s(V_t)$ + $\\epsilon$",
+  Model="3. $ln(N_t)$ = M + $s(V_t)$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -104,7 +104,7 @@ a=anova(m1,m2,m3, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="4. $ln(N_t)$ = M1 + $\\beta V_{t-1}$ + $\\epsilon$", 
+  Model="4. $ln(N_t)$ = M + $\\beta V_{t-1}$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -116,7 +116,7 @@ seltable=rbind(seltable,tmp1)
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="5. $ln(N_t)$ = M1 + $s(ln(S_{t-2}))$ + $s(V_{t-1})$ + $\\epsilon$", 
+  Model="5. $ln(N_t)$ = M + $s(V_{t-1})$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -136,7 +136,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch during the non-spawning months (Oct-Jun) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  $N_t$ is the catch during Oct-Mar of season $t$.  $V_t$ is the covariate in the current season (current season spans two calendar years from July to June in the next year). $V_{t-1}$ is the covariate in the prior season. M1 is the base model without environmental covariates. The model sets are nested and the number before the equation indicates the level of nestedness.")
+thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch during the non-spawning months (Oct-Jun) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  $N_t$ is the catch during Oct-Mar of season $t$.  $V_t$ is the covariate in the current season (current season spans two calendar years from July to June in the next year). $V_{t-1}$ is the covariate in the prior season. M is the base model without environmental covariates. The model sets are nested and the number before the equation indicates the level of nestedness.")
 fullcap=paste("Table ", ref("tabappB:nspawner-model-precip", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
@@ -150,7 +150,7 @@ cat("\\clearpage")
 #set up table
 #set up table
 seltable = data.frame(
-  Model=paste("M1 ", Yr1,"-", Yr2, " data", sep=""), 
+  Model=paste("base model (M) ", Yr1,"-", Yr2, " data", sep=""), 
   Residual.df="", 
   MASE="",
   Adj.R2="", 
@@ -167,7 +167,7 @@ m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=
 m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 a=anova(m1,m2,m3, test="F")
 
-# header M1 for all models
+# header M for all models
 
 #model 1
 i=1; mod=paste("m",i,sep="")
@@ -208,7 +208,7 @@ seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="2. $ln(N_t)$ = M1 + $\\beta V_t$ + $\\epsilon$",
+  Model="2. $ln(N_t)$ = M + $\\beta V_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -220,7 +220,7 @@ seltable=rbind(seltable,tmp1)
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="3. $ln(N_t)$ = M1 + $s(V_t)$ + $\\epsilon$",
+  Model="3. $ln(N_t)$ = M + $s(V_t)$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -236,7 +236,7 @@ a=anova(m1,m2,m3, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="4. $ln(N_t)$ = M1 + $\\beta V_{t-1}$ + $\\epsilon$", 
+  Model="4. $ln(N_t)$ = M + $\\beta V_{t-1}$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -248,7 +248,7 @@ seltable=rbind(seltable,tmp1)
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="5. $ln(N_t)$ = M1 + $s(ln(S_{t-2}))$ + $s(V_{t-1})$ + $\\epsilon$", 
+  Model="5. $ln(N_t)$ = M + $s(ln(S_{t-2}))$ + $s(V_{t-1})$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -283,7 +283,7 @@ cat("\\clearpage")
 ```{r table-appB-nspawner-upw, echo=FALSE}
 #set up table
 seltable = data.frame(
-  Model=paste("M1 ", Yr1,"-", Yr2, " data", sep=""), 
+  Model=paste("base model (M) ", Yr1,"-", Yr2, " data", sep=""), 
   Residual.df="", 
   MASE="",
   Adj.R2="", 
@@ -300,7 +300,7 @@ m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=
 m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 a=anova(m1,m2,m3, test="F")
 
-# header M1 for all models
+# header M for all models
 
 #model 1
 i=1; mod=paste("m",i,sep="")
@@ -317,7 +317,6 @@ seltable=rbind(seltable,tmp1)
 ## Add space
 tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
-
 
 for(covname in c("SST.UPW.4.mon7to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon1to3.")){
 #set up table
@@ -340,7 +339,7 @@ seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="2. $ln(N_t)$ = M1 + $\\beta V_t$ + $\\epsilon$",
+  Model="2. $ln(N_t)$ = M + $\\beta V_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -352,7 +351,7 @@ seltable=rbind(seltable,tmp1)
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="3. $ln(N_t)$ = M1 + $s(V_t)$ + $\\epsilon$",
+  Model="3. $ln(N_t)$ = M + $s(V_t)$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -368,7 +367,7 @@ a=anova(m1,m2,m3, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="4. $ln(N_t)$ = M1 + $\\beta V_{t-1}$ + $\\epsilon$", 
+  Model="4. $ln(N_t)$ = M + $\\beta V_{t-1}$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -380,7 +379,7 @@ seltable=rbind(seltable,tmp1)
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="5. $ln(N_t)$ = M1 + $s(ln(S_{t-2}))$ + $s(V_{t-1})$ + $\\epsilon$", 
+  Model="5. $ln(N_t)$ = M + $s(ln(S_{t-2}))$ + $s(V_{t-1})$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 

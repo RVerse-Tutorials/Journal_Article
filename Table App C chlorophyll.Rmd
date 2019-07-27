@@ -22,7 +22,14 @@ Yr2 = max(dat$Year)
 
 ```{r table-appC-spawner, echo=FALSE}
 #set up table
-seltable = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="&nbsp;", stringsAsFactors=FALSE)
+seltable = data.frame(
+  Model=paste("base model (M) ", Yr1,"-", Yr2, " data", sep=""), 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC="", stringsAsFactors=FALSE)
 
 m1 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE), data=dat.chl)
 m2 = gam(nspawners0 ~ poly(nspawners1, 3, raw=TRUE), data=dat.chl)
@@ -31,18 +38,27 @@ a=anova(m1,m2, test="F")
 #model 1
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="I-M1: $ln(S_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="1. $ln(S_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+## Add space
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
+seltable=rbind(seltable,tmp1)
 
 for(covname in c("log.CHL.4.mon7to9.")){
 #set up table
-  if(covname=="log.CHL.4.mon1to3.")   covtit = "V = Jan-Mar Chlorophyll"
-  if(covname=="log.CHL.4.mon7to9.")   covtit = "V = Jul-Sep Chlorophyll"
-  if(covname=="log.CHL.4.mon10to12.") covtit = "V = Oct-Dec Chlorophyll"
+  if(covname=="log.CHL.4.mon1to3.")   covtit = "$V_t$ = Jan-Mar Chlorophyll"
+  if(covname=="log.CHL.4.mon7to9.")   covtit = "$V_t$ = Jul-Sep Chlorophyll"
+  if(covname=="log.CHL.4.mon10to12.") covtit = "$V_t$ = Oct-Dec Chlorophyll"
 
-  seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
+#var header
+seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
 
 #set up the cov0 and cov1 variables
 dat$cov0=dat[[paste(covname, "0", sep="")]]
@@ -57,46 +73,64 @@ a=anova(m1,m2,m3,m4,m5, test="F")
 #model 2
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="II: $ln(S_t) = M1 + \\beta V_t$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="2. $ln(S_t) = M + \\beta V_t$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 #model 3
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="III: $ln(S_t) = M1 + p(V_t)$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="3. $ln(S_t) = M + p(V_t)$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 #model 4
 i=4; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="IV: $ln(S_t) = M1 + p(V_t) + \\beta V_{t-1}$", 
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="4. $ln(S_t) = M + p(V_t) + \\beta V_{t-1}$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 #model 5
 i=5; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="V: $ln(S_t) = M1 + p(V_t) + p(V_{t-1})$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="5. $ln(S_t) = M + p(V_t) + p(V_{t-1})$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 ## Add space
-tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="")
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 }
 
 for(covname in c("log.CHL.4.mon10to12.", "log.CHL.4.mon1to3.")){
 #set up table
-  if(covname=="log.CHL.4.mon1to3.")   covtit = "V = Jan-Mar Chlorophyll"
-  if(covname=="log.CHL.4.mon7to9.")   covtit = "V = Jul-Sep Chlorophyll"
-  if(covname=="log.CHL.4.mon10to12.") covtit = "V = Oct-Dec Chlorophyll"
+  if(covname=="log.CHL.4.mon1to3.")   covtit = "$V_t$ = Jan-Mar Chlorophyll"
+  if(covname=="log.CHL.4.mon7to9.")   covtit = "$V_t$ = Jul-Sep Chlorophyll"
+  if(covname=="log.CHL.4.mon10to12.") covtit = "$V_t$ = Oct-Dec Chlorophyll"
 
-  seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
+#var header
+seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
 
 #set up the cov0 and cov1 variables
 dat$cov0=dat[[paste(covname, "0", sep="")]]
@@ -109,34 +143,42 @@ a=anova(m1,m2,m3, test="F")
 #model 2
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="II: $ln(S_t) = M1 + \\beta V_{t-1}$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="2. $ln(S_t) = M + \\beta V_{t-1}$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 #model 3
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="III: $ln(S_t) = M1 + p(V_{t-1})$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="3. $ln(S_t) = M + p(V_{t-1})$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 ## Add space
-tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="")
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 }
 # Remove space at top and bottom
-seltable=seltable[2:(dim(seltable)[1]-1),]
+seltable=seltable[1:(dim(seltable)[1]-1),]
 ```
 
 ```{r print-tableAppC-spawners, echo=FALSE}
-colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
-if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
+colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of Chlorophyll-a (CHL) as an explanatory variable for the Jul-Sep catch ($S_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_t$ is CHL in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is CHL in the prior Jul-Jun season. Only CHL in Oct-Dec and Jan-Mar in the prior season is used since for the current season, these months are after the Jul-Sep catch being modeled.  Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Jul-Sep catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This is done due to data constraints. The models are nested; the Roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M1) at top.")
+thecap=paste("Model selection tests of Chlorophyll-a (CHL) as an explanatory variable for the Jul-Sep catch ($S_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_t$ is CHL in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is CHL in the prior Jul-Jun season. Only CHL in Oct-Dec and Jan-Mar in the prior season is used since for the current season, these months are after the Jul-Sep catch being modeled.  Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Jul-Sep catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This is done due to data constraints. The models are nested; the Roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M) at top.")
 fullcap=paste("Table ", ref("tabappC:spawner-model", pre="C"), ". ", thecap, sep="")
-kable(seltable, align="lccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
+kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
 
 ```{r, results="asis", echo=FALSE}
@@ -145,7 +187,14 @@ cat("\\clearpage")
 
 ```{r table-appC-nonspawner, echo=FALSE}
 #set up table
-seltable = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="&nbsp;", stringsAsFactors=FALSE)
+seltable = data.frame(
+  Model=paste("base model (M) ", Yr1,"-", Yr2, " data", sep=""), 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC="", stringsAsFactors=FALSE)
 
 m1 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE), data=dat.chl)
 m2 = gam(nspawners0 ~ poly(nspawners1, 3, raw=TRUE), data=dat.chl)
@@ -154,20 +203,24 @@ a=anova(m1,m2, test="F")
 #model 1
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="I-M1: $ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="1. $ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 ## Add space
-tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="")
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 
 for(covname in c("log.CHL.4.mon7to9.", "log.CHL.4.mon10to12.", "log.CHL.4.mon1to3.")){
 #set up table
-  if(covname=="log.CHL.4.mon1to3.")   covtit = "V = Jan-Mar Chlorophyll"
-  if(covname=="log.CHL.4.mon7to9.")   covtit = "V = Jul-Sep Chlorophyll"
-  if(covname=="log.CHL.4.mon10to12.") covtit = "V = Oct-Dec Chlorophyll"
+  if(covname=="log.CHL.4.mon1to3.")   covtit = "$V_t$ = Jan-Mar Chlorophyll"
+  if(covname=="log.CHL.4.mon7to9.")   covtit = "$V_t$ = Jul-Sep Chlorophyll"
+  if(covname=="log.CHL.4.mon10to12.") covtit = "$V_t$ = Oct-Dec Chlorophyll"
 
 
 #set up the cov0 and cov1 variables
@@ -180,40 +233,57 @@ m4 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE) + poly(cov0, 2, raw=TRUE) + 
 m5 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE) + poly(cov0, 2, raw=TRUE) + poly(cov1, 2, raw=TRUE), data=dat)
 a=anova(m1,m2,m3,m4,m5, test="F")
 
-
-seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
+#var header
+seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
 
 #model 2
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="II: $ln(N_t) = M1 + \\beta V_t$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="2. $ln(N_t) = M + \\beta V_t$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 #model 3
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="III: $ln(N_t) = M1 + p(V_t)$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="3. $ln(N_t) = M + p(V_t)$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 if(covname=="log.CHL.4.mon10to12."){
 #model 4
 i=4; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="IV: $ln(N_t) = M1 + p(V_t) + \\beta V_{t-1}$", 
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="4. $ln(N_t) = M + p(V_t) + \\beta V_{t-1}$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 #model 5
 i=5; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="V: $ln(N_t) = M1 + p(V_t) + p(V_{t-1})$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="5. $ln(N_t) = M + p(V_t) + p(V_{t-1})$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 }
 
 m1 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE), data=dat)
@@ -224,35 +294,43 @@ a=anova(m1,m2,m3, test="F")
 #model 2
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="II: $ln(N_t) = M1 + \\beta V_{t-1}$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="2. $ln(N_t) = M + \\beta V_{t-1}$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 #model 3
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="III: $ln(N_t) = M1 + p(V_{t-1})$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="3. $ln(N_t) = M + p(V_{t-1})$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 ## Add space
-tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="")
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 }
 
 # Remove space at top and bottom
-seltable=seltable[2:(dim(seltable)[1]-1),]
+seltable=seltable[1:(dim(seltable)[1]-1),]
 ```
 
 ```{r print-tableAppC-nonspawners, echo=FALSE}
-colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
-if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
+colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of Chlorophyll-a (CHL) as an explanatory variable for Oct-Jun catch ($N_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_t$ is CHL in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is CHL in the prior Jul-Jun season. Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Oct-Jun catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This was done due to data constraints. The models are nested; the Roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M1) at top.")
+thecap=paste("Model selection tests of Chlorophyll-a (CHL) as an explanatory variable for Oct-Jun catch ($N_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_t$ is CHL in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is CHL in the prior Jul-Jun season. Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Oct-Jun catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This was done due to data constraints. The models are nested; the Roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M) at top.")
 fullcap=paste("Table ", ref("tabappC:nonspawner-model", pre="C"), ". ", thecap, sep="")
-kable(seltable, align="lccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
+kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
 
 ```{r, results="asis", echo=FALSE}
@@ -261,7 +339,14 @@ cat("\\clearpage")
 
 ```{r table-appC-nonspawner-box3, echo=FALSE}
 #set up table
-seltable = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="&nbsp;", stringsAsFactors=FALSE)
+seltable = data.frame(
+  Model=paste("base model (M) ", Yr1,"-", Yr2, " data", sep=""), 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC="", stringsAsFactors=FALSE)
 
 m1 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE), data=dat.chl)
 m2 = gam(nspawners0 ~ poly(nspawners1, 3, raw=TRUE), data=dat.chl)
@@ -270,20 +355,24 @@ a=anova(m1,m2, test="F")
 #model 1
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="I-M1: $ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F="", p.value="", AIC=round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value="", AIC="")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="1. $ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 ## Add space
-tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="")
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 
 for(covname in c("log.CHL.5.mon7to9.", "log.CHL.5.mon10to12.", "log.CHL.5.mon1to3.")){
 #set up table
-  if(covname=="log.CHL.5.mon1to3.")   covtit = "V = Jan-Mar Chlorophyll"
-  if(covname=="log.CHL.5.mon7to9.")   covtit = "V = Jul-Sep Chlorophyll"
-  if(covname=="log.CHL.5.mon10to12.") covtit = "V = Oct-Dec Chlorophyll"
+  if(covname=="log.CHL.5.mon1to3.")   covtit = "$V_t$ = Jan-Mar Chlorophyll"
+  if(covname=="log.CHL.5.mon7to9.")   covtit = "$V_t$ = Jul-Sep Chlorophyll"
+  if(covname=="log.CHL.5.mon10to12.") covtit = "$V_t$ = Oct-Dec Chlorophyll"
 
 
 #set up the cov0 and cov1 variables
@@ -296,40 +385,57 @@ m4 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE) + poly(cov0, 2, raw=TRUE) + 
 m5 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE) + poly(cov0, 2, raw=TRUE) + poly(cov1, 2, raw=TRUE), data=dat)
 a=anova(m1,m2,m3,m4,m5, test="F")
 
-
-seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
+#var header
+seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
 
 #model 2
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="II: $ln(N_t) = M1 + \\beta V_t$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="2. $ln(N_t) = M + \\beta V_t$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 #model 3
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="III: $ln(N_t) = M1 + p(V_t)$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="3. $ln(N_t) = M + p(V_t)$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 if(covname=="log.CHL.5.mon10to12."){
 #model 4
 i=4; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="IV: $ln(N_t) = M1 + p(V_t) + \\beta V_{t-1}$", 
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="4. $ln(N_t) = M + p(V_t) + \\beta V_{t-1}$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 #model 5
 i=5; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="V: $ln(N_t) = M1 + p(V_t) + p(V_{t-1})$", Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="5. $ln(N_t) = M + p(V_t) + p(V_{t-1})$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 }
 
 m1 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE), data=dat)
@@ -340,33 +446,41 @@ a=anova(m1,m2,m3, test="F")
 #model 2
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="II: $ln(N_t) = M1 + \\beta V_{t-1}$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="2. $ln(N_t) = M + \\beta V_{t-1}$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 #model 3
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
-tmp1=data.frame(Model="III: $ln(N_t) = M1 + p(V_{t-1})$",
-                Residual.df=round(a[["Resid. Df"]][i],digits=1), Residual.dev=round(a[["Resid. Dev"]][i],digits=2), F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), AIC = round(AIC(get(mod)), digits=2))
-tmp2=data.frame(Model=paste("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;($R^2 adj$ = ",100*round(aa$r.sq, digits=2), "\\%, Var($\\epsilon$) = ", round(get(mod)$sig2, digits=2),")", sep=""), Residual.df="", Residual.dev="", F="", p.value = "", AIC= "")
-seltable=rbind(seltable,tmp1,tmp2)
+tmp1=data.frame(
+  Model="3. $ln(N_t) = M + p(V_{t-1})$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
 
 ## Add space
-tmp1 = data.frame(Model="&nbsp;", Residual.df="&nbsp;", Residual.dev="&nbsp;", F="&nbsp;", p.value="&nbsp;", AIC="")
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 }
 
 # Remove space at top and bottom
-seltable=seltable[2:(dim(seltable)[1]-1),]
+seltable=seltable[1:(dim(seltable)[1]-1),]
 ```
 
 ```{r print-tableAppC-nonspawners-box3, echo=FALSE}
-colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
-if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
+colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
 thecap=paste("Model selection tests of Chlorophyll-a as an explanatory variable for the catch during the non-spawning months (Oct-Jun) using box 5.")
 fullcap=paste("Table ", ref("tabappC:nonspawner-model-box5", pre="C"), ". ", thecap, sep="")
-kable(seltable, align="lccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
+kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```

@@ -7,27 +7,24 @@
 \hline
 Stage & Hypothesis & Resp. & Covariates\\
 \hline
-Age 2+ & DD1.  $S_t$ is dominated by mature age 2+ fish, thus abundance of the 1-yr and 2-yr ages in the prior season (Oct-Jun catch) should be correlated with the abundance of mature fish this year. & $S_t$ & $N_{t-1}$\\
+Age 2+ & DD1.  $S_t$ is dominated by mature age 2+ fish, thus abundance of the 1-yr and 2-yr ages in the prior season (Oct-Mar catch) should be correlated with the abundance of mature fish this year. & $S_t$ & $N_{t-1}$\\
 \hline
 Age 1-2 & DD2.  Abundance of 1-yr and 2-yr fish should be correlated with strength of the cohorts from the previous two seasons.  The quarter 3 catch, dominated by mature fish, in the prior two years is expected to be correlated with post-monsoon catch. & $N_t$ & $S_{t-1}$ and $S_{t-2}$\\
 \hline
-Age 2+ & DD3.  Because age 2 fish also appear in the post-monsoon catch, we also expect the post-monsoon catch in the previous season to be correlated with the post-monsoon catch in the current season. & $N_t$ & $N_{t-1}$\\
+Age 2+ & DD3.  Because age 2 fish appear in the post-monsoon catch, we also expect the post-monsoon catch (dominated by age 1 and 2) in the previous season to be correlated with the post-monsoon catch in the current season. Post-monsoon catch two seasons prior should be minimally correlated with current post-monsoon catch. & $N_t$ & $N_{t-1}$\\
 \hline
 Spawn & S1.  The onset of monsoon precipitation triggers movement of adults from offshore to spawning areas due to changes in salinity, turbulence or noise. Spent adults migrate inshore and are exposed to the fishery. & $S_t$ & Seasonal precipitation anomaly during Jun-Jul in year t\\
 \hline
-Spawn & S2.  The level of precipitation in pre-monsoon predicts spawning strength. & $S_t$ & Seasonal precipitation anomaly during Apr-May in year t\\
+Spawn & S2.  The level of precipitation in pre-monsoon months predicts spawning strength. & $S_t$ & Seasonal precipitation anomaly during Apr-May in year t\\
 \hline
-Spawn & S3.  Low SST is associated with delayed and limited spawning as a behavioral response by adults to avoid exposing larvae to low temperatures associated with poor survival. & $S_t$ & Average SST during Jun-Sep in year t\\
+Spawn & S3.  Low SST is associated with delayed and limited spawning as a behavioral response by adults to avoid exposing larvae to low temperatures associated with poor survival. Conversely, high SST is indicative of poor upwelling and poor larval feeding conditions. & $S_t$ & Average SST during Jun-Sep in year t\\
 \hline
-Spawn & S4.  Extremely high upwelling brings poorly oxygenated water to the surface causing sardines to move offshore. & $S_t$ & Average upwelling index Jun-Sep, Max upwelling index Jun-Sep in year t\\
-\hline
-Spawn & S5. Salinity changes due to precipitation or river run-off trigger spawning.  After spawning, spent adult move to inshore waters and are exposed to fishery. & $S_t$ & Average Salinity during Jun-Sep in year t\\
+Spawn & S4.  xtremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing sardines to move offshore where they are less exposed to the fishery. & $S_t$ & Average upwelling index Jun-Sep, Max upwelling index Jun-Sep in year t\\
 \hline
 \end{tabular}
 \end{table}
 
-\hypertarget{section}{%
-\section{}\label{section}}
+\section{}\label{section}
 
 \clearpage
 
@@ -39,16 +36,15 @@ Spawn & S5. Salinity changes due to precipitation or river run-off trigger spawn
 \hline
 Stage & Hypothesis & Resp. & Covariates\\
 \hline
-Larv. & L1.  Larval mortality is higher in colder water due to low motility causing increased predation and slower somatic growth. Low SST is also associated with strong upwelling which advects larvae into offshore waters. & $N_t$ & Average SST during Jun-Sep, Cum DD Jun-Sep in year t-1\\
+Larv. & L1.  Highest somatic growth occurs in Sep-Oct. Larval growth and survival is higher in warmer water. Low SST at this time is also associated with strong upwelling which advects larvae into offshore waters where productivity is lower. & $N_t$ & Average SST during Sep-Oct in year t-1\\
 \hline
-Larv. & L2. Extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore. & $N_t$ & Ave. upwelling index Jun-Sep, max upwelling index Jun-Sep in year t-1\\
+Juv. & L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  Thus the strength of upwelling during the monsoon should be associated with higher biomass in subsequent years. At the same time, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore. & $N_t$ and $S_t$ & Ave. upwelling index Jun-Sep and max upwelling index Jun-Sep in year t-1 and t-2\\
 \hline
-Juv. & J1. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  Thus the strength of upwelling during the monsoon should be associated with higher biomass in subsequent years. & $N_t$ & Ave. upwelling index Jun-Sep, max upwelling index Jun-Sep in year t-1 and t-2\\
-\hline
-Juv. & J2. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  Bloom intensity in prior years should be associated with future sardine biomass. & $N_t$ & Ave. Chl-a density Jun-Dec, Chl-a density Jun-Dec in year t-1 and t-2\\
+Juv. & L3. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  Bloom intensity in prior years should be associated with future sardine biomass. & $N_t$ and $S_t$ & Ave. Chl-a density Jun-Dec in year t-1 and t-2\\
 \hline
 All ages & A1. During the Mar-Apr, the sea temperatures are high and sardines migrate offshore to avoid high temp. & Catch Q2 year t & Ave. SST Q2 year t, max SST Q2 year t\\
 \hline
+All ages & A1. The changes brought about by the El Niño Southern Oscillation (ENSO) cycle have a variety of effect on environmental parameters (precipitation, SST, thermal fronts, Wind) which impacts spawning and early survival. This in turn impacts the overall abundance. & $N_t$ and $S_t$ & ONI year t-1\\
+\hline
 \end{tabular}
 \end{table}
-

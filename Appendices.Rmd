@@ -127,6 +127,10 @@ title(var.title)
 }
 ```
 
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
 # Appendix E: Covariates along the SE India coast
 
 ```{r upw.mon, echo=FALSE,fig.cap="Figure E1. Upwelling index.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
@@ -276,6 +280,10 @@ cat("\\clearpage")
 ```{r rainfall.mon.comparison, echo=FALSE,fig.cap="Figure F2. Monthly precipitation measured over land via land gauges versus the precipitation measured via remote sensing over the ocean.", fig.width=6,fig.height=6,message=FALSE,warning=FALSE}
 plot(seio_covariates_mon$Precip.Kerala, seio_covariates_mon$precip.gpcp.kerala, ylab="land precipitation",
 xlab="ocean precipitation")
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
 ```
 
 # Appendix G: Chlorophyll-a images in 2016
