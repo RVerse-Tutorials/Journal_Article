@@ -38,37 +38,67 @@ respdat$nspawners0 = respdat$CatchWin0
 respdat=log(respdat)
 
   covnames=c(
-    "log.CHL.3","log.CHL.4","log.CHL.5",
-    "log.CHL.3","log.CHL.4","log.CHL.5",
-    "log.CHL.3","log.CHL.4","log.CHL.5",
-    "SST.UPW.5","SST.UPW.4","SST.UPW.4",
-    "SST.UPW.5","SST.UPW.4","SST.UPW.4",
-    "SST.UPW.5","SST.UPW.4","SST.UPW.4",
-    "SST.UPW.5","SST.UPW.4","SST.UPW.4",
-    "SST.5","SST.4","SST.4",
-    "SST.5","SST.4","SST.4",
-    "SST.5","SST.4","SST.4",
-    "precip.gpcp.kerala", "precip.gpcp.kerala")
+    "log.CHL.4","log.CHL.5",
+    "log.CHL.4","log.CHL.5",
+    "log.CHL.4","log.CHL.5",
+    "SST.UPW.5","SST.UPW.4",
+    "SST.UPW.5","SST.UPW.4",
+    "SST.UPW.5","SST.UPW.4",
+    "SST.UPW.5","SST.UPW.4",
+    "SST.5","SST.4",
+    "SST.5","SST.4",
+     "SST.2","SST.3","SST.4","SST.5",
+    "SST.7","SST.8","SST.9","SST.10",
+    "SST.2","SST.3","SST.4","SST.5",
+    "SST.7","SST.8","SST.9","SST.10",
+    "SST.2","SST.3","SST.4","SST.5",
+    "SST.7","SST.8","SST.9","SST.10",
+    "SST.2","SST.3","SST.4","SST.5",
+    "SST.7","SST.8","SST.9","SST.10",
+    "SST.2","SST.3","SST.4","SST.5",
+    "SST.7","SST.8","SST.9","SST.10",
+    "SST.11","SST.12","SST.13",
+    "SST.11","SST.12","SST.13",
+    "SST.11","SST.12","SST.13",
+    "SST.11","SST.12","SST.13",
+    "SST.11","SST.12","SST.13",
+   "precip.gpcp.kerala", "precip.gpcp.kerala")
   covmon=list(
-     7:9,7:9,7:9,
-     1:3,1:3,1:3,
+     7:9,7:9,
+     1:3,1:3,
+     10:12,10:12,
+     6:9,6:9,
+     1:3,1:3,
+     4:6,4:6,
+     10:12,10:12,
+     1:3,1:3,
+     1:12,1:12,
+     6:9,6:9,6:9,6:9,
+     6:9,6:9,6:9,6:9,
+     9:10,9:10,9:10,9:10,
+     9:10,9:10,9:10,9:10,
+     1:12,1:12,1:12,1:12,
+     1:12,1:12,1:12,1:12,
+     1:5,1:5,1:5,1:5,
+     1:5,1:5,1:5,1:5,
+     10:12,10:12,10:12,10:12,
+     10:12,10:12,10:12,10:12,
+     9:10,9:10,9:10,
+     1:12,1:12,1:12,
+     1:5,1:5,1:5,
+     6:9,6:9,6:9,
      10:12,10:12,10:12,
-     7:9,7:9,7:9,
-     1:3,1:3,1:3,
-     4:6,4:6,4:6,
-     10:12,10:12,10:12,
-     1:3,1:9,1:3,
-     10:12,10:12,4:6,
-     7:9,7:9,1:12,
      4:5,6:7)
 
 #fix problem in seio_covariates_mon with SST in 1994.
   #replace with 5 year mean for that month
   seio_covariates_mon2 = seio_covariates_mon
-  tmpcov=c("SST.UPW.3","SST.UPW.4","SST.UPW.5","SST.3","SST.4","SST.5")
+  tmpcov=c("SST.UPW.3","SST.UPW.4","SST.UPW.5","SST.2",
+           "SST.3","SST.4","SST.5","SST.7","SST.8","SST.9","SST.10","SST.11","SST.12","SST.13")
   for(itmpcov in tmpcov){
     for(mon in 10:12){
     filt1=with(seio_covariates_mon2, Year==1994 & Month==mon)
+    if(!is.na(seio_covariates_mon2[filt1,itmpcov])) next
     filt2=with(seio_covariates_mon2, Year%in%(1990:1996) & Month==mon)
     seio_covariates_mon2[filt1,itmpcov]=mean(seio_covariates_mon[filt2,itmpcov], na.rm=TRUE)
     }
@@ -79,13 +109,23 @@ for(i in 1:length(covnames)){
   covname=covnames[i]
   mon=covmon[[i]]
   varname=paste(covname,".mon",mon[1],"to",mon[length(mon)],".0",sep="")
-  covdat=tapply(seio_covariates_mon2[[covname]],seio_covariates_mon2$Year,function(x){max(x[mon],na.rm=TRUE)})
+  covdat=tapply(seio_covariates_mon2[[covname]],seio_covariates_mon2$Year,function(x){mean(x[mon],na.rm=TRUE)})
   covdat[is.infinite(covdat)]=NA
+  maxcovdat=tapply(seio_covariates_mon2[[covname]],seio_covariates_mon2$Year,function(x){max(x[mon],na.rm=TRUE)})
+  maxcovdat[is.infinite(covdat)]=NA  
   if(str_detect(varname, "mon1to3")|str_detect(varname, "mon4to6")){
     respdat[[varname]]=c(covdat[-1],NA)
-  }else{
+    respdat[[paste0("max.",varname)]]=c(maxcovdat[-1],NA)
+ }else{
     respdat[[varname]]=covdat
+    respdat[[paste0("max.",varname)]]=maxcovdat
   }
+}
+for(j in c("mon9to10.0", "mon6to9.0", "mon1to12.0", "mon1to5.0",  "mon10to12.0")){
+  varname=paste0("SST.",c(2:5),".",j)
+  tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
+  varname=paste0("SST.2.10.",j)
+  respdat[[varname]]=tmp
 }
 
 #add lags
@@ -101,9 +141,14 @@ fullrespdat = respdat
 ```
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
-covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", "SST.4.mon1to12.", "SST.4.mon1to9.", "SST.4.mon7to9.", "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.")
+covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", 
+             "SST.4.mon1to12.", "SST.4.mon6to9.", 
+             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon6to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
+             "max.SST.UPW.4.mon6to9.",
+             "SST.2.10.mon6to9.", "SST.2.10.mon9to10.", "SST.2.10.mon1to12.",
+             "SST.2.10.mon1to5.", "SST.2.10.mon10to12.")
 #set up to use consistent data
-dat=fullrespdat[,c("Year","spawners0", "nspawners1", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
+dat=fullrespdat[,c("Year","spawners0", "nspawners1", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
 dat.spawners=dat
 if(any(diff(dat.spawners$Year)!=1)) stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")
@@ -111,10 +156,11 @@ if(any(diff(dat.spawners$Year)!=1)) stop("Problem in setup.Rmd.  The covariate d
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
 covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", 
-             "SST.4.mon1to12.", "SST.4.mon1to9.", "SST.4.mon7to9.", 
-             "SST.4.mon4to6.","SST.4.mon1to3.",
-             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", 
-             "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.")
+             "SST.4.mon1to12.", "SST.4.mon6to9.", 
+             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon6to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
+             "max.SST.UPW.4.mon6to9.",
+             "SST.2.10.mon6to9.", "SST.2.10.mon9to10.", "SST.2.10.mon1to12.", 
+             "SST.2.10.mon1to5.", "SST.2.10.mon10to12.")
 #set up to use consistent data
 dat=fullrespdat[,c("Year","nspawners0", "nspawners1", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
@@ -130,16 +176,13 @@ rm(dat) #make sure I don't accidentally forget to define dat
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
 covnames = c("log.CHL.4.mon1to3.", "log.CHL.4.mon7to9.", "log.CHL.4.mon10to12.",
-             "log.CHL.3.mon1to3.", "log.CHL.3.mon7to9.", "log.CHL.3.mon10to12.",
              "log.CHL.5.mon1to3.", "log.CHL.5.mon7to9.", "log.CHL.5.mon10to12.",
-             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon7to9.", 
-             "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
-             "SST.UPW.5.mon1to3.", "SST.UPW.5.mon7to9.", 
-             "SST.UPW.5.mon10to12.", "SST.UPW.5.mon4to6.",
-             "SST.4.mon7to9.", 
-             "SST.4.mon10to12.", 
-             "SST.5.mon7to9.", 
-             "SST.5.mon10to12.")
+             "precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.",
+             "SST.4.mon1to12.", "SST.4.mon6to9.", 
+             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon6to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
+             "max.SST.UPW.4.mon6to9.",
+             "SST.2.10.mon6to9.", "SST.2.10.mon9to10.", "SST.2.10.mon1to12.",
+             "SST.2.10.mon1to5.", "SST.2.10.mon10to12.")
 #set up to use consistent data
 dat=fullrespdat[,c("Year", "spawners0", "nspawners0",
                    "nspawners1", "spawners2",

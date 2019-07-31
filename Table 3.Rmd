@@ -14,10 +14,10 @@ header-includes: \usepackage[labelformat=empty]{caption}
 dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-covnames=c("SST.4.mon7to9.0", "SST.UPW.4.mon1to3.1")
-covtits =  c("Jul-Sep SST current season", "Jan-Mar UPW prior season")
-dat$cov0=dat[["SST.4.mon7to9.0"]]
-dat$cov1=dat[["SST.UPW.4.mon1to3.1"]]
+covnames=c("SST.4.mon6to9.0", "SST.4.mon9to10.1")
+covtits =  c("Jun-Sep SST current season", "Sep-Oct SST prior season")
+dat$cov0=dat[["SST.4.mon6to9.0"]]
+dat$cov1=dat[["SST.4.mon9to10.1"]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
 
@@ -36,10 +36,10 @@ m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=
 dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-covnames=c("SST.4.mon7to9.0", "SST.UPW.4.mon1to3.1")
-covtits =  c("Jul-Sep SST current season", "Jan-Mar UPW prior season")
-dat$cov0=dat[["SST.4.mon7to9.0"]]
-dat$cov1=dat[["SST.UPW.4.mon1to3.1"]]
+covnames=c("SST.4.mon6to9.0", "SST.4.mon9to10.1")
+covtits =  c("Jun-Sep SST current season", "Sep-Oct SST prior season")
+dat$cov0=dat[["SST.4.mon6to9.0"]]
+dat$cov1=dat[["SST.4.mon9to10.1"]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
@@ -47,8 +47,8 @@ a=anova(m1,m2,m3, test="F")
 
 ## Header
 tmp1 = data.frame(Model="Jul-Sep catch models with covariates", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
-tmp2 = data.frame(Model="$V_t$ = Jul-Sep SST current season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
-tmp3 = data.frame(Model="$W_{t-1}$ = Jan-Mar upwelling prior season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
+tmp2 = data.frame(Model="$V_t$ = Jun-Sep SST current season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
+tmp3 = data.frame(Model="$W_{t-1}$ = Sep-Oct SST prior season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
 seltable=rbind(tmp1,tmp2,tmp3)
 
 i=1; mod=paste("m",i,sep="")
@@ -87,9 +87,9 @@ seltable=rbind(seltable,tmp1)
 dat=dat.nonspawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-covnames=c("SST.4.mon7to9.0", "SST.UPW.4.mon10to12.1")
-covtits =  c("Jul-Sep SST current season", "Oct-Dec UPW prior season")
-dat$cov0=dat[["SST.4.mon7to9.0"]]
+covnames=c("SST.4.mon6to9.0", "SST.UPW.4.mon10to12.1")
+covtits =  c("Jun-Sep SST current season", "Oct-Dec UPW prior season")
+dat$cov0=dat[["SST.4.mon6to9.0"]]
 dat$cov1=dat[["SST.UPW.4.mon10to12.1"]]
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
@@ -97,8 +97,8 @@ m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=
 a=anova(m1,m2,m3, test="F")
 
 ## Header
-tmp1 = data.frame(Model="Oct-Jun catch models with covariates", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
-tmp2 = data.frame(Model="$V_t$ = Jul-Sep SST current season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
+tmp1 = data.frame(Model="Oct-Mar catch models with covariates", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
+tmp2 = data.frame(Model="$V_t$ = Jun-Sep SST current season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
 tmp3 = data.frame(Model="$W_{t-1}$ = Oct-Dec upwelling prior season", Residual.df="", Residual.dev="", F="", p.value="", AIC="", stringsAsFactors = FALSE)
 seltable=rbind(seltable,tmp1,tmp2,tmp3)
 

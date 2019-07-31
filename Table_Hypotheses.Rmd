@@ -63,13 +63,13 @@ HS3 = data.frame(
   Time="Jun-Sep",
   Hyp="S3.  Low SST is associated with delayed and limited spawning as a behavioral response by adults to avoid exposing larvae to low temperatures associated with poor survival. Conversely, high SST is indicative of poor upwelling and poor larval feeding conditions.",
   Response="$S_t$",
-  Cov="Average SST during Jun-Sep in year t",
+  Cov="Average SST during Jul-Sep in year t",
   stringsAsFactors=FALSE)
 
 HS4 = data.frame(
   Life="Spawn",
   Time="Jun-Sep",
-  Hyp="S4.  xtremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing sardines to move offshore where they are less exposed to the fishery.",
+  Hyp="S4.  Extremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing sardines to move offshore where they are less exposed to the fishery.",
   Response="$S_t$",
   Cov="Average upwelling index Jun-Sep, Max upwelling index Jun-Sep in year t",
   stringsAsFactors=FALSE)
