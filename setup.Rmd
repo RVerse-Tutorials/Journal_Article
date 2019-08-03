@@ -79,8 +79,8 @@ respdat=log(respdat)
      9:10,9:10,9:10,9:10,
      1:12,1:12,1:12,1:12,
      1:12,1:12,1:12,1:12,
-     1:5,1:5,1:5,1:5,
-     1:5,1:5,1:5,1:5,
+     3:5,3:5,3:5,3:5,
+     3:5,3:5,3:5,3:5,
      10:12,10:12,10:12,10:12,
      10:12,10:12,10:12,10:12,
      9:10,9:10,9:10,
@@ -121,7 +121,7 @@ for(i in 1:length(covnames)){
     respdat[[paste0("max.",varname)]]=maxcovdat
   }
 }
-for(j in c("mon9to10.0", "mon6to9.0", "mon1to12.0", "mon1to5.0",  "mon10to12.0")){
+for(j in c("mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0")){
   varname=paste0("SST.",c(2:5),".",j)
   tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
   varname=paste0("SST.2.10.",j)
@@ -146,7 +146,7 @@ covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.",
              "SST.UPW.4.mon1to3.", "SST.UPW.4.mon6to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
              "max.SST.UPW.4.mon6to9.",
              "SST.2.10.mon6to9.", "SST.2.10.mon9to10.", "SST.2.10.mon1to12.",
-             "SST.2.10.mon1to5.", "SST.2.10.mon10to12.")
+             "SST.2.10.mon3to5.", "SST.2.10.mon10to12.")
 #set up to use consistent data
 dat=fullrespdat[,c("Year","spawners0", "nspawners1", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
@@ -160,7 +160,7 @@ covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.",
              "SST.UPW.4.mon1to3.", "SST.UPW.4.mon6to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
              "max.SST.UPW.4.mon6to9.",
              "SST.2.10.mon6to9.", "SST.2.10.mon9to10.", "SST.2.10.mon1to12.", 
-             "SST.2.10.mon1to5.", "SST.2.10.mon10to12.")
+             "SST.2.10.mon3to5.", "SST.2.10.mon10to12.")
 #set up to use consistent data
 dat=fullrespdat[,c("Year","nspawners0", "nspawners1", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
@@ -182,7 +182,7 @@ covnames = c("log.CHL.4.mon1to3.", "log.CHL.4.mon7to9.", "log.CHL.4.mon10to12.",
              "SST.UPW.4.mon1to3.", "SST.UPW.4.mon6to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
              "max.SST.UPW.4.mon6to9.",
              "SST.2.10.mon6to9.", "SST.2.10.mon9to10.", "SST.2.10.mon1to12.",
-             "SST.2.10.mon1to5.", "SST.2.10.mon10to12.")
+             "SST.2.10.mon3to5.", "SST.2.10.mon10to12.")
 #set up to use consistent data
 dat=fullrespdat[,c("Year", "spawners0", "nspawners0",
                    "nspawners1", "spawners2",

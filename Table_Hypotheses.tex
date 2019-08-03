@@ -1,3 +1,42 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
 
 \begin{table}[t]
 
@@ -13,18 +52,16 @@ Age 1-2 & DD2.  Abundance of 1-yr and 2-yr fish should be correlated with streng
 \hline
 Age 2+ & DD3.  Because age 2 fish appear in the post-monsoon catch, we also expect the post-monsoon catch (dominated by age 1 and 2) in the previous season to be correlated with the post-monsoon catch in the current season. Post-monsoon catch two seasons prior should be minimally correlated with current post-monsoon catch. & $N_t$ & $N_{t-1}$\\
 \hline
-Spawn & S1.  The onset of monsoon precipitation triggers movement of adults from offshore to spawning areas due to changes in salinity, turbulence or noise. Spent adults migrate inshore and are exposed to the fishery. & $S_t$ & Seasonal precipitation anomaly during Jun-Jul in year t\\
+Spawn & S1.  The onset of monsoon precipitation triggers movement of adults from offshore to spawning areas due to changes in salinity, turbulence or noise. Spent adults migrate inshore and are exposed to the fishery. & $S_t$ & Seasonal precipitation during Jun-Jul in year t\\
 \hline
-Spawn & S2.  The level of precipitation in pre-monsoon months predicts spawning strength. & $S_t$ & Seasonal precipitation anomaly during Apr-May in year t\\
+Spawn & S2.  The level of precipitation in pre-monsoon months predicts spawning strength. & $S_t$ & Seasonal precipitation during Apr-May in year t\\
 \hline
-Spawn & S3.  Low SST is associated with delayed and limited spawning as a behavioral response by adults to avoid exposing larvae to low temperatures associated with poor survival. Conversely, high SST is indicative of poor upwelling and poor larval feeding conditions. & $S_t$ & Average SST during Jun-Sep in year t\\
+Spawn & S3.  Extremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing a delayed or poor spawning while optimal upwelling conditions leads to increased spawing. Spawning affects the recruitment of 0-age fish to the fishery and thus the post-monsoon catch. & $N_t$ and $S_t$ & Ave. Jun-Sep upwelling index in year $t$\\
 \hline
-Spawn & S4.  xtremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing sardines to move offshore where they are less exposed to the fishery. & $S_t$ & Average upwelling index Jun-Sep, Max upwelling index Jun-Sep in year t\\
+Spawn & S4.  Extreme heat events in the pre-spawning months cause mature fish to move offshore away from productive feeding areas leading to poor spawning condition. Poor recruitment leads to low 0-age in current season catch and 1-age fish in next season's catch. & $N_t$ & Ave. nearshore Mar-May SST in year $t$ and $t-1$\\
 \hline
 \end{tabular}
 \end{table}
-
-\section{}\label{section}
 
 \clearpage
 
@@ -36,15 +73,13 @@ Spawn & S4.  xtremely high upwelling brings poorly oxygenated water and very low
 \hline
 Stage & Hypothesis & Resp. & Covariates\\
 \hline
-Larv. & L1.  Highest somatic growth occurs in Sep-Oct. Larval growth and survival is higher in warmer water. Low SST at this time is also associated with strong upwelling which advects larvae into offshore waters where productivity is lower. & $N_t$ & Average SST during Sep-Oct in year t-1\\
+Larval & L1.  The prior year post-monsoon larval survival and growth is associated with higher future biomass. Larval growth and survival is highest in an intermediate temperature window. Low SST at this time is also indicative of strong upwelling which advects larvae into offshore waters where productivity is lower. & $N_t$ and $S_t$ & Average nearshore SST during Oct-Dec in year t-1\\
 \hline
-Juv. & L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  Thus the strength of upwelling during the monsoon should be associated with higher biomass in subsequent years. At the same time, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore. & $N_t$ and $S_t$ & Ave. upwelling index Jun-Sep and max upwelling index Jun-Sep in year t-1 and t-2\\
+Larval & L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  The strength of summer upwelling should be associated with higher biomass in future years. However, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore. & $N_t$ and $S_t$ & Ave. Jun-Sep upwelling index in year t-1 and t-2\\
 \hline
-Juv. & L3. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  Bloom intensity in prior years should be associated with future sardine biomass. & $N_t$ and $S_t$ & Ave. Chl-a density Jun-Dec in year t-1 and t-2\\
+Larval & L3. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  The monsoon bloom intensity in prior years should be associated with 0-year fish abundance in year $t$ and future sardine biomass. & $N_t$ and $S_t$ & Ave. Chl-a density Jun-Sep in year $t$, $t-1$ and $t-2$\\
 \hline
-All ages & A1. During the Mar-Apr, the sea temperatures are high and sardines migrate offshore to avoid high temp. & Catch Q2 year t & Ave. SST Q2 year t, max SST Q2 year t\\
-\hline
-All ages & A1. The changes brought about by the El Niño Southern Oscillation (ENSO) cycle have a variety of effect on environmental parameters (precipitation, SST, thermal fronts, Wind) which impacts spawning and early survival. This in turn impacts the overall abundance. & $N_t$ and $S_t$ & ONI year t-1\\
+All ages & A1. The changes brought about by the El Niño Southern Oscillation (ENSO) cycle have a variety of effects on environmental parameters (precipitation, SST, thermal fronts, Wind) which impacts spawning and early survival. This in turn impacts the overall abundance. & $N_t$ and $S_t$ & ONI year t-1\\
 \hline
 \end{tabular}
 \end{table}

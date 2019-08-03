@@ -20,7 +20,6 @@ fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
 
 DD1 = data.frame(
   Life="Age 2+",
-  Time="Jun-Sep",
   Hyp="DD1.  $S_t$ is dominated by mature age 2+ fish, thus abundance of the 1-yr and 2-yr ages in the prior season (Oct-Mar catch) should be correlated with the abundance of mature fish this year.",
   Response="$S_t$",
   Cov="$N_{t-1}$",
@@ -28,7 +27,6 @@ DD1 = data.frame(
 
 DD2 = data.frame(
   Life="Age 1-2",
-  Time="Oct-May",
   Hyp="DD2.  Abundance of 1-yr and 2-yr fish should be correlated with strength of the cohorts from the previous two seasons.  The quarter 3 catch, dominated by mature fish, in the prior two years is expected to be correlated with post-monsoon catch.",
   Response="$N_t$",
   Cov="$S_{t-1}$ and $S_{t-2}$",
@@ -36,7 +34,6 @@ DD2 = data.frame(
 
 DD3 = data.frame(
   Life="Age 2+",
-  Time="Oct-May",
   Hyp="DD3.  Because age 2 fish appear in the post-monsoon catch, we also expect the post-monsoon catch (dominated by age 1 and 2) in the previous season to be correlated with the post-monsoon catch in the current season. Post-monsoon catch two seasons prior should be minimally correlated with current post-monsoon catch.",
   Response="$N_t$",
   Cov="$N_{t-1}$",
@@ -44,79 +41,62 @@ DD3 = data.frame(
 
 HS1 = data.frame(
   Life="Spawn",
-  Time="Jun-Sep",
   Hyp="S1.  The onset of monsoon precipitation triggers movement of adults from offshore to spawning areas due to changes in salinity, turbulence or noise. Spent adults migrate inshore and are exposed to the fishery.",
   Response="$S_t$",
-  Cov="Seasonal precipitation anomaly during Jun-Jul in year t",
+  Cov="Seasonal precipitation during Jun-Jul in year t",
   stringsAsFactors=FALSE)
 
 HS2 = data.frame(
   Life="Spawn",
-  Time="Jun-Sep",
   Hyp="S2.  The level of precipitation in pre-monsoon months predicts spawning strength.",
   Response="$S_t$",
-  Cov="Seasonal precipitation anomaly during Apr-May in year t",
+  Cov="Seasonal precipitation during Apr-May in year t",
   stringsAsFactors=FALSE)
 
 HS3 = data.frame(
   Life="Spawn",
-  Time="Jun-Sep",
-  Hyp="S3.  Low SST is associated with delayed and limited spawning as a behavioral response by adults to avoid exposing larvae to low temperatures associated with poor survival. Conversely, high SST is indicative of poor upwelling and poor larval feeding conditions.",
-  Response="$S_t$",
-  Cov="Average SST during Jul-Sep in year t",
+  Hyp="S3.  Extremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing a delayed or poor spawning while optimal upwelling conditions leads to increased spawing. Spawning affects the recruitment of 0-age fish to the fishery and thus the post-monsoon catch.",
+  Response="$N_t$ and $S_t$",
+  Cov="Ave. Jun-Sep upwelling index in year $t$",
   stringsAsFactors=FALSE)
 
 HS4 = data.frame(
   Life="Spawn",
-  Time="Jun-Sep",
-  Hyp="S4.  Extremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing sardines to move offshore where they are less exposed to the fishery.",
-  Response="$S_t$",
-  Cov="Average upwelling index Jun-Sep, Max upwelling index Jun-Sep in year t",
+  Hyp="S4.  Extreme heat events in the pre-spawning months cause mature fish to move offshore away from productive feeding areas leading to poor spawning condition. Poor recruitment leads to low 0-age in current season catch and 1-age fish in next season's catch.",
+  Response="$N_t$",
+  Cov="Ave. nearshore Mar-May SST in year $t$ and $t-1$",
   stringsAsFactors=FALSE)
 
 HL1 = data.frame(
-  Life="Larv.",
-  Time="Sep-Oct",
-  Hyp="L1.  Highest somatic growth occurs in Sep-Oct. Larval growth and survival is higher in warmer water. Low SST at this time is also associated with strong upwelling which advects larvae into offshore waters where productivity is lower.",
-  Response="$N_t$",
-  Cov="Average SST during Sep-Oct in year t-1",
+  Life="Larval",
+  Hyp="L1.  The prior year post-monsoon larval survival and growth is associated with higher future biomass. Larval growth and survival is highest in an intermediate temperature window. Low SST at this time is also indicative of strong upwelling which advects larvae into offshore waters where productivity is lower.",
+  Response="$N_t$ and $S_t$",
+  Cov="Average nearshore SST during Oct-Dec in year t-1",
   stringsAsFactors=FALSE)
 
 HL2 = data.frame(
-  Life="Juv.",
-  Time="",
-  Hyp="L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  Thus the strength of upwelling during the monsoon should be associated with higher biomass in subsequent years. At the same time, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore.",
+  Life="Larval",
+  Hyp="L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  The strength of summer upwelling should be associated with higher biomass in future years. However, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore.",
   Response="$N_t$ and $S_t$",
-  Cov="Ave. upwelling index Jun-Sep and max upwelling index Jun-Sep in year t-1 and t-2",
+  Cov="Ave. Jun-Sep upwelling index in year t-1 and t-2",
   stringsAsFactors=FALSE)
 
 HL3 = data.frame(
-  Life="Juv.",
-  Time="",
-  Hyp="L3. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  Bloom intensity in prior years should be associated with future sardine biomass.",
+  Life="Larval",
+  Hyp="L3. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  The monsoon bloom intensity in prior years should be associated with 0-year fish abundance in year $t$ and future sardine biomass.",
   Response="$N_t$ and $S_t$",
-  Cov="Ave. Chl-a density Jun-Dec in year t-1 and t-2",
+  Cov="Ave. Chl-a density Jun-Sep in year $t$, $t-1$ and $t-2$",
   stringsAsFactors=FALSE)
 
 HA1 = data.frame(
   Life="All ages",
-  Time="Mar-May",
-  Hyp="A1. During the Mar-Apr, the sea temperatures are high and sardines migrate offshore to avoid high temp.",
-  Response="Catch Q2 year t",
-  Cov="Ave. SST Q2 year t, max SST Q2 year t",
-  stringsAsFactors=FALSE)
-
-HA2 = data.frame(
-  Life="All ages",
-  Time="Jul-Jun",
-  Hyp="A1. The changes brought about by the El Niño Southern Oscillation (ENSO) cycle have a variety of effect on environmental parameters (precipitation, SST, thermal fronts, Wind) which impacts spawning and early survival. This in turn impacts the overall abundance.",
+  Hyp="A1. The changes brought about by the El Niño Southern Oscillation (ENSO) cycle have a variety of effects on environmental parameters (precipitation, SST, thermal fronts, Wind) which impacts spawning and early survival. This in turn impacts the overall abundance.",
   Response="$N_t$ and $S_t$",
   Cov="ONI year t-1",
   stringsAsFactors=FALSE)
 
 
 hyptable = rbind(DD1,DD2,DD3, HS1,HS2,HS3,HS4)
-hyptable = hyptable[,-2]
 colnames(hyptable)=c("Stage", "Hypothesis", "Resp.", "Covariates")
 
 kable(hyptable, "latex", caption=fullcap, escape=FALSE) %>%
@@ -127,7 +107,6 @@ kable(hyptable, "latex", caption=fullcap, escape=FALSE) %>%
   kableExtra::column_spec(4, width="3cm")
 ```
 
-#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
@@ -137,8 +116,7 @@ cat("\\clearpage")
 thecap = "Continued."
 
 fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
-hyptable = rbind(HL1, HL2, HL3, HA1, HA2)
-hyptable = hyptable[,-2]
+hyptable = rbind(HL1, HL2, HL3, HA1)
 colnames(hyptable)=c("Stage", "Hypothesis", "Resp.", "Covariates")
 
 kable(hyptable, "latex", caption=fullcap, escape=FALSE) %>%
