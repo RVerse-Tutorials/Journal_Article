@@ -104,29 +104,29 @@ tmp1=data.frame(
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
-#model 4
-i=4; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="4. $ln(S_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$", 
-  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-  Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
-
-#model 5
-i=5; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="5. $ln(S_t)$ = M + $s(V_t)$ + $s(V_{t-1})$", 
-  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-  Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
+# #model 4
+# i=4; mod=paste("m",i,sep="")
+# aa = summary(get(mod))
+# tmp1=data.frame(
+#   Model="4. $ln(S_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$", 
+#   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+#   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+#   Adj.R2=100*round(aa$r.sq, digits=3), 
+#   F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+#   AIC = round(AIC(get(mod)), digits=2))
+# seltable=rbind(seltable,tmp1)
+# 
+# #model 5
+# i=5; mod=paste("m",i,sep="")
+# aa = summary(get(mod))
+# tmp1=data.frame(
+#   Model="5. $ln(S_t)$ = M + $s(V_t)$ + $s(V_{t-1})$", 
+#   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+#   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+#   Adj.R2=100*round(aa$r.sq, digits=3), 
+#   F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+#   AIC = round(AIC(get(mod)), digits=2))
+# seltable=rbind(seltable,tmp1)
 
 ## Add space
 tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
@@ -140,7 +140,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch during spawning months (Jul-Sep) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  $S_t$ is the catch during Jul-Sep of season $t$.  $V_t$ is the covariate in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is the covariate in the prior Jul-Jun season.")
+thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch during spawning months (Jul-Sep) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  $S_t$ is the catch during Jul-Sep of fishing season $t$.  $V_t$ is the covariate in same calendar year as the Jul-Sep catch.")
 fullcap=paste("Table ", ref("tabappB:spawner-model-precip", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```

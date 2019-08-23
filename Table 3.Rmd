@@ -15,7 +15,7 @@ dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 covnames=c("SST.4.mon6to9.0", "SST.4.mon9to10.1")
-covtits =  c("Jun-Sep SST current season", "Sep-Oct SST prior season")
+covtits =  c("Jun-Sep SST current season", "Oct-Dec SST prior season")
 dat$cov0=dat[["SST.4.mon6to9.0"]]
 dat$cov1=dat[["SST.4.mon9to10.1"]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)

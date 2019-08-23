@@ -14,7 +14,7 @@ header-includes: \usepackage[labelformat=empty]{caption}
 # Note to use, knit to pdf and edit the tex file to remove the header
 # up to the \begin{table}
 
-thecap = "Hypotheses for covariates affecting landings.  $S_t$ is quarter 3 (July-September) catch in the current season, $S_{t-1}$ is quarter 3 catch in the previous season. $N_t$ is the post-monsoon October-March catch in the current season and $N_{t-1}$ is the October-March catch in the prior season. Because the fishing season is July-June, $N_t$ spans two calendar years."
+thecap = "Hypotheses for covariates affecting landings.  $S_t$ is quarter 3 (July-September) catch in the current season, $S_{t-1}$ is quarter 3 catch in the previous season. $N_t$ is the post-monsoon October-March catch in the current season and $N_{t-1}$ is the October-March catch in the prior season. Because the fishing season is July-June, $N_t$ spans two calendar years. DD = hypotheses related to effects of past abundance (landings) on current abundance. S = hypotheses related to spawning. L = hypotheses related to larval and juvenile growth and survival. A = hypotheses affecting all ages."
 
 fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
 
@@ -41,70 +41,77 @@ DD3 = data.frame(
 
 HS1 = data.frame(
   Life="Spawn",
-  Hyp="S1.  The onset of monsoon precipitation triggers movement of adults from offshore to spawning areas due to changes in salinity, turbulence or noise. Spent adults migrate inshore and are exposed to the fishery.",
+  Hyp="S1.  The onset of monsoon precipitation triggers movement of adults from offshore to spawning areas due to changes in salinity, turbulence or noise. Spent adults migrate inshore and are exposed to the fishery. Strong spawning affects post-monsoon catch in current and future seasons.",
   Response="$S_t$",
-  Cov="Seasonal precipitation during Jun-Jul in year t",
+  Cov="Jun-Jul precipitation in year $t$",
   stringsAsFactors=FALSE)
 
 HS2 = data.frame(
   Life="Spawn",
   Hyp="S2.  The level of precipitation in pre-monsoon months predicts spawning strength.",
   Response="$S_t$",
-  Cov="Seasonal precipitation during Apr-May in year t",
+  Cov="Apr-May precipitation in year $t$",
   stringsAsFactors=FALSE)
 
 HS3 = data.frame(
   Life="Spawn",
-  Hyp="S3.  Extremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing a delayed or poor spawning while optimal upwelling conditions leads to increased spawing. Spawning affects the recruitment of 0-age fish to the fishery and thus the post-monsoon catch.",
-  Response="$N_t$ and $S_t$",
-  Cov="Ave. Jun-Sep upwelling index in year $t$",
+  Hyp="S3.  Precipitation initiates and supports spawning. Spawning affects post-monsoon catch in current and future seasons.",
+  Response="$N_t$",
+  Cov="Apr-May and Jun-Jul precipitation in year $t$ and $t-1$",
   stringsAsFactors=FALSE)
+
 
 HS4 = data.frame(
   Life="Spawn",
-  Hyp="S4.  Extreme heat events in the pre-spawning months cause mature fish to move offshore away from productive feeding areas leading to poor spawning condition. Poor recruitment leads to low 0-age in current season catch and 1-age fish in next season's catch.",
+  Hyp="S4.  Extremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing mature fish to avoid nearshore areas where they would be exposed to the fishery.",
+  Response="$S_t$",
+  Cov="Jun-Sep upwelling index in year $t$",
+  stringsAsFactors=FALSE)
+
+HS5 = data.frame(
+  Life="Spawn",
+  Hyp="S5.  Extreme heat events in the pre-spawning months cause mature fish to move offshore away from productive feeding areas leading to poor spawning condition. Poor recruitment leads to few 0-age in current season catch and 1-age fish in next season's catch.",
   Response="$N_t$",
-  Cov="Ave. nearshore Mar-May SST in year $t$ and $t-1$",
+  Cov="Nearshore Mar-May SST in year $t$ and $t-1$",
   stringsAsFactors=FALSE)
 
 HL1 = data.frame(
   Life="Larval",
   Hyp="L1.  The prior year post-monsoon larval survival and growth is associated with higher future biomass. Larval growth and survival is highest in an intermediate temperature window. Low SST at this time is also indicative of strong upwelling which advects larvae into offshore waters where productivity is lower.",
   Response="$N_t$ and $S_t$",
-  Cov="Average nearshore SST during Oct-Dec in year t-1",
+  Cov="Nearshore SST during Oct-Dec in year t-1",
   stringsAsFactors=FALSE)
 
 HL2 = data.frame(
   Life="Larval",
-  Hyp="L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  The strength of summer upwelling should be associated with higher biomass in future years. However, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore.",
+  Hyp="L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  The strength of summer upwelling should be associated with higher biomass in future years and the appearance of 0-age fish in post-monsoon catch. However, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore.",
   Response="$N_t$ and $S_t$",
-  Cov="Ave. Jun-Sep upwelling index in year t-1 and t-2",
+  Cov="Jun-Sep upwelling index in year $t-1$ and $t$ (for $N_t$)",
   stringsAsFactors=FALSE)
 
 HL3 = data.frame(
   Life="Larval",
-  Hyp="L3. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  The monsoon bloom intensity in prior years should be associated with 0-year fish abundance in year $t$ and future sardine biomass.",
+  Hyp="L3. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  The monsoon bloom intensity should be associated with 0-year fish abundance in year $t$ and future sardine biomass.",
   Response="$N_t$ and $S_t$",
-  Cov="Ave. Chl-a density Jun-Sep in year $t$, $t-1$ and $t-2$",
+  Cov="Chl-a density Jun-Sep in year $t-1$ and $t$ (for $N_t$)",
   stringsAsFactors=FALSE)
 
 HA1 = data.frame(
   Life="All ages",
   Hyp="A1. The changes brought about by the El Niño Southern Oscillation (ENSO) cycle have a variety of effects on environmental parameters (precipitation, SST, thermal fronts, Wind) which impacts spawning and early survival. This in turn impacts the overall abundance.",
   Response="$N_t$ and $S_t$",
-  Cov="ONI year t-1",
+  Cov="ONI in year t-1",
   stringsAsFactors=FALSE)
 
 
-hyptable = rbind(DD1,DD2,DD3, HS1,HS2,HS3,HS4)
-colnames(hyptable)=c("Stage", "Hypothesis", "Resp.", "Covariates")
+hyptable = rbind(DD1,DD2,DD3, HS1,HS2,HS3,HS4,HS5)[,-1]
+colnames(hyptable)=c("Hypothesis", "Resp.", "Covariates")
 
 kable(hyptable, "latex", caption=fullcap, escape=FALSE) %>%
   kableExtra::kable_styling(full_width=FALSE) %>%
-  kableExtra::column_spec(2, width="8.5cm") %>%
-  kableExtra::column_spec(1, width="1cm") %>%
-  kableExtra::column_spec(3, width="1cm") %>%
-  kableExtra::column_spec(4, width="3cm")
+  kableExtra::column_spec(1, width="8.5cm") %>%
+  kableExtra::column_spec(2, width="1cm") %>%
+  kableExtra::column_spec(3, width="3cm")
 ```
 
 
@@ -116,13 +123,12 @@ cat("\\clearpage")
 thecap = "Continued."
 
 fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
-hyptable = rbind(HL1, HL2, HL3, HA1)
-colnames(hyptable)=c("Stage", "Hypothesis", "Resp.", "Covariates")
+hyptable = rbind(HL1, HL2, HL3, HA1)[,-1]
+colnames(hyptable)=c("Hypothesis", "Resp.", "Covariates")
 
 kable(hyptable, "latex", caption=fullcap, escape=FALSE) %>%
   kableExtra::kable_styling(full_width=FALSE) %>%
-  kableExtra::column_spec(2, width="8.5cm") %>%
-  kableExtra::column_spec(1, width="1cm") %>%
-  kableExtra::column_spec(3, width="1cm") %>%
-  kableExtra::column_spec(4, width="3cm")
+  kableExtra::column_spec(1, width="8.5cm") %>%
+  kableExtra::column_spec(2, width="1cm") %>%
+  kableExtra::column_spec(3, width="3cm")
 ```

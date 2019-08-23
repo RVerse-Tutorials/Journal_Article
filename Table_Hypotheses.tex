@@ -37,28 +37,91 @@
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 \IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{}
+    \pretitle{\vspace{\droptitle}}
+  \posttitle{}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+\usepackage[labelformat=empty]{caption}
+
+\begin{document}
 
 \begin{table}[t]
 
-\caption{\label{tab:print-table-hyp}Table 1. Hypotheses for covariates affecting landings.  $S_t$ is quarter 3 (July-September) catch in the current season, $S_{t-1}$ is quarter 3 catch in the previous season. $N_t$ is the post-monsoon October-March catch in the current season and $N_{t-1}$ is the October-March catch in the prior season. Because the fishing season is July-June, $N_t$ spans two calendar years.}
+\caption{\label{tab:print-table-hyp}Table 1. Hypotheses for covariates affecting landings.  $S_t$ is quarter 3 (July-September) catch in the current season, $S_{t-1}$ is quarter 3 catch in the previous season. $N_t$ is the post-monsoon October-March catch in the current season and $N_{t-1}$ is the October-March catch in the prior season. Because the fishing season is July-June, $N_t$ spans two calendar years. DD = hypotheses related to effects of past abundance (landings) on current abundance. S = hypotheses related to spawning. L = hypotheses related to larval and juvenile growth and survival. A = hypotheses affecting all ages.}
 \centering
-\begin{tabular}{>{\raggedright\arraybackslash}p{1cm}|>{\raggedright\arraybackslash}p{8.5cm}|>{\raggedright\arraybackslash}p{1cm}|>{\raggedright\arraybackslash}p{3cm}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{8.5cm}|>{\raggedright\arraybackslash}p{1cm}|>{\raggedright\arraybackslash}p{3cm}}
 \hline
-Stage & Hypothesis & Resp. & Covariates\\
+Hypothesis & Resp. & Covariates\\
 \hline
-Age 2+ & DD1.  $S_t$ is dominated by mature age 2+ fish, thus abundance of the 1-yr and 2-yr ages in the prior season (Oct-Mar catch) should be correlated with the abundance of mature fish this year. & $S_t$ & $N_{t-1}$\\
+DD1.  $S_t$ is dominated by mature age 2+ fish, thus abundance of the 1-yr and 2-yr ages in the prior season (Oct-Mar catch) should be correlated with the abundance of mature fish this year. & $S_t$ & $N_{t-1}$\\
 \hline
-Age 1-2 & DD2.  Abundance of 1-yr and 2-yr fish should be correlated with strength of the cohorts from the previous two seasons.  The quarter 3 catch, dominated by mature fish, in the prior two years is expected to be correlated with post-monsoon catch. & $N_t$ & $S_{t-1}$ and $S_{t-2}$\\
+DD2.  Abundance of 1-yr and 2-yr fish should be correlated with strength of the cohorts from the previous two seasons.  The quarter 3 catch, dominated by mature fish, in the prior two years is expected to be correlated with post-monsoon catch. & $N_t$ & $S_{t-1}$ and $S_{t-2}$\\
 \hline
-Age 2+ & DD3.  Because age 2 fish appear in the post-monsoon catch, we also expect the post-monsoon catch (dominated by age 1 and 2) in the previous season to be correlated with the post-monsoon catch in the current season. Post-monsoon catch two seasons prior should be minimally correlated with current post-monsoon catch. & $N_t$ & $N_{t-1}$\\
+DD3.  Because age 2 fish appear in the post-monsoon catch, we also expect the post-monsoon catch (dominated by age 1 and 2) in the previous season to be correlated with the post-monsoon catch in the current season. Post-monsoon catch two seasons prior should be minimally correlated with current post-monsoon catch. & $N_t$ & $N_{t-1}$\\
 \hline
-Spawn & S1.  The onset of monsoon precipitation triggers movement of adults from offshore to spawning areas due to changes in salinity, turbulence or noise. Spent adults migrate inshore and are exposed to the fishery. & $S_t$ & Seasonal precipitation during Jun-Jul in year t\\
+S1.  The onset of monsoon precipitation triggers movement of adults from offshore to spawning areas due to changes in salinity, turbulence or noise. Spent adults migrate inshore and are exposed to the fishery. Strong spawning affects post-monsoon catch in current and future seasons. & $S_t$ & Jun-Jul precipitation in year $t$\\
 \hline
-Spawn & S2.  The level of precipitation in pre-monsoon months predicts spawning strength. & $S_t$ & Seasonal precipitation during Apr-May in year t\\
+S2.  The level of precipitation in pre-monsoon months predicts spawning strength. & $S_t$ & Apr-May precipitation in year $t$\\
 \hline
-Spawn & S3.  Extremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing a delayed or poor spawning while optimal upwelling conditions leads to increased spawing. Spawning affects the recruitment of 0-age fish to the fishery and thus the post-monsoon catch. & $N_t$ and $S_t$ & Ave. Jun-Sep upwelling index in year $t$\\
+S3.  Precipitation initiates and supports spawning. Spawning affects post-monsoon catch in current and future seasons. & $N_t$ & Apr-May and Jun-Jul precipitation in year $t$ and $t-1$\\
 \hline
-Spawn & S4.  Extreme heat events in the pre-spawning months cause mature fish to move offshore away from productive feeding areas leading to poor spawning condition. Poor recruitment leads to low 0-age in current season catch and 1-age fish in next season's catch. & $N_t$ & Ave. nearshore Mar-May SST in year $t$ and $t-1$\\
+S4.  Extremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing mature fish to avoid nearshore areas where they would be exposed to the fishery. & $S_t$ & Jun-Sep upwelling index in year $t$\\
+\hline
+S5.  Extreme heat events in the pre-spawning months cause mature fish to move offshore away from productive feeding areas leading to poor spawning condition. Poor recruitment leads to few 0-age in current season catch and 1-age fish in next season's catch. & $N_t$ & Nearshore Mar-May SST in year $t$ and $t-1$\\
 \hline
 \end{tabular}
 \end{table}
@@ -69,17 +132,20 @@ Spawn & S4.  Extreme heat events in the pre-spawning months cause mature fish to
 
 \caption{\label{tab:unnamed-chunk-3}Table 1. Continued.}
 \centering
-\begin{tabular}{>{\raggedright\arraybackslash}p{1cm}|>{\raggedright\arraybackslash}p{8.5cm}|>{\raggedright\arraybackslash}p{1cm}|>{\raggedright\arraybackslash}p{3cm}}
+\begin{tabular}{>{\raggedright\arraybackslash}p{8.5cm}|>{\raggedright\arraybackslash}p{1cm}|>{\raggedright\arraybackslash}p{3cm}}
 \hline
-Stage & Hypothesis & Resp. & Covariates\\
+Hypothesis & Resp. & Covariates\\
 \hline
-Larval & L1.  The prior year post-monsoon larval survival and growth is associated with higher future biomass. Larval growth and survival is highest in an intermediate temperature window. Low SST at this time is also indicative of strong upwelling which advects larvae into offshore waters where productivity is lower. & $N_t$ and $S_t$ & Average nearshore SST during Oct-Dec in year t-1\\
+L1.  The prior year post-monsoon larval survival and growth is associated with higher future biomass. Larval growth and survival is highest in an intermediate temperature window. Low SST at this time is also indicative of strong upwelling which advects larvae into offshore waters where productivity is lower. & $N_t$ and $S_t$ & Nearshore SST during Oct-Dec in year t-1\\
 \hline
-Larval & L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  The strength of summer upwelling should be associated with higher biomass in future years. However, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore. & $N_t$ and $S_t$ & Ave. Jun-Sep upwelling index in year t-1 and t-2\\
+L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  The strength of summer upwelling should be associated with higher biomass in future years and the appearance of 0-age fish in post-monsoon catch. However, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore. & $N_t$ and $S_t$ & Jun-Sep upwelling index in year $t-1$ and $t$ (for $N_t$)\\
 \hline
-Larval & L3. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  The monsoon bloom intensity in prior years should be associated with 0-year fish abundance in year $t$ and future sardine biomass. & $N_t$ and $S_t$ & Ave. Chl-a density Jun-Sep in year $t$, $t-1$ and $t-2$\\
+L3. Chlorophyll blooms are signatures of high productivity from nutrient influx either due to upwelling or coastal inputs.  The monsoon bloom intensity should be associated with 0-year fish abundance in year $t$ and future sardine biomass. & $N_t$ and $S_t$ & Chl-a density Jun-Sep in year $t-1$ and $t$ (for $N_t$)\\
 \hline
-All ages & A1. The changes brought about by the El Niño Southern Oscillation (ENSO) cycle have a variety of effects on environmental parameters (precipitation, SST, thermal fronts, Wind) which impacts spawning and early survival. This in turn impacts the overall abundance. & $N_t$ and $S_t$ & ONI year t-1\\
+A1. The changes brought about by the El Niño Southern Oscillation (ENSO) cycle have a variety of effects on environmental parameters (precipitation, SST, thermal fronts, Wind) which impacts spawning and early survival. This in turn impacts the overall abundance. & $N_t$ and $S_t$ & ONI in year t-1\\
 \hline
 \end{tabular}
 \end{table}
+
+
+\end{document}

@@ -1,5 +1,5 @@
 ---
-title: "Spawner (Jul-Sep Catch) Covariates Analysis"
+title: "Non-Spawner (Oct-May Catch) Covariates Analysis"
 output:
   pdf_document: default
   word_document: default
@@ -11,18 +11,18 @@ Generic setup code common across all Rmds; run code in setup.Rmd if not knitting
 ```{r child = 'setup.Rmd'}
 ```
 
-```{r table-appB-spawner-dat, echo=FALSE}
-#dat.spawners defined in setup.Rmd
-dat=dat.spawners
+```{r table-appB-nspawner-dat, echo=FALSE}
+#dat.nonspawners defined in setup.Rmd
+dat=dat.nonspawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 
 #naive model error
 #def of MASE is MAE/naive error
-NE=mean(abs(dat$spawners0-dat$spawners1))
+NE=mean(abs(dat$nspawners0-dat$nspawners1))
 ```
 
-```{r table-appB-spawner-precip, echo=FALSE}
+```{r table-appB-nspawner-precip, echo=FALSE}
 #set up table
 seltable = data.frame(
   Model=paste("base model (M) ", Yr1,"-", Yr2, " data", sep=""), 
@@ -37,12 +37,10 @@ seltable = data.frame(
 covname="precip.gpcp.kerala.mon6to7."
 dat$cov0=dat[[paste(covname, "0", sep="")]]
 dat$cov1=dat[[paste(covname, "1", sep="")]]
-m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
-m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m4 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
-m5 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4,m5, test="F")
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
 
 # header M1 for all models
 
@@ -50,7 +48,7 @@ a=anova(m1,m2,m3,m4,m5, test="F")
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. $ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$",
+  Model="1. $ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(ln(S_{t-2}))$ + $\\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -73,18 +71,18 @@ seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj
 #set up the cov0 and cov1 variables
 dat$cov0=dat[[paste(covname, "0", sep="")]]
 dat$cov1=dat[[paste(covname, "1", sep="")]]
-m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
-m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m4 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
-m5 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+m4 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
+m5 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
 a=anova(m1,m2,m3,m4,m5, test="F")
 
 #model 2
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="2. $ln(S_t)$ = M + $\\beta V_t$",
+  Model="2. $ln(N_t)$ = M + $\\beta V_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -96,7 +94,7 @@ seltable=rbind(seltable,tmp1)
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="3. $ln(S_t)$ = M + $s(V_t)$",
+  Model="3. $ln(N_t)$ = M + $s(V_t)$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -108,7 +106,7 @@ seltable=rbind(seltable,tmp1)
 i=4; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="4. $ln(S_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$", 
+  Model="4. $ln(N_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -120,7 +118,7 @@ seltable=rbind(seltable,tmp1)
 i=5; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="5. $ln(S_t)$ = M + $s(V_t)$ + $s(V_{t-1})$", 
+  Model="5. $ln(N_t)$ = M + $s(V_t)$ + $s(V_{t-1})$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -140,8 +138,8 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch during spawning months (Jul-Sep) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  $S_t$ is the catch during Jul-Sep of season $t$.  $V_t$ is the covariate in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is the covariate in the prior Jul-Jun season.")
-fullcap=paste("Table ", ref("tabappB:spawner-model-precip", pre="B"), ". ", thecap, sep="")
+thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch during post-monsoon months (Oct-May) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  $S_t$ is the catch during Jul-Sep of season $t$.  $V_t$ is the covariate in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is the covariate in the prior Jul-Jun season.")
+fullcap=paste("Table ", ref("tabappB:nspawner-model-precip", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
 
@@ -166,9 +164,10 @@ seltable = data.frame(
 covname="precip.gpcp.kerala.mon6to7."
 dat$cov0=dat[[paste(covname, "0", sep="")]]
 dat$cov1=dat[[paste(covname, "1", sep="")]]
-m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
-a=anova(m1,m2, test="F")
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
 
 # header M1 for all models
 
@@ -176,7 +175,7 @@ a=anova(m1,m2, test="F")
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. $ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$",
+  Model="1. $ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(ln(S_{t-2}))$ + $\\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -350,7 +349,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste0("Model selection tests of average sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1) as the explanatory variable ($V_t$) for the catch during spawning months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
+thecap=paste0("Model selection tests of average sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1) as the explanatory variable ($V_t$) for the catch during post-monsoon months (Oct-May) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
 fullcap=paste("Table ", ref("tabappB:spawner-model-sst", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
