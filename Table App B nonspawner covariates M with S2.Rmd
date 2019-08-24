@@ -37,12 +37,10 @@ seltable = data.frame(
 covname="precip.gpcp.kerala.mon6to7."
 dat$cov0=dat[[paste(covname, "0", sep="")]]
 dat$cov1=dat[[paste(covname, "1", sep="")]]
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m4 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
-m5 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4,m5, test="F")
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
 
 # header M1 for all models
 
@@ -50,7 +48,7 @@ a=anova(m1,m2,m3,m4,m5, test="F")
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. $ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$",
+  Model="1. $ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(ln(S_{t-2}))$ + $\\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -73,12 +71,10 @@ seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj
 #set up the cov0 and cov1 variables
 dat$cov0=dat[[paste(covname, "0", sep="")]]
 dat$cov1=scale(dat[[paste(covname, "1", sep="")]])
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m4 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
-m5 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4,m5, test="F")
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
 
 #model 2
 i=2; mod=paste("m",i,sep="")
@@ -104,33 +100,9 @@ tmp1=data.frame(
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
-#model 4
-i=4; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="4a. $ln(N_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$",
-  Residual.df=round(a[["Resid. Df"]][i],digits=1),
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3),
-  Adj.R2=100*round(aa$r.sq, digits=3),
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3),
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
-
-#model 5
-i=5; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="5a. $ln(N_t)$ = M + $s(V_t)$ + $s(V_{t-1})$",
-  Residual.df=round(a[["Resid. Df"]][i],digits=1),
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3),
-  Adj.R2=100*round(aa$r.sq, digits=3),
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3),
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
-
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov1, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
 a=anova(m1,m2,m3, test="F")
 
 #model 4
@@ -170,7 +142,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch ($N_t$) during post-monsoon months (Oct-May) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  The base model (M) with prior catch dependency was selected independently (Appendix A). To the base model, covariates are added.  $V_t$ is the covariate in the calendar year, and $V_{t-1}$ is the covariate in the prior calendar year. The specific hypothesis (Table ", ref("tab:hypotheses"), ") being tested is noted in parentheses. The models are tested as nested sets.  Thus 1, 2a, 3a is a set and 1, 2b, 3b is another set.")
+thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch ($N_t$) during post-monsoon months (Oct-May) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  The base model (M) with prior catch dependency was selected independently (Appendix A). $N_{t-1}$ is the post-monsoon catch in prior season, and $S_{t-2}$ is the catch during Jul-Sep two seasons prior.  To the base model, covariates are added.  $V_t$ is the covariate in the calendar year, and $V_{t-1}$ is the covariate in the prior calendar year. The specific hypothesis (Table ", ref("tab:hypotheses"), ") being tested is noted in parentheses. The models are tested as nested sets.  Thus 1, 2a, 3a is a set and 1, 2b, 3b is another set.")
 fullcap=paste("Table ", ref("tabappB:nspawner-model-precip", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
@@ -196,12 +168,10 @@ seltable = data.frame(
 covname="precip.gpcp.kerala.mon6to7."
 dat$cov0=dat[[paste(covname, "0", sep="")]]
 dat$cov1=dat[[paste(covname, "1", sep="")]]
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m4 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
-m5 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4,m5, test="F")
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
 
 # header M1 for all models
 
@@ -209,7 +179,7 @@ a=anova(m1,m2,m3,m4,m5, test="F")
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. $ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$",
+  Model="1. $ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(ln(S_{t-2}))$ + $\\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -242,12 +212,10 @@ seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj
 
 dat$cov0=dat[[paste(covname, "0", sep="")]]
 dat$cov1=dat[[paste(covname, "1", sep="")]]
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m4 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
-m5 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4,m5, test="F")
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
 
 #model 2
 i=2; mod=paste("m",i,sep="")
@@ -273,33 +241,9 @@ tmp1=data.frame(
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
-#model 4
-i=4; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="4a. $ln(N_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$",
-  Residual.df=round(a[["Resid. Df"]][i],digits=1),
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3),
-  Adj.R2=100*round(aa$r.sq, digits=3),
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3),
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
-
-#model 5
-i=5; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="5a. $ln(N_t)$ = M + $s(V_t)$ + $s(V_{t-1})$",
-  Residual.df=round(a[["Resid. Df"]][i],digits=1),
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3),
-  Adj.R2=100*round(aa$r.sq, digits=3),
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3),
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
-
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov1, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
 a=anova(m1,m2,m3, test="F")
 
 #model 4
@@ -341,9 +285,9 @@ seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj
 dat$cov0=dat[[paste(covname, "0", sep="")]]
 dat$cov1=dat[[paste(covname, "1", sep="")]]
 #dat$cov2=dat[[paste(covname, "2", sep="")]]
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov1, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
 a=anova(m1,m2,m3, test="F")
 
 #model 2
@@ -408,12 +352,10 @@ seltable = data.frame(
 covname="precip.gpcp.kerala.mon6to7."
 dat$cov0=dat[[paste(covname, "0", sep="")]]
 dat$cov1=dat[[paste(covname, "1", sep="")]]
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m4 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
-m5 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4,m5, test="F")
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
 
 # header M1 for all models
 
@@ -421,7 +363,7 @@ a=anova(m1,m2,m3,m4,m5, test="F")
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. $ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$",
+  Model="1. $ln(N_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $s(ln(S_{t-2}))$ + $\\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -443,12 +385,10 @@ seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj
 
 dat$cov0=dat[[paste(covname, "0", sep="")]]
 dat$cov1=dat[[paste(covname, "1", sep="")]]
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m4 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
-m5 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4,m5, test="F")
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov0, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
 
 #model 2
 i=2; mod=paste("m",i,sep="")
@@ -474,33 +414,11 @@ tmp1=data.frame(
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
-#model 4
-i=4; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="4a. $ln(N_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$",
-  Residual.df=round(a[["Resid. Df"]][i],digits=1),
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3),
-  Adj.R2=100*round(aa$r.sq, digits=3),
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3),
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
-
-#model 5
-i=5; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="5a. $ln(N_t)$ = M + $s(V_t)$ + $s(V_{t-1})$",
-  Residual.df=round(a[["Resid. Df"]][i],digits=1),
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3),
-  Adj.R2=100*round(aa$r.sq, digits=3),
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3),
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
-
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
+dat$cov0=dat[[paste(covname, "0", sep="")]]
+dat$cov1=dat[[paste(covname, "1", sep="")]]
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov1, data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
 a=anova(m1,m2,m3, test="F")
 
 #model 4
