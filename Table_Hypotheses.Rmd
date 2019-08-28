@@ -63,7 +63,7 @@ HS3 = data.frame(
 
 HS4 = data.frame(
   Life="Spawn",
-  Hyp="S4.  Extremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing mature fish to avoid nearshore areas where they would be exposed to the fishery.",
+  Hyp="S4.  Extremely high upwelling brings poorly oxygenated water and very low temperatures to the surface causing mature fish to avoid nearshore areas. Avoidance of nearshore leads to lower exposure to the fishery and lower catch.",
   Response="$S_t$",
   Cov="Jun-Sep upwelling index in year $t$",
   stringsAsFactors=FALSE)
@@ -71,7 +71,7 @@ HS4 = data.frame(
 HS5 = data.frame(
   Life="Spawn",
   Hyp="S5.  Extreme heat events in the pre-spawning months cause mature fish to move offshore away from productive feeding areas leading to poor spawning condition. Poor recruitment leads to few 0-age in current season catch and 1-age fish in next season's catch.",
-  Response="$N_t$",
+  Response="$S_t$ and $N_t$",
   Cov="Nearshore Mar-May SST in year $t$ and $t-1$",
   stringsAsFactors=FALSE)
 
@@ -84,9 +84,9 @@ HL1 = data.frame(
 
 HL2 = data.frame(
   Life="Larval",
-  Hyp="L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  The strength of summer upwelling should be associated with higher biomass in future years and the appearance of 0-age fish in post-monsoon catch. However, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and advects larvae offshore.",
+  Hyp="L2. Upwelling is associated with higher productivity and higher density of zooplankton, which leads to better larval and juvenile growth and survival.  The strength of summer upwelling should be associated with higher biomass in future years and the appearance of 0-age fish in post-monsoon catch. However, extremely strong upwelling brings poorly oxygenated water to the surface causing larval mortality and offshore advection and causing mature fish to move offshore.",
   Response="$N_t$ and $S_t$",
-  Cov="Jun-Sep upwelling index in year $t-1$ and $t$ (for $N_t$)",
+  Cov="Jun-Sep upwelling index in year $t-1$ and $t$",
   stringsAsFactors=FALSE)
 
 HL3 = data.frame(
