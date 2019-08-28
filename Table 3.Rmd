@@ -11,23 +11,24 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```
 
 ```{r table3-cov-models}
+# run to check that they work
 dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-covnames=c("SST.4.mon6to9.0", "SST.4.mon9to10.1")
-covtits =  c("Jun-Sep SST current season", "Oct-Dec SST prior season")
-dat$cov0=dat[["SST.4.mon6to9.0"]]
-dat$cov1=dat[["SST.4.mon9to10.1"]]
+covnames=c("SST.2.10.mon6to9.", "SST.UPW.4.mon6to9.")
+covtits =  c("Jun-Sep SST current season", "Jun-Sep SST current season")
+dat$cov0=dat[["SST.2.10.mon6to9.0"]]
+dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
 
 dat=dat.nonspawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-covnames=c("SST.4.mon7to9.0", "SST.UPW.4.mon10to12.1")
-covtits =  c("Jul-Sep SST current season", "Oct-Dec UPW prior season")
-dat$cov0=dat[["SST.4.mon7to9.0"]]
-dat$cov1=dat[["SST.UPW.4.mon10to12.1"]]
+covnames=c("SST.2.10.mon3to5.", "SST.UPW.4.mon6to9.")
+covtits =  c("Mar-May SST current season", "Jun-Sept SST current season")
+dat$cov0=dat[["SST.2.10.mon3to5.0"]]
+dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
 ```
@@ -36,13 +37,13 @@ m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=
 dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-covnames=c("SST.4.mon6to9.0", "SST.4.mon9to10.1")
-covtits =  c("Jun-Sep SST current season", "Sep-Oct SST prior season")
-dat$cov0=dat[["SST.4.mon6to9.0"]]
-dat$cov1=dat[["SST.4.mon9to10.1"]]
+covnames=c("SST.2.10.mon6to9.", "SST.UPW.4.mon6to9.")
+covtits =  c("Jun-Sep SST current season", "Jun-Sep UPW current season")
+dat$cov0=dat[["SST.2.10.mon6to9.0"]]
+dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
 a=anova(m1,m2,m3, test="F")
 
 ## Header
@@ -137,7 +138,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 colnames(seltable)=c("Model", "Residual df", "Residual deviance", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "\\shortstack{Residual\\\\deviance}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Top covariates for the $S_t$ (Jul-Sep catch) and $N_t$ (Oct-Jun catch) models. The models are nested; the roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M0 or M1) at top.  The full set of covariate models tested are given in Appendix B. The fitted versus observed catches from the covariate models are shown in Figure ", ref("fig:fitted"), ".", sep="")
+thecap=paste("Top covariates for the monsooon (Jul-Sep) and post-monsoon (Oct-Jun) catch ($S_t$ and $N_t$) models. The models are nested; the roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M0 or M1) at top.  The full set of covariate models tested are given in Appendix B. The fitted versus observed catches from the covariate models are shown in Figure ", ref("fig:fitted"), ".", sep="")
 fullcap=paste("Table ", ref("tab:covariate-models"), ". ", thecap, sep="")
 kable(seltable, align="lccccc", caption=fullcap, escape=FALSE)
 ```
