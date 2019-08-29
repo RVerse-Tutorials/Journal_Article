@@ -1,9 +1,9 @@
 ---
-title: 'Table 1: Quarter 3 Catch Model'
+title: 'Table 1: Monsoon Catch Model'
 output:
-  pdf_document: default
-  html_document: default
   word_document: default
+  html_document: default
+  pdf_document: default
 header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
@@ -253,7 +253,7 @@ seltable=rbind(seltable,tmp1)
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap = "Model selection tests of time-dependency and linearity for the quarter 3 (Jul-Sep) catch model using F-tests of nested models fit to log of landings data.  $S_t$ is the quarter 3 catch of season $t$. $N_{t-1}$ is the post-monsoon Oct-Mar catch in the prior sardine season. $N_{t-2}$ is the same for two seasons prior.  $s()$ is a non-linear function of the response variable. MASE is mean absolute squared error of the residuals. The tests are nested and the numbers before the models indicates the nest level. In the list with numbers 1, 2, 3a, 3b, two nested tests were done, one on 1, 2, 3a and one on 1, 2, 3b.  See tables in Appendix A for the full set of time-dependency and linearity tests. This table only shows the nested model sets that were most supported."
+thecap = "Model selection tests of time-dependency and linearity for the monsoon (Jul-Sep) catch model using F-tests and AIC of nested models fit to log of landings data.  $S_t$ is the catch during the monsoon (Jul-Sep) of season $t$. $N_{t-1}$ is the post-monsoon (Oct-Mar) catch in the prior sardine season. $N_{t-2}$ is the same for two seasons prior.  $s()$ is a non-linear function of the response variable. MASE is mean absolute squared error of the residuals. The tests are nested and the numbers before the models indicates the nest level. In the list with numbers 1, 2, 3a, 3b, two nested tests were done, one on 1, 2, 3a and one on 1, 2, 3b.  See tables in Appendix A for the full set of time-dependency and linearity tests. This table only shows the nested model sets that were most supported."
 
 fullcap = paste("Table ", ref("tab:spawner_model_selection"), ". ", thecap, sep="")
 

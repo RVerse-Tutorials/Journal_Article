@@ -1,8 +1,8 @@
 ---
-title: 'Table 2: Non-Spawner Model Selection'
+title: 'Table 2: Post-Monsson Model Selection'
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   word_document: default
 header-includes: \usepackage[labelformat=empty]{caption}
 ---
@@ -19,6 +19,8 @@ Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 
 respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
+#naive model error
+NE=mean(abs(respdat$spawners0-respdat$spawners1))
 
 #set up table
 seltable = data.frame(
@@ -124,7 +126,7 @@ seltable=rbind(seltable,tmp1)
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests for the $N_t$ model using AIC for models fit to log landings data.  $S_t$ is the catch during the spawning season (Jul-Sep). $N_t$ is the catch during the post-monsoon period (Oct-Mar) of season $t$; note the fishing season is defined as Jul-Jun not calendar year. $S_{t-1}$ and $N_{t-1}$ are the catch during the prior sardine season during and after the spawning period respectively. $S_{t-2}$ and $N_{t-2}$ are the same for two seasons prior. ")
+thecap=paste("Model selection tests for the post-monsoon (Oct-Mar) catch model ($N_t$) using F-tests and AIC.  $S_t$ is the catch during the monsoon (Jul-Sep). $N_t$ is the catch during the post-monsoon period (Oct-Mar) of season $t$; note the fishing season is defined as Jul-Jun not calendar year. $S_{t-1}$ and $N_{t-1}$ are the catch during the prior sardine season during and after the monsoon respectively. $S_{t-2}$ and $N_{t-2}$ are the same for two seasons prior. ")
 fullcap=paste("Table ", ref("tab:nonspawner-models"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, escape=FALSE)
 ```

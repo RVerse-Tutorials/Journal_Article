@@ -4,10 +4,11 @@ output:
   pdf_document: default
   html_document: default
   word_document: default
-header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
 <!-- 
+header-includes: \usepackage[labelformat=empty]{caption}
+
 Generic setup code common across all Rmds; run code in setup.Rmd if not knitting.
 --> 
 ```{r child = 'setup.Rmd'}
@@ -18,6 +19,7 @@ Generic setup code common across all Rmds; run code in setup.Rmd if not knitting
 dat=dat.chl
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
+NE=mean(abs(dat$spawners0-dat$spawners1))
 ```
 
 ```{r table-appC-spawner, echo=FALSE}
@@ -31,8 +33,8 @@ seltable = data.frame(
   p.value="", 
   AIC="", stringsAsFactors=FALSE)
 
-m1 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE), data=dat.chl)
-m2 = gam(nspawners0 ~ poly(nspawners1, 3, raw=TRUE), data=dat.chl)
+m1 = gam(spawners0 ~ poly(nspawners1, 2, raw=TRUE), data=dat.chl)
+m2 = gam(spawners0 ~ poly(nspawners1, 3, raw=TRUE), data=dat.chl)
 a=anova(m1,m2, test="F")
 
 #model 1
@@ -199,12 +201,13 @@ seltable = data.frame(
 m1 = gam(nspawners0 ~ poly(nspawners1, 2, raw=TRUE), data=dat.chl)
 m2 = gam(nspawners0 ~ poly(nspawners1, 3, raw=TRUE), data=dat.chl)
 a=anova(m1,m2, test="F")
+NE=mean(abs(dat$nspawners0-dat$nspawners1))
 
 #model 1
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. $ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
+  Model="1-M. $ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -328,7 +331,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of Chlorophyll-a (CHL) as an explanatory variable for Oct-Jun catch ($N_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_t$ is CHL in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is CHL in the prior Jul-Jun season. Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Oct-Jun catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This was done due to data constraints. The models are nested; the Roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M) at top.")
+thecap=paste("Model selection tests of Chlorophyll-a (CHL) as an explanatory variable for Oct-Jun catch ($N_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_t$ is CHL in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is CHL in the prior Jul-Jun season. Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Oct-Jun catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This was done due to data constraints. The models are nested; the numeral indicates the level of nestedness. Models at levels 2 and higher are shown with the component that is added to the base level model (M) at top.")
 fullcap=paste("Table ", ref("tabappC:nonspawner-model", pre="C"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```

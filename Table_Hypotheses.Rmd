@@ -96,13 +96,19 @@ HL3 = data.frame(
   Cov="Chl-a density Jun-Sep in year $t-1$ and $t$ (for $N_t$)",
   stringsAsFactors=FALSE)
 
-HA1 = data.frame(
+HA2 = data.frame(
   Life="All ages",
-  Hyp="A1. The changes brought about by the El Niño Southern Oscillation (ENSO) cycle have a variety of effects on environmental parameters (precipitation, SST, thermal fronts, Wind) which impacts spawning and early survival. This in turn impacts the overall abundance.",
+  Hyp="A2. The changes brought about by the El Niño Southern Oscillation (ENSO) cycle have a variety of effects on environmental parameters (precipitation, SST, thermal fronts, Wind) which impacts spawning and early survival. This in turn impacts the overall abundance (Rohit et al. 2018). ",
   Response="$N_t$ and $S_t$",
   Cov="ONI in year t-1",
   stringsAsFactors=FALSE)
 
+HA1 = data.frame(
+  Life="All ages",
+  Hyp="A1. The multi-year average sea surface temperature (SST) has been found to correlate with recruitment strength in Pacific sardine. Presumably the long-term average SST is associated with a variety of factors which affect spawning and early survival (Checkley et al. 2017).",
+  Response="$N_t$ and $S_t$",
+  Cov="3-year average SST",
+  stringsAsFactors=FALSE)
 
 hyptable = rbind(DD1,DD2,DD3, HS1,HS2,HS3,HS4,HS5)[,-1]
 colnames(hyptable)=c("Hypothesis", "Resp.", "Covariates")
@@ -123,7 +129,7 @@ cat("\\clearpage")
 thecap = "Continued."
 
 fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
-hyptable = rbind(HL1, HL2, HL3, HA1)[,-1]
+hyptable = rbind(HL1, HL2, HL3, HA1, HA2)[,-1]
 colnames(hyptable)=c("Hypothesis", "Resp.", "Covariates")
 
 kable(hyptable, "latex", caption=fullcap, escape=FALSE) %>%

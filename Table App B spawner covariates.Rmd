@@ -6,6 +6,8 @@ output:
 ---
 
 <!-- 
+header-includes: \usepackage[labelformat=empty]{caption}
+
 Generic setup code common across all Rmds; run code in setup.Rmd if not knitting.
 --> 
 ```{r child = 'setup.Rmd'}
@@ -152,8 +154,8 @@ cat("\\clearpage")
 ```
 
 
-```{r table-appB-spawner-sst, echo=FALSE}
-########### SST Hypotheses
+```{r table-appB-spawner-upw, echo=FALSE}
+## SST, UPWELLING, A TESTs
 #set up table
 seltable = data.frame(
   Model=paste("base model (M) ", Yr1,"-", Yr2, " data", sep=""), 
@@ -192,14 +194,6 @@ seltable=rbind(seltable,tmp1)
 
 for(covname in c("SST.2.10.mon3to5.")){
 #set up table
-  if(covname=="SST.4.mon10to12.") covtit = "$V_t$ = Oct-Dec SST"
-  if(covname=="SST.4.mon7to12.") covtit =  "$V_t$ = Jul-Dec SST"
-  if(covname=="SST.4.mon1to3.") covtit =  "$V_t$ = Jan-Mar SST"
-  if(covname=="SST.4.mon7to9.") covtit =  "$V_t$ = Jul-Sep SST (S3)"
-  if(covname=="SST.4.mon6to9.") covtit =  "$V_t$ = Ave Jun-Sep SST (S3)"
-  if(covname=="SST.4.mon1to12.") covtit =  "$V_t$ = Ave Jan-Dec SST"
-  if(covname=="SST.4.mon9to10.") covtit =  "$V_t$ = Ave Sep-Oct SST (L1)"
-  if(covname=="SST.4.mon1to12.") covtit =  "$V_t$ = Ave Jan-Dec SST"
   if(covname=="SST.2.10.mon6to9.") covtit =  "$V_t$ = Ave Jun-Sep SST (S1)"
   if(covname=="SST.2.10.mon9to10.") covtit =  "$V_t$ = Sep-Oct SST (L1)"
   if(covname=="SST.2.10.mon1to12.") covtit =  "$V_t$ = Ave Jan-Dec SST"
@@ -215,9 +209,9 @@ dat$cov1=dat[[paste(covname, "1", sep="")]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
 m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m4 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
-m5 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4,m5, test="F")
+# m4 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
+# m5 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
 
 #model 2
 i=2; mod=paste("m",i,sep="")
@@ -243,35 +237,34 @@ tmp1=data.frame(
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
-#model 4
-i=4; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="4a. $ln(S_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$", 
-  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-  Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
-
-#model 5
-i=5; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="4a. $ln(S_t)$ = M + $s(V_t)$ + $s(V_{t-1})$", 
-  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-  Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
+# #model 4
+# i=4; mod=paste("m",i,sep="")
+# aa = summary(get(mod))
+# tmp1=data.frame(
+#   Model="4a. $ln(S_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$", 
+#   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+#   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+#   Adj.R2=100*round(aa$r.sq, digits=3), 
+#   F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+#   AIC = round(AIC(get(mod)), digits=2))
+# seltable=rbind(seltable,tmp1)
+# 
+# #model 5
+# i=5; mod=paste("m",i,sep="")
+# aa = summary(get(mod))
+# tmp1=data.frame(
+#   Model="4a. $ln(S_t)$ = M + $s(V_t)$ + $s(V_{t-1})$", 
+#   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+#   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+#   Adj.R2=100*round(aa$r.sq, digits=3), 
+#   F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+#   AIC = round(AIC(get(mod)), digits=2))
+# seltable=rbind(seltable,tmp1)
 
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
 m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
-m4 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4, test="F")
+a=anova(m1,m2,m3, test="F")
 
 #model 4
 i=2; mod=paste("m",i,sep="")
@@ -304,14 +297,6 @@ seltable=rbind(seltable,tmp1)
 }
 for(covname in c("SST.2.10.mon10to12.")){
 #set up table
-  if(covname=="SST.4.mon10to12.") covtit = "$V_t$ = Oct-Dec SST"
-  if(covname=="SST.4.mon7to12.") covtit =  "$V_t$ = Jul-Dec SST"
-  if(covname=="SST.4.mon1to3.") covtit =  "$V_t$ = Jan-Mar SST"
-  if(covname=="SST.4.mon7to9.") covtit =  "$V_t$ = Jul-Sep SST (S3)"
-  if(covname=="SST.4.mon6to9.") covtit =  "$V_t$ = Ave Jun-Sep SST (S3)"
-  if(covname=="SST.4.mon1to12.") covtit =  "$V_t$ = Ave Jan-Dec SST"
-  if(covname=="SST.4.mon9to10.") covtit =  "$V_t$ = Ave Sep-Oct SST (L1)"
-  if(covname=="SST.4.mon1to12.") covtit =  "$V_t$ = Ave Jan-Dec SST"
   if(covname=="SST.2.10.mon6to9.") covtit =  "$V_t$ = Jun-Sep SST (S1)"
   if(covname=="SST.2.10.mon9to10.") covtit =  "$V_t$ = Ave Sep-Oct SST (L1)"
   if(covname=="SST.2.10.mon1to12.") covtit =  "$V_t$ = Ave Jan-Dec SST"
@@ -357,61 +342,6 @@ seltable=rbind(seltable,tmp1)
 tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 }
-# Remove space at top and bottom
-seltable=seltable[1:(dim(seltable)[1]-1),]
-```
-
-```{r print-tableAppB-sst, echo=FALSE}
-colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
-if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
-
-thecap=paste0("Model selection tests of average sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1) as the explanatory variable ($V_t$) for the catch during monsoon months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
-fullcap=paste("Table ", ref("tabappB:spawner-model-sst", pre="B"), ". ", thecap, sep="")
-kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
-```
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-
-```{r table-appB-spawner-upw, echo=FALSE}
-## UPWELLING TEST
-#set up table
-seltable = data.frame(
-  Model=paste("base model (M) ", Yr1,"-", Yr2, " data", sep=""), 
-  Residual.df="", 
-  MASE="",
-  Adj.R2="", 
-  F="", 
-  p.value="", 
-  AIC="", stringsAsFactors=FALSE)
-
-#set up the cov0 and cov1 variables
-covname="precip.gpcp.kerala.mon6to7."
-dat$cov0=dat[[paste(covname, "0", sep="")]]
-dat$cov1=dat[[paste(covname, "1", sep="")]]
-m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
-a=anova(m1,m2, test="F")
-
-# header M1 for all models
-
-#model 1
-i=1; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="1. $ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$",
-  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-  Adj.R2=100*round(aa$r.sq, digits=3), 
-  F="", p.value="", 
-  AIC=round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
-
-## Add space
-tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
-seltable=rbind(seltable,tmp1)
 
 for(covname in c("SST.UPW.4.mon6to9.", "SST.2.10.mon6to9.")){
 #set up table
@@ -427,9 +357,9 @@ dat$cov1=dat[[paste(covname, "1", sep="")]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
 m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m4 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
-m5 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4,m5, test="F")
+# m4 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
+# m5 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
 
 #model 2
 i=2; mod=paste("m",i,sep="")
@@ -455,35 +385,34 @@ tmp1=data.frame(
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
-#model 4
-i=4; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="4a. $ln(S_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$", 
-  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-  Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
-
-#model 5
-i=5; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="4a. $ln(S_t)$ = M + $s(V_t)$ + $s(V_{t-1})$", 
-  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-  Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
-  AIC = round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
+# #model 4
+# i=4; mod=paste("m",i,sep="")
+# aa = summary(get(mod))
+# tmp1=data.frame(
+#   Model="4a. $ln(S_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$", 
+#   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+#   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+#   Adj.R2=100*round(aa$r.sq, digits=3), 
+#   F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+#   AIC = round(AIC(get(mod)), digits=2))
+# seltable=rbind(seltable,tmp1)
+# 
+# #model 5
+# i=5; mod=paste("m",i,sep="")
+# aa = summary(get(mod))
+# tmp1=data.frame(
+#   Model="4a. $ln(S_t)$ = M + $s(V_t)$ + $s(V_{t-1})$", 
+#   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+#   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+#   Adj.R2=100*round(aa$r.sq, digits=3), 
+#   F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+#   AIC = round(AIC(get(mod)), digits=2))
+# seltable=rbind(seltable,tmp1)
 
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
 m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
-m4 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-a=anova(m1,m2,m3,m4, test="F")
+a=anova(m1,m2,m3, test="F")
 
 #model 4
 i=2; mod=paste("m",i,sep="")
@@ -515,6 +444,94 @@ tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em
 seltable=rbind(seltable,tmp1)
 }
 
+for(covname in c("SST.2.10.3.yr.runsum.")){
+#set up table
+  if(covname=="SST.2.10.3.yr.runsum.") covtit = "$V_t$ = 2.5-year average SST (A1)"
+
+#var header
+seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
+
+dat$cov0=dat[[paste(covname, "0", sep="")]]
+dat$cov1=dat[[paste(covname, "1", sep="")]]
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
+
+#model 2
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = M + $\\beta V_t$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+#model 3
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = M + $s(V_t)$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+## Add space
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
+seltable=rbind(seltable,tmp1)
+}
+
+for(covname in c("ONI.mon1to12.")){
+#set up table
+  if(covname=="ONI.mon1to12.") covtit = "$V_t$ = ONI (A2)"
+
+#var header
+seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
+
+dat$cov0=dat[[paste(covname, "0", sep="")]]
+dat$cov1=dat[[paste(covname, "1", sep="")]]
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
+a=anova(m1,m2,m3, test="F")
+
+#model 4
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = M + $\\beta V_{t-1}$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+#model 5
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = M + $s(V_{t-1})$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  AIC = round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+
+## Add space
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
+seltable=rbind(seltable,tmp1)
+}
+
+
 seltable=seltable[1:(dim(seltable)[1]-1),]
 ```
 
@@ -522,7 +539,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of upwelling intensity off Cochi as the explanatory variable.  See Table", ref("tabappB:spawner-model-precip", pre="B"), "for an explanation of the models. Two upwelling indices were tested. The nearshore-offshore temperature differential (UPW), which is the offshore (box 13) minus nearshore (box 4) SST, and the average nearshore SST along the Kerala coast (boxes 2-5). These are highly correlated but not identical. Larger (and positive) UPW indicates stronger upwelling (offshore warmer than nearshore) while smaller SST (during monsoon months) indicates stronger upwelling.")
+thecap=paste("Model selection tests of sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1), upwelling and ONI as the explanatory variables ($V_t$) for the catch during monsoon months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. Two upwelling indices were tested. The nearshore-offshore temperature diferential (UPW), which is the offshore (box 13) minus nearshore (box 4) SST, and the average nearshore SST along the Kerala coast (boxes 2-5). These are highly correlated but not identical. The ONI index is the average over all months in the calendar year. The 2.5-year average SST is the average for Jan-Jun in the current calendar year and the prior 2 calendar years. Thus the average does not include any months during the Jul-Sep catch (response variable).  See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
 fullcap=paste("Table ", ref("tabappB:spawner-model-upw", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
