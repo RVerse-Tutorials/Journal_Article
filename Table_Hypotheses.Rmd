@@ -115,7 +115,7 @@ colnames(hyptable)=c("Hypothesis", "Resp.", "Covariates")
 
 kable(hyptable, "latex", caption=fullcap, escape=FALSE) %>%
   kableExtra::kable_styling(full_width=FALSE) %>%
-  kableExtra::column_spec(1, width="8.5cm") %>%
+  kableExtra::column_spec(1, width="10.5cm") %>%
   kableExtra::column_spec(2, width="1cm") %>%
   kableExtra::column_spec(3, width="3cm")
 ```
@@ -134,7 +134,7 @@ colnames(hyptable)=c("Hypothesis", "Resp.", "Covariates")
 
 kable(hyptable, "latex", caption=fullcap, escape=FALSE) %>%
   kableExtra::kable_styling(full_width=FALSE) %>%
-  kableExtra::column_spec(1, width="8.5cm") %>%
+  kableExtra::column_spec(1, width="10.5cm") %>%
   kableExtra::column_spec(2, width="1cm") %>%
   kableExtra::column_spec(3, width="3cm")
 ```
