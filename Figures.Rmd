@@ -233,7 +233,6 @@ dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 covnames=c("SST.2.10.3.yr.runsum.0", "SST.UPW.4.mon6to9.0")
-covtits =  c("3-yr average SST", "Jul-Sep UPW current season")
 dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
 dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
@@ -252,9 +251,8 @@ dat=dat.nonspawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 covnames=c("SST.2.10.3.yr.runsum.0", "SST.UPW.4.mon6to9.0")
-covtits =  c("2.5-yr average SST", "Jul-Sep UPW current season")
-dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
-dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
+dat$cov0=dat[[covnames[1]]]
+dat$cov1=dat[[covnames[2]]]
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
 plot(m1, select=3, xlab="2.5-year ave. SST", ylab="Effect")
@@ -288,7 +286,6 @@ dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 covnames=c("SST.2.10.3.yr.runsum.0")
-covtits =  c("Jul-Sep SST current season")
 dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
 m0 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
@@ -310,7 +307,6 @@ dat=dat.nonspawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 covnames=c("SST.2.10.3.yr.runsum.0")
-covtits =  c("Mar-May SST current season", "Jun-Sep SST current season")
 dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
 dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
 m0 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)

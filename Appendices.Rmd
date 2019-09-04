@@ -17,16 +17,12 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r child = 'Table App A spawner model.Rmd'}
 ```
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
 ```{r child = 'Table App A nonspawner model.Rmd'}
 ```
-
-#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
@@ -37,8 +33,6 @@ cat("\\clearpage")
 ```{r child = 'Table App B spawner covariates.Rmd'}
 ```
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -46,19 +40,16 @@ cat("\\clearpage")
 ```{r child = 'Table App B nonspawner covariates M with S2.Rmd'}
 ```
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-```{r child = 'Table App B nonspawner covariates M wo S2.Rmd'}
-```
-#
+<!-- ```{r child = 'Table App B nonspawner covariates M wo S2.Rmd'} -->
+<!-- ``` -->
 
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
+<!-- ```{r, results="asis", echo=FALSE} -->
+<!-- cat("\\clearpage") -->
+<!-- ``` -->
 
 # Appendix C: Tests for Chlorophyll-a as a covariate
 
@@ -68,7 +59,6 @@ cat("\\clearpage")
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
-
 
 # Appendix D: Covariates along the SE India coast
 
@@ -81,7 +71,7 @@ dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
 datts=ts(dat,start=1956, frequency=12)
 plot(datts,ylab=paste("SST Upwelling Index Box",i),xlab="",bty="n",ylim=c(-2,5),xlim=c(1960,2015))
-#lines(ts(filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2,col="red")
+#lines(ts(stats::filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2,col="red")
 }
 for(i in 2:5){
   covname=paste("SST.UPW.",i,sep="")
@@ -119,8 +109,6 @@ if(i==5) oldpar=par(fig = c(0.05+.5, .25+.5, 0.05, .25), new = T)
 par(oldpar)
 ```
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -134,7 +122,7 @@ dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
 datts=ts(dat,start=1956, frequency=12)
 plot(datts,ylab=paste("Surface Chl-a Box",i),xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
-#lines(ts(filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2,col="red")
+#lines(ts(stats::filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2,col="red")
 }
 for(i in 2:5){
   covname=paste("CHL.",i,sep="")
@@ -172,8 +160,6 @@ plot(mymap$x,mymap$y,type="l",bty="n",xaxt="n",yaxt="n",ylab="",xlab="")
 par(oldpar)
 ```
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -191,7 +177,7 @@ dat=seio_covariates_mon$precip.gpcp.kerala
 datts=ts(dat,start=1956, frequency=12)
 plot(datts,ylab="Monthly precipitation off Kerala coast",xlab="",bty="n")
 
-#lines(ts(filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2)
+#lines(ts(stats::filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2)
 oldpar=par(fig = c(0.5, .93, 0.8, 1), new = T)  
 dat=seio_covariates_mon$Precip.Kerala
 catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
@@ -210,8 +196,6 @@ title("Mean Monthly Precip",cex.main=.75)
 par(oldpar)
 ```
 
-#
-
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
@@ -220,8 +204,6 @@ cat("\\clearpage")
 plot(seio_covariates_mon$Precip.Kerala, seio_covariates_mon$precip.gpcp.kerala, ylab="land precipitation",
 xlab="ocean precipitation")
 ```
-
-#
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
@@ -234,6 +216,5 @@ figfile = system.file("docs", "2016 CHL.png", package="SardineForecast")
 knitr::include_graphics(figfile)
 ```
 
-#
 
 

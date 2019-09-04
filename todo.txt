@@ -1,0 +1,12 @@
+to do
+
+Create a detailed version of the hypotheses table with references in the appendix.
+Need refs for the cHl section? might already be in intro
+
+test of autocorrelation of residuals and normality
+
+cross-validation test of the catch models
+
+Cut the cartoon of sardine life-cycle? Or need to improve the quality of the figure.
+
+fix Rohit 2018 ref in endnote when return to NWFSC

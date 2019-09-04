@@ -26,11 +26,11 @@ reg="Kerala"
 respdat=data.frame(
   spawners0=oilsardine_qtr[[reg]][oilsardine_qtr$Qtr==3]
   )
-catch0=filter(oilsardine_qtr[[reg]],c(1,1,1,1),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
+catch0=stats::filter(oilsardine_qtr[[reg]],c(1,1,1,1),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
 respdat$Catch0 = c(catch0,NA)
-CatchWin=filter(oilsardine_qtr[[reg]],c(0,1,1,0),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
+CatchWin=stats::filter(oilsardine_qtr[[reg]],c(0,1,1,0),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
 respdat$CatchWin0 = c(CatchWin,NA)
-CatchSum=filter(oilsardine_qtr[[reg]],c(1,0,0,1),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
+CatchSum=stats::filter(oilsardine_qtr[[reg]],c(1,0,0,1),sides=1)[seq(6,dim(oilsardine_qtr)[1],4)]
 respdat$CatchSum0 = c(CatchSum,NA)
 
 #add Catch - spawners

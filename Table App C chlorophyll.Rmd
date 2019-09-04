@@ -41,7 +41,7 @@ a=anova(m1,m2, test="F")
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. $ln(S_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
+  Model="1. $ln(S_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -207,7 +207,7 @@ NE=mean(abs(dat$nspawners0-dat$nspawners1))
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1-M. $ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
+  Model="1-M. $ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -359,7 +359,7 @@ a=anova(m1,m2, test="F")
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. $ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon$",
+  Model="1. $ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 

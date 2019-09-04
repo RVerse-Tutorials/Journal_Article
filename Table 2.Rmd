@@ -18,9 +18,10 @@ dat=dat.nonspawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 
-respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
+#respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
+respdat = dat
 #naive model error
-NE=mean(abs(respdat$spawners0-respdat$spawners1))
+NE=mean(abs(respdat$nspawners0-respdat$nspawners1))
 
 #set up table
 seltable = data.frame(
@@ -41,6 +42,53 @@ tmp1=data.frame(
   Residual.df=round(aa$df[2],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", stringsAsFactors=FALSE)
+tmp2 = data.frame(
+  Model="Time dependency test", 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m0 = gam(nspawners0 ~ nspawners1 + nspawners2 + spawners1 + spawners2, data=respdat)
+m1 = gam(nspawners0 ~ spawners1, data=m0$model)
+m2 = gam(nspawners0 ~ nspawners1, data=m0$model)
+
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(N_t)$ = $\\alpha$ + $\\beta ln(S_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(N_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
   F="", 
   p.value="", 
   AIC=round(AIC(get(mod)), digits=2)

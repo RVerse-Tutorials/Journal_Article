@@ -58,7 +58,7 @@ seltable=rbind(tmp1,tmp2,tmp3)
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1-M0. $ln(S_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon$", 
+  Model="1-M0. $ln(S_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=2), 
@@ -128,7 +128,7 @@ seltable=rbind(seltable,tmp1,tmp2,tmp3)
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1-M1. $ln(N_t) = \\alpha + s(ln(N_{t-1})) + s(ln(S_{t-2})) + \\epsilon$",
+  Model="1-M1. $ln(N_t) = \\alpha + s(ln(N_{t-1})) + s(ln(S_{t-2})) + \\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=2), 
