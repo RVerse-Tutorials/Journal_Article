@@ -45,6 +45,8 @@ http://rpubs.com/eeholmes/SSTKerala
 
 Not clear how/whether to use this for Sardine Paper 2. Leave for Sardine Paper 3 (upwelling dynamics).
 
+Maybe redo with SST seasonal anomaly like in Boyer et al 2001.
+
 # May 8, 2019
 
 Updated the SardineForecast package with the `tidelevel` dataset and updated the documentation under `?tidelevel`. Updated Sardine.bib with the references.
