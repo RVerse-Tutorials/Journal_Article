@@ -7,11 +7,43 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# June-August, 2019
+
+I spent the summer revamping and clarifying the hypotheses to test (per comments from literature, Smitha, and Mark & Dave). I then redid all the analyses focusing on the hypotheses and then needed to rewrite results, tables, figures, and discussion.
+
+### Other stuff
+
+* simplified the table structure a bit
+* wrote the discussion
+* rewrote introduction
+* lots of work on cleaning up references
+
+### To do
+
+* Edit for specific journal
+* Write abstract
+* Do I need a detailed version of the hypotheses table with references? in the appendix? Refs are currently scattered in introduction.
+* Test of autocorrelation of residuals and normality to appendix
+* Need to do influence analysis via cross-validation (LOO).  1994 catch is influential and outlier.
+* Cut the cartoon of sardine life-cycle? Or need to improve the quality of the figure.
+* Need to discuss the land precipitation results briefly or cut the land precipitation data. 
+* Discuss the CHL results more?
+
+### Things that would be interesting but not necessary before submitting
+
+* cross-validation test of the catch models? Maybe not.
+* Look at the paper that found correlation with MEI and annual landings. Maybe use MEI instead of ONI? or use ONI_t? That's a question for the others. What is the best ENSO metric and why? Supraba et al 2016: Climate influence on oil sardine and Indian mackerel in southeastern Arabian Sea
+* ONI can be tested with full data set.  Add that.
+* Might be interesting do windowing and see how SST average correlates for different windows.
+* Because SST average was good, try average over larger region.  If that works, then ICOADS SST might work.
+
 # May 10-21, 2019
 
 Did the SST transect studies to look for better/other ways to characterize the SST gradients both temporally and spatially. This work is summarized here.
 
 http://rpubs.com/eeholmes/SSTKerala
+
+Not clear how/whether to use this for Sardine Paper 2. Leave for Sardine Paper 3 (upwelling dynamics).
 
 # May 8, 2019
 
@@ -20,6 +52,8 @@ Updated the SardineForecast package with the `tidelevel` dataset and updated the
 I did some cursory looking at the tide level anomalies against the catches. No obvious relationships. Studies have found a relationship between mean sea level and SOI but that relationship does not seem to hold for the whole 1939-2018 time series. It seems to hold for some shorter periods however.
 
 Next: Re look at Dave's suggestions for how to use sea level as a covariate. Not clear to me how to use it. Also there is a strong seasonal cycle in sea level. Should one use one part of this cycle, like Sept, or just use the mean annual level?
+
+Status: Not clear how to use tide level and no obvious relationship. I can add this in as a hypothesis but need more direction on what *exactly* to use. I don't want to go on a fishing expediction with tide-level.
 
 # May 7, 2019
 
