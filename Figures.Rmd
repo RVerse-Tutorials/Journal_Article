@@ -40,11 +40,11 @@ cat("\\clearpage")
 par(mfrow=c(1,1),mar=c(5,5,1,5))
 dat=oilsardine_qtr
 plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Quarterly Kerala Catch (1000 kg)",xlab="",bty="L", ylim=c(0,180))
-tmp <- ringseine[!is.na(ringseine$HP),]
-par(new = T)
-plot(tmp$Year, tmp$Length.net, axes=FALSE, xlab=NA, ylab=NA, type="l", xlim=c(1956,2015), ylim=c(0,3000), lwd=3, col="grey")
-axis(side = 4)
-mtext(side = 4, line = 3, 'Ring Seine Net Length (m)')
+# tmp <- ringseine[!is.na(ringseine$HP),]
+# par(new = T)
+# plot(tmp$Year, tmp$Length.net, axes=FALSE, xlab=NA, ylab=NA, type="l", xlim=c(1956,2015), ylim=c(0,3000), lwd=3, col="grey")
+# axis(side = 4)
+# mtext(side = 4, line = 3, 'Ring Seine Net Length (m)')
 oldpar=par(fig = c(0.6, 1, 0.6, .97), new = T)  
 catchmeans=tapply(dat$Kerala, dat$Qtr, mean, na.rm=TRUE)
 names(catchmeans)=c("JFM","AMJ","JAS","OND")
@@ -248,6 +248,9 @@ abline(h=0, col="grey")
 legend("topleft","Jul-Sep Catch", bty="n")
 
 dat=dat.nonspawners
+# dat$nspawners0[dat$Year==1994]=NA
+# dat$nspawners1[dat$Year==1995]=NA
+# dat$nspawners2[dat$Year==1996]=NA
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 covnames=c("SST.2.10.3.yr.runsum.0", "SST.UPW.4.mon6to9.0")
@@ -255,6 +258,7 @@ dat$cov0=dat[[covnames[1]]]
 dat$cov1=dat[[covnames[2]]]
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
+#cbind(dat$Year, residuals(m0), residuals(m1), residuals(m2))
 plot(m1, select=3, xlab="2.5-year ave. SST", ylab="Effect")
 legend("topright","C", bty="n")
 legend("topleft","Oct-Mar Catch", bty="n")

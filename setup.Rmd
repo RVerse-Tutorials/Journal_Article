@@ -170,7 +170,7 @@ covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.",
              "SST.2.10.mon3to5.", "SST.2.10.mon10to12.",
              "SST.2.10.3.yr.runsum.", "ONI.mon1to12.")
 #set up to use consistent data
-dat=fullrespdat[,c("Year","spawners0", "nspawners1", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
+dat=fullrespdat[,c("Year","spawners0", "nspawners1", "nspawners2", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
 dat.spawners=dat
 if(any(diff(dat.spawners$Year)!=1)) stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")

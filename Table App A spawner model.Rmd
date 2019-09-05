@@ -15,10 +15,14 @@ header-includes: \usepackage[labelformat=empty]{caption}
 dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
+
+#naive model error
+#def of MASE is MAE/naive error
+NE=mean(abs(dat$spawners0-dat$spawners1))
 ```
 
 ```{r seltableA1a, echo=FALSE}
-respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
+respdat = dat
 
 seltable = data.frame(
   Model=paste("Naive Model ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
@@ -270,8 +274,6 @@ cat("\\clearpage")
 
 
 ```{r seltableA1b, echo=FALSE}
-respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
-
 #set up table
 seltable = data.frame(
   Model=paste("Time dependency test A ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 

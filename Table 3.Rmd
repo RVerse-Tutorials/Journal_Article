@@ -9,7 +9,7 @@ output:
 ```{r child = 'setup.Rmd'}
 ```
 
-```{r table3-cov-models}
+```{r table3-cov-models, eval=FALSE}
 # run to check that they work
 dat=dat.spawners
 Yr1 = min(dat$Year)
@@ -36,14 +36,13 @@ m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=
 dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
 #naive model error
-NE=mean(abs(respdat$spawners0-respdat$spawners1))
+NE=mean(abs(dat$spawners0-dat$spawners1))
 
-covnames=c("SST.2.10.mon6to9.", "SST.UPW.4.mon6to9.")
-covtits =  c("Jun-Sep SST current season", "Jun-Sep UPW current season")
-dat$cov0=dat[["SST.2.10.mon6to9.0"]]
-dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
+covnames=c("SST.2.10.mon6to9.0", "SST.UPW.4.mon6to9.0","SST.2.10.3.yr.runsum.0")
+dat$cov0=dat[[covnames[1]]]
+dat$cov1=dat[[covnames[2]]]
+dat$cov2=dat[[covnames[3]]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
@@ -53,12 +52,13 @@ a=anova(m1,m2,m3, test="F")
 tmp1 = data.frame(Model="Jul-Sep catch models with covariates", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 tmp2 = data.frame(Model="$V_t$ = Jun-Sep SST current season", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 tmp3 = data.frame(Model="$W_{t}$ = Jun-Sep UPW current season", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
-seltable=rbind(tmp1,tmp2,tmp3)
+tmp4 = data.frame(Model="$Z_{t}$ = 2.5-year average SST", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+seltable=rbind(tmp1,tmp2,tmp3,tmp4)
 
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1-M0. $ln(S_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$", 
+  Model="1. M0 $ln(S_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=2), 
@@ -92,6 +92,21 @@ tmp1=data.frame(
   AIC=round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov2, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$\\Rightarrow$ 2c. $ln(S_t) = M1 + s(Z_{t})$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
 ## Space
 tmp1 = data.frame(
   Model="\\kern 1em", 
@@ -110,10 +125,10 @@ respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),
 #naive model error
 NE=mean(abs(respdat$spawners0-respdat$spawners1))
 
-covnames=c("SST.2.10.mon3to5.", "SST.UPW.4.mon6to9.")
-covtits =  c("Mar-May SST current season", "Jun-Sep SST current season")
-dat$cov0=dat[["SST.2.10.mon3to5.0"]]
-dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
+covnames=c("SST.2.10.mon3to5.0", "SST.UPW.4.mon6to9.0","SST.2.10.3.yr.runsum.0")
+dat$cov0=dat[[covnames[1]]]
+dat$cov1=dat[[covnames[2]]]
+dat$cov2=dat[[covnames[3]]]
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
@@ -123,12 +138,13 @@ a=anova(m1,m2,m3, test="F")
 tmp1 = data.frame(Model="Oct-Mar catch models with covariates", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 tmp2 = data.frame(Model="$V_t$ = Mar-May SST current season", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 tmp3 = data.frame(Model="$W_{t}$ = Jun-Sep upwelling current season", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
-seltable=rbind(seltable,tmp1,tmp2,tmp3)
+tmp4 = data.frame(Model="$Z_{t}$ = 2.5-year average SST", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+seltable=rbind(seltable,tmp1,tmp2,tmp3,tmp4)
 
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1-M1. $ln(N_t) = \\alpha + s(ln(N_{t-1})) + s(ln(S_{t-2})) + \\epsilon_t$",
+  Model="1. M1 $ln(N_t) = \\alpha + s(ln(N_{t-1})) + s(ln(S_{t-2})) + \\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=2), 
@@ -147,16 +163,16 @@ tmp1=data.frame(
   AIC=round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
-i=3; mod=paste("m",i,sep="")
-aa = summary(get(mod))
-tmp1=data.frame(
-  Model="3a. $ln(N_t) = M1 + s(V_t) + \\beta W_{t}$", 
-  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-  Adj.R2=100*round(aa$r.sq, digits=2), 
-  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
-  AIC=round(AIC(get(mod)), digits=2))
-seltable=rbind(seltable,tmp1)
+# i=3; mod=paste("m",i,sep="")
+# aa = summary(get(mod))
+# tmp1=data.frame(
+#   Model="3a. $ln(N_t) = M1 + s(V_t) + \\beta W_{t}$", 
+#   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+#   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+#   Adj.R2=100*round(aa$r.sq, digits=2), 
+#   F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+#   AIC=round(AIC(get(mod)), digits=2))
+# seltable=rbind(seltable,tmp1)
 
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov1, data=dat)
@@ -166,6 +182,21 @@ i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
   Model="2b. $ln(N_t) = M1 + \\beta W_{t}$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov2, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$\\Rightarrow$ 2c. $ln(N_t) = M1 + s(Z_{t})$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=2), 
