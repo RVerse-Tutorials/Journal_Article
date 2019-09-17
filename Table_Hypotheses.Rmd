@@ -1,9 +1,9 @@
 ---
 output:
-  pdf_document: 
-    keep_tex: true
   html_document: default
   word_document: default
+  pdf_document: 
+    keep_tex: true
 header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
@@ -28,7 +28,7 @@ DD1 = data.frame(
 DD2 = data.frame(
   Life="Age 1-2",
   Hyp="DD2.  Abundance of 1-yr and 2-yr fish should be correlated with strength of the cohorts from the previous two seasons.",
-  Response="$S_t and N_t$",
+  Response="$S_t$ and $N_t$",
   Cov="$S_{t-1}$ and $S_{t-2}$",
   stringsAsFactors=FALSE)
 
