@@ -17,6 +17,7 @@ Remove Jr. from Checkley
 
 add
 
+#DONE
 @article{Roxyetal2014},
   title={The curious case of Indian Ocean warming},
   author={Roxy, Mathew Koll and Ritika, Kapoor and Terray, Pascal and Masson, S{\'e}bastien},
@@ -27,6 +28,7 @@ add
   year={2014}
 }
 
+#DONE
 @article{SchwartzloseAlheit1999,
   title={Worldwide large-scale fluctuations of sardine and anchovy populations},
   author={Schwartzlose, R. A. and J. Alheit, A. Bakun and T. R. Baumgartner and R. Cloete and R. J. M. Crawford and W. J. Fletcher and Y. Green-Ruiz and E. Hagen and T. Kawasaki and D. Lluch-Belda and S. E. Lluch-Cota and A. D. MacCall and Y. Matsuura and M. O. Nevarez-Martinez and R. H. Parrish and C. Roy and R. Serra and K. V. Shust and M. N. Ward and J. Z. Zuzunaga},
@@ -39,6 +41,7 @@ add
 
 Add
 
+#DONE
 @inbook{Moustahfidetal2018,
   author = {Hassan Moustahfid and Francis Marsac and Avijit Grangopadhyay},
   title={Climate change impacts, vulnerabilities and adaptations: Western Indian Ocean marine fisheries},
@@ -51,6 +54,7 @@ Add
    type = {Book Section}
 }
 
+#DONE
 @article{Kripaetal2018,
   title={Overfishing and climate drives changes in biology and recruitment of the Indian oil sardine Sardinella longiceps in southeastern Arabian Sea},
   author={Kripa, Vasant and Mohamed, Kolliyil S and Koya, KP and Jeyabaskaran, R and Prema, D and Padua, Shelton and Kuriakose, Somy and Anilkumar, PS and Nair, Preetha G and Ambrose, TV and others},
@@ -61,6 +65,7 @@ Add
   publisher={Frontiers}
 }
 
+#DONE
 @article{Suprabaetal2016,
   title={Climate influence on oil sardine and {I}ndian mackerel in southeastern {A}rabian {S}ea},
   author={Supraba, Vasu and Dineshbabu, Aaythan Puthiyapurayil and Thomas, Sujitha and Rohit, Prathibha and Rajesh, Kothanahally Mallegowda and Zacharia, Payiyappanal Ulahannan},
