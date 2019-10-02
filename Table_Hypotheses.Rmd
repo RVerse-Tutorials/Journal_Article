@@ -19,29 +19,29 @@ thecap = "Hypotheses for covariates affecting landings.  $S_t$ is quarter 3 (Jul
 fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
 
 DD1 = data.frame(
-  Life="Age 2+",
-  Hyp="DD1.  $S_t$ is dominated by age 2+ fish, thus abundance of the 1-yr and 2-yr ages in the prior season (Oct-Mar catch) should be correlated with the abundance of mature fish this year.",
+  Hyp="DD1.  $S_t \sim N_{t-1}$",
+  Des = "$S_t$ is age 1+ age fish and reflects the 0-2yr fish in $N_{t-1}$ which have aged 3-6 months.",
   Response="$S_t$",
   Cov="$N_{t-1}$",
   stringsAsFactors=FALSE)
 
 DD2 = data.frame(
-  Life="Age 1-2",
-  Hyp="DD2.  Abundance of 1-yr and 2-yr fish should be correlated with strength of the cohorts from the previous two seasons.",
+  Hyp="DD2. $S_t \sim S_{t-1} + S_{t-2}$ \n $N_t \sim S_{t-1} + S_{t-2}$",
+  Des = "$S_t$ is age 1+ fish and reflects the abundance of the spawning stock and cohort strength. If cohort strength persists over time, landings in the current season should correlate with landings in the previous two seasons.",
   Response="$S_t$ and $N_t$",
   Cov="$S_{t-1}$ and $S_{t-2}$",
   stringsAsFactors=FALSE)
 
 DD3 = data.frame(
-  Life="Age 2+",
-  Hyp="DD3.  Because age 2 fish appear in the post-monsoon catch, we expect the post-monsoon catch (dominated by age 1 and 2) in the previous season to be correlated with the post-monsoon catch in the current season.",
+  Hyp="DD3.  $N_t \sim N_{t-1}$",
+  Des = "$N_{t-1}$ includes age 0, 1, 2 and 2+ fish. Thus the 0, 1, and 2 yr fish will appear 1 year later in the $N_t$ landings.",
   Response="$N_t$",
   Cov="$N_{t-1}$",
   stringsAsFactors=FALSE)
 
 HS1 = data.frame(
-  Life="Spawn",
-  Hyp="S1.  The onset of monsoon precipitation triggers movement of adults from offshore to spawning areas due to changes in salinity, turbulence or noise. Spent adults migrate inshore and are exposed to the fishery.",
+  Hyp="S1.  $S_t \sim$ Jun precipitation in year $t$",
+  Des = "The magnitude of precipitation in June-July signals mature fish to spawn offshore, after which the spent adults migrate inshore to the fishery.",
   Response="$S_t$",
   Cov="Jun-Jul precipitation in year $t$",
   stringsAsFactors=FALSE)
