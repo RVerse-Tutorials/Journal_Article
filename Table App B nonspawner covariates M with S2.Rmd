@@ -1,5 +1,5 @@
 ---
-title: "Non-Spawner (Oct-May Catch) Covariates Analysis"
+title: "Non-Spawner (Oct-Mar Catch) Covariates Analysis"
 output:
   pdf_document: default
   word_document: default
