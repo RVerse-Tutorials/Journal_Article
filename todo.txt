@@ -15,6 +15,17 @@ fix Rohit 2018 ref in endnote when return to NWFSC
 
 Remove Jr. from Checkley
 
+From Kripa et al 2015
+
+It is already established that stock abundance is not necessarily related directly to landings but we assume this to be so for oil sardine because:
+• Reproduction occurs near the coast so that the whole reproducing population is available for the fishery.
+• Fishing effort for most of the period is artisanal.
+• Total catch of the fishery is unregulated except for a brief
+period of closure (that too not for Kerala coast)
+• Oil sardine shoals do not perform long distance migrations like anchovies which concentrate south of Cape Comorin during the summer monsoon period and then spread northwards along the Malabar coast during the dry
+season (November onwards).
+
+
 add
 
 #DONE
