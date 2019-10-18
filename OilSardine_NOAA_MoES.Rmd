@@ -1,10 +1,10 @@
 ---
-title: \LARGE{Influence of temperature and upwelling intensity on Indian oil sardine (\textit{Sardinella longiceps}) landings}
+title: '\large{Fishing in a warming ocean: influence of changing temperature and upwelling intensity on Indian oil sardine (\textit{Sardinella longiceps}) landings}'
 author: \newline Eli Holmes$^1$, Smitha B.R.$^2$, Nimit Kumar$^3$, Sourav Maity$^3$, David Checkley$^4$, Mark Wells$^5$, Vera Trainer$^1$
-date: '`r format(Sys.time(), "%d %B, %Y")`'
+#date: '`r format(Sys.time(), "%d %B, %Y")`'
 output: 
   pdf_document: default
-csl: '`r system.file("docs", "ecology.csl", package = "SardineForecast")`'
+csl: '`r system.file("docs", "apa.csl", package = "SardineForecast")`'
 bibliography: '`r system.file("docs", "Sardine.bib", package = "SardineForecast")`'
 header-includes:
 - \usepackage[labelformat=empty]{caption}
@@ -25,15 +25,14 @@ header-includes:
 #Generic setup code common across all Rmds
 ```
 
-1. NWFSC, Seattle, 2. CMLRE, Kochi, India, 3. INCOIS, Hyderabad, India, 4. UCSD, San Diego, 5. Univ of Maine.
+\noindent\small{1. Northwest Fisheries Science Center, NOAA, Seattle, WA. 2. Centre for Marine Living Resources and Ecology, MoES, Kochi, India. 3. Indian National Centre for Ocean Information Services, Hyderabad, India. 4. Scripps Institution of Oceanography, UC San Diego, San Diego, CA. 5. School of Marine Sciences, University of Maine, Orono, ME.}
 
 
 \begin{abstract}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-%All article types: you may provide up to 8 keywords; at least 5 are mandatory.
-
-\section{Keywords:} Text Text Text Text Text Text Text Text 
+Commercial landings of sardine are known for strong year-to-year fluctuations. A key driver is thought to be environmental variability, to which small forage fish are especially sensitive. We examined the environmental drivers associated with landings fluctuations in the Indian oil sardine using a 32-year time series off Kerala state. Past research suggested a variety of influential variables: precipitation, upwelling intensity, SST, chlorophyll and ENSO. Using the life-history of the Indian oil sardine, we developed hypotheses concerning how these environmental variables might affect landings and tested them using generalized additive models which allow non-linear response curves. We found significant correlation for only two variables: upwelling intensity and the multi-year average nearshore SST.  Both monsoon and post-monsoon landings were correlated with upwelling intensity in June-September. Upwelling intensity has both a positive effect (fueling higher food availability) and a negative effect at extreme intensity (bringing poorly oxygenated water to the surface). However, the most significant correlation (adjusted R2 of 67.5\%) was between the 2.5 year average nearshore SST and post-monsoon landings. The multi-year average SST also been identified as a predictor for Pacific sardine and southern African sardine fluctuations, suggesting that the average SST over the sardine life-span successfully captures a variety of factors which predict future abundance. The temperature in the Western Indian Ocean has been increasing faster than in other tropical oceans and the warming has been most extreme during the summer monsoon. Our work highlights that these changes in summer upwelling intensity and sea temperature are likely to affect landings. 
+\newline\newline
+\noindent{\bf Keywords}: Indian oil sardine, catch prediction, GAM modeling, climate, sea surface temperature, remote sensing, Southeastern Ariabian Sea
 
 \end{abstract}
 
