@@ -28,6 +28,7 @@ covnames=c("SST.2.10.mon3to5.", "SST.UPW.4.mon6to9.")
 covtits =  c("Mar-May SST current season", "Jun-Sept SST current season")
 dat$cov0=dat[["SST.2.10.mon3to5.0"]]
 dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
+m0 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
 ```
@@ -39,7 +40,7 @@ Yr2 = max(dat$Year)
 #naive model error
 NE=mean(abs(dat$spawners0-dat$spawners1))
 
-covnames=c("SST.2.10.mon6to9.0", "SST.UPW.4.mon6to9.0","SST.2.10.3.yr.runsum.0")
+covnames=c("SST.2.10.mon6to9.0", "Bakun.UPW.mon6to9.0","SST.2.10.3.yr.runsum.0")
 dat$cov0=dat[[covnames[1]]]
 dat$cov1=dat[[covnames[2]]]
 dat$cov2=dat[[covnames[3]]]
@@ -49,18 +50,23 @@ m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
 a=anova(m1,m2,m3, test="F")
 
 ## Header
-tmp1 = data.frame(Model="Jul-Sep catch models with covariates", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
-tmp2 = data.frame(Model="$V_t$ = Jun-Sep SST current season", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
-tmp3 = data.frame(Model="$W_{t}$ = Jun-Sep UPW current season", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
-tmp4 = data.frame(Model="$Z_{t}$ = 2.5-year average SST", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+blanktmp = data.frame(Model="Mod", Residual.df="", MASE="", MAE="", RMSE="", LOOCV="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+tmp1 <- tmp2 <- tmp3 <- tmp4 <- blanktmp
+tmp1$Model = "Jul-Sep catch models with covariates"
+tmp2$Model = "$V_t$ = Jun-Sep SST current season"
+tmp3$Model = "$W_{t}$ = Jun-Sep Bakun-UPW current season"
+tmp4$Model = "$Z_{t}$ = 2.5-year average SST"
 seltable=rbind(tmp1,tmp2,tmp3,tmp4)
 
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. M0 $ln(S_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$", 
+  Model="M0: $ln(S_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
   Adj.R2=100*round(aa$r.sq, digits=2), 
   F="", p.value="", 
   AIC=round(AIC(get(mod)), digits=2), stringsAsFactors=FALSE)
@@ -69,9 +75,12 @@ seltable=rbind(seltable,tmp1)
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="2a. $ln(S_t) = M0 + s(V_t)$", 
+  Model="$ln(S_t) = M0 + s(V_t)$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
   Adj.R2=100*round(aa$r.sq, digits=2), 
   F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
   AIC=round(AIC(get(mod)), digits=2))
@@ -84,9 +93,12 @@ a=anova(m1,m2, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="2b. $ln(S_t) = M0 + \\beta W_{t}$", 
+  Model="$ln(S_t) = M0 + \\beta W_{t}$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
   Adj.R2=100*round(aa$r.sq, digits=2), 
   F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
   AIC=round(AIC(get(mod)), digits=2))
@@ -99,9 +111,12 @@ a=anova(m1,m2, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="$\\Rightarrow$ 2c. $ln(S_t) = M1 + s(Z_{t})$", 
+  Model="$\\Rightarrow$ $ln(S_t) = M1 + s(Z_{t})$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
   Adj.R2=100*round(aa$r.sq, digits=2), 
   F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
   AIC=round(AIC(get(mod)), digits=2))
@@ -112,6 +127,9 @@ tmp1 = data.frame(
   Model="\\kern 1em", 
   Residual.df="\\kern 1em", 
   MASE="\\kern 1em", 
+  MAE="\\kern 1em", 
+  RMSE="\\kern 1em", 
+  LOOCV="\\kern 1em",
   Adj.R2="",
   F="\\kern 1em",
   p.value="\\kern 1em", 
@@ -125,28 +143,35 @@ respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),
 #naive model error
 NE=mean(abs(respdat$spawners0-respdat$spawners1))
 
-covnames=c("SST.2.10.mon3to5.0", "SST.UPW.4.mon6to9.0","SST.2.10.3.yr.runsum.0")
+covnames=c("SST.2.10.mon3to5.0", "SST.2.10.mon6to9.0","SST.2.10.3.yr.runsum.0","DMI.mon9to11.1")
 dat$cov0=dat[[covnames[1]]]
 dat$cov1=dat[[covnames[2]]]
 dat$cov2=dat[[covnames[3]]]
+dat$cov3=dat[[covnames[4]]]
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
 a=anova(m1,m2,m3, test="F")
 
 ## Header
-tmp1 = data.frame(Model="Oct-Mar catch models with covariates", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
-tmp2 = data.frame(Model="$V_t$ = Mar-May SST current season", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
-tmp3 = data.frame(Model="$W_{t}$ = Jun-Sep upwelling current season", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
-tmp4 = data.frame(Model="$Z_{t}$ = 2.5-year average SST", Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
-seltable=rbind(seltable,tmp1,tmp2,tmp3,tmp4)
+blanktmp = data.frame(Model="Mod", Residual.df="", MASE="", MAE="", RMSE="", LOOCV="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+tmp1 <- tmp2 <- tmp3 <- tmp4 <- tmp5 <- blanktmp
+tmp1$Model = "Oct-Mar catch models with covariates"
+tmp2$Model = "$V_t$ = Mar-May SST current season"
+tmp3$Model = "$W_{t}$ = Jun-Sep SST current season"
+tmp4$Model = "$Z_{t}$ = 2.5-year average SST"
+tmp5$Model = "$X_{t}$ = fall DMI prior season"
+seltable=rbind(seltable,tmp1,tmp2,tmp3,tmp4,tmp5)
 
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="1. M1 $ln(N_t) = \\alpha + s(ln(N_{t-1})) + s(ln(S_{t-2})) + \\epsilon_t$",
+  Model="M1: $ln(N_t) = \\alpha + s(ln(N_{t-1})) + s(ln(S_{t-2})) + \\epsilon_t$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
   Adj.R2=100*round(aa$r.sq, digits=2), 
   F="", p.value="", 
   AIC=round(AIC(get(mod)), digits=2), stringsAsFactors=FALSE)
@@ -155,9 +180,12 @@ seltable=rbind(seltable,tmp1)
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="2a. $ln(N_t) = M1 + s(V_t)$", 
+  Model="$ln(N_t) = M1 + s(V_t)$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
   Adj.R2=100*round(aa$r.sq, digits=2), 
   F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
   AIC=round(AIC(get(mod)), digits=2))
@@ -181,9 +209,12 @@ a=anova(m1,m2, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="2b. $ln(N_t) = M1 + \\beta W_{t}$", 
+  Model="$ln(N_t) = M1 + \\beta W_{t}$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
   Adj.R2=100*round(aa$r.sq, digits=2), 
   F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
   AIC=round(AIC(get(mod)), digits=2))
@@ -196,9 +227,132 @@ a=anova(m1,m2, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="$\\Rightarrow$ 2c. $ln(N_t) = M1 + s(Z_{t})$", 
+  Model="$\\Rightarrow ln(N_t) = M1 + s(Z_{t})$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov3, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$ln(N_t) = M1 + s(X_{t})$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  MAE="\\kern 1em", 
+  RMSE="\\kern 1em", 
+  LOOCV="\\kern 1em",
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", stringsAsFactors=FALSE)
+seltable=rbind(seltable,tmp1)
+
+## Simpler model
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="M2: $ln(N_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2), stringsAsFactors=FALSE)
+seltable=rbind(seltable,tmp1)
+
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$ln(N_t) = M2 + s(V_t)$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) , data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6)  + cov1, data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$ln(N_t) = M2 + \\beta W_{t}$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) , data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6)  + s(cov2, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$\\Rightarrow ln(N_t) = M2 + s(Z_{t})$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov3, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$ln(N_t) = M2 + s(X_{t})$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
   Adj.R2=100*round(aa$r.sq, digits=2), 
   F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
   AIC=round(AIC(get(mod)), digits=2))
@@ -207,10 +361,11 @@ seltable=rbind(seltable,tmp1)
 
 
 ```{r print-table3, echo=FALSE}
-colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
-if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
+colnames(seltable)=c("Model", "Residual df", "MASE", "MAE", "RMSE", "LOOCV", "Adj.R2", "F", "p value", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "MAE", "RMSE", "\\shortstack{LOOCV\\\\RMSE}", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
+seltable = seltable[,c(1,2,7,5,10,6)]
 
-thecap=paste("Top covariates for the monsoon (Jul-Sep) and post-monsoon (Oct-Mar) catch ($S_t$ and $N_t$) models. The models are nested; the number indicates the level of nestedness. Models at levels 2 and higher are shown with the component that is added to the base level model (M0 or M1) at top.  The full set of covariate models tested are given in Appendix B. The fitted versus observed catches from the covariate models are shown in Figure ", ref("fig:fitted"), ".", sep="")
+thecap=paste("Top covariates for the monsoon (Jul-Sep) and post-monsoon (Oct-Mar) catch ($S_t$ and $N_t$) models. M0, M1 and M2 are the base models with only prior catch as covariates. To the base models, the listed environmental covariates are added. The full set of covariate models and the results of the tests on the nested models sets are given in Appendix B. The fitted versus observed catches from the covariate models are shown in Figure ", ref("fig:fitted"), ".", sep="")
 fullcap=paste("Table ", ref("tab:covariate-models"), ". ", thecap, sep="")
-kable(seltable, align="lcccccc", caption=fullcap, escape=FALSE)
+kable(seltable, align=paste0("l", paste0(rep("c",dim(seltable)[2]-1),collapse="")), caption=fullcap, escape=FALSE)
 ```

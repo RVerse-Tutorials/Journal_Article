@@ -144,7 +144,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch $S_t$ during spawning months (Jul-Sep) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  The base model (M) with prior catch dependency was selected independently (Appendix A). To the base model, covariates are added. $V_t$ is the covariate in same calendar year as the Jul-Sep catch. The specific hypothesis (Table ", ref("tab:hypotheses"), ") being tested is noted in parentheses. The models are tested as nested sets.  Thus 1, 2a, 3a is a set and 1, 2b, 3b is another set. MASE is the mean absolute square error (residuals).")
+thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch $S_t$ during monsoon months (Jul-Sep) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  The base model (M) with prior catch dependency was selected independently (Appendix A). To the base model, covariates are added. $V_t$ is the covariate in same calendar year as the Jul-Sep catch. The specific hypothesis (Table ", ref("tab:hypotheses"), ") being tested is noted in parentheses. The models are tested as nested sets.  Thus 1, 2a, 3a is a set and 1, 2b, 3b is another set. MASE is the mean absolute square error (residuals).")
 fullcap=paste("Table ", ref("tabappB:spawner-model-precip", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
@@ -237,30 +237,6 @@ tmp1=data.frame(
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
-# #model 4
-# i=4; mod=paste("m",i,sep="")
-# aa = summary(get(mod))
-# tmp1=data.frame(
-#   Model="4a. $ln(S_t)$ = M + $s(V_t)$ + $\\beta V_{t-1}$", 
-#   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-#   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-#   Adj.R2=100*round(aa$r.sq, digits=3), 
-#   F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
-#   AIC = round(AIC(get(mod)), digits=2))
-# seltable=rbind(seltable,tmp1)
-# 
-# #model 5
-# i=5; mod=paste("m",i,sep="")
-# aa = summary(get(mod))
-# tmp1=data.frame(
-#   Model="4a. $ln(S_t)$ = M + $s(V_t)$ + $s(V_{t-1})$", 
-#   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-#   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-#   Adj.R2=100*round(aa$r.sq, digits=3), 
-#   F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
-#   AIC = round(AIC(get(mod)), digits=2))
-# seltable=rbind(seltable,tmp1)
-
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
 m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
@@ -330,7 +306,7 @@ seltable=rbind(seltable,tmp1)
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="3. $ln(S_t)$ = M + $s(V_{t-1})$",
+  Model="$\\Rightarrow$ 3. $ln(S_t)$ = M + $s(V_{t-1})$",
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -343,8 +319,9 @@ tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em
 seltable=rbind(seltable,tmp1)
 }
 
-for(covname in c("SST.UPW.4.mon6to9.", "SST.2.10.mon6to9.")){
+for(covname in c("SST.UPW.4.mon6to9.", "SST.2.10.mon6to9.", "Bakun.UPW.mon6to9.")){
 #set up table
+  if(covname=="Bakun.UPW.mon6to9.") covtit = "$V_t$ = Ave. Jun-Sep Bakun-UPW (L2)"
   if(covname=="SST.UPW.4.mon6to9.") covtit = "$V_t$ = Ave. Jun-Sep UPW (S4 and L2)"
   if(covname=="SST.2.10.mon6to9.") covtit = "$V_t$ = Ave. Jun-Sep SST (S4 and L2)"
  
@@ -376,8 +353,10 @@ seltable=rbind(seltable,tmp1)
 #model 3
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
+addarrow <- ""
+if(AIC(get(mod))<105) addarrow <- "$\\Rightarrow$"
 tmp1=data.frame(
-  Model="3a. $ln(S_t)$ = M + $s(V_t)$",
+  Model=paste(addarrow, "3a. $ln(S_t)$ = M + $s(V_t)$"),
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -444,6 +423,61 @@ tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em
 seltable=rbind(seltable,tmp1)
 }
 
+seltable=seltable[1:(dim(seltable)[1]-1),]
+```
+
+```{r print-tableAppB-upw, echo=FALSE}
+colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
+
+thecap=paste("Model selection tests of sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1), and upwelling indices as the explanatory variables ($V_t$) for the catch during monsoon months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. Three upwelling indices were tested. The nearshore-offshore temperature diferential (UPW), which is the offshore (box 13) minus nearshore (box 4) SST, the average nearshore SST along the Kerala coast (boxes 2-5), and the Bakun upwelling index based on wind stress. See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
+fullcap=paste("Table ", ref("tabappB:spawner-model-upw", pre="B"), ". ", thecap, sep="")
+kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
+```
+
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r table-appB-spawner-enso, echo=FALSE}
+## ENSO, A TESTs
+#set up table
+seltable = data.frame(
+  Model=paste("base model (M) ", Yr1,"-", Yr2, " data", sep=""), 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC="", stringsAsFactors=FALSE)
+
+#set up the cov0 and cov1 variables
+covname="precip.gpcp.kerala.mon6to7."
+dat$cov0=dat[[paste(covname, "0", sep="")]]
+dat$cov1=dat[[paste(covname, "1", sep="")]]
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov0, data=dat)
+a=anova(m1,m2, test="F")
+
+# header M1 for all models
+
+#model 1
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2))
+seltable=rbind(seltable,tmp1)
+
+## Add space
+tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
+seltable=rbind(seltable,tmp1)
+
 for(covname in c("SST.2.10.3.yr.runsum.")){
 #set up table
   if(covname=="SST.2.10.3.yr.runsum.") covtit = "$V_t$ = 2.5-year average SST (A1)"
@@ -487,9 +521,10 @@ tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em
 seltable=rbind(seltable,tmp1)
 }
 
-for(covname in c("ONI.mon1to12.")){
+for(covname in c("ONI.mon1to12.", "DMI.mon9to11.")){
 #set up table
   if(covname=="ONI.mon1to12.") covtit = "$V_t$ = ONI (A2)"
+  if(covname=="DMI.mon9to11.") covtit = "$V_t$ = DMI (A3)"
 
 #var header
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
@@ -535,11 +570,15 @@ seltable=rbind(seltable,tmp1)
 seltable=seltable[1:(dim(seltable)[1]-1),]
 ```
 
-```{r print-tableAppB-upw, echo=FALSE}
+```{r print-tableAppB-enso, echo=FALSE}
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1), upwelling and ONI as the explanatory variables ($V_t$) for the catch during monsoon months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. Two upwelling indices were tested. The nearshore-offshore temperature diferential (UPW), which is the offshore (box 13) minus nearshore (box 4) SST, and the average nearshore SST along the Kerala coast (boxes 2-5). These are highly correlated but not identical. The ONI index is the average over all months in the calendar year. The 2.5-year average SST is the average for Jan-Jun in the current calendar year and the prior 2 calendar years (30 months total). Thus the average does not include any months during the Jul-Sep catch (response variable).  See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
+thecap=paste("Model selection tests of the multi-year average nearshore sea surface temperature and ENSO indices as the explanatory variables ($V$) for the catch during summer months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. The ENSO indices were the ONI index averaged over all months in the calendar year and the DMI index for Sep-Nov. The 2.5-year average SST is the average for Jan-Jun in the current calendar year and the prior 2 calendar years (30 months total). Thus the average does not include any months during the Jul-Sep catch.  See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
 fullcap=paste("Table ", ref("tabappB:spawner-model-upw", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
 ```

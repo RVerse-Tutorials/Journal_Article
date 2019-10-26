@@ -106,8 +106,16 @@ HA2 = data.frame(
   Cov="ONI in year t-1",
   stringsAsFactors=FALSE)
 
+HA3 = data.frame(
+  Hyp="A3 \\newline $S_t \\sim$ DMI in $t-1$ \\newline $N_t \\sim$ DMI in $t-1$ \\& $t$",
+  Des="Negative Dipole Mode Index (DMI) values in Sep-Nov are associated with anoxic events on the Kerala coast while positive values are associated with a absence of such events (Vallivattathillam et al. 2017).",
+  Response="$N_t$ and $S_t$",
+  Cov="DMI in year t-1",
+  stringsAsFactors=FALSE)
+
+
 HA1 = data.frame(
-  Hyp="A1 \\newline $S_t \\sim$ 2.5-year ave. nearshore SST \\newline $N_t \\sim$ 2.5-year ave. nearshore SST",
+  Hyp="A1 \\newline $S_t \\sim$ 2.5-yr ave. nearshore SST \\newline $N_t \\sim$ 2.5-yr ave. nearshore SST",
   Des="Spawning, early survival, and recruitment of sardines depends on a multitude of cascading factors summarized by the multi-year average  nearshore SST. The multi-year average SST has been correlated with recruitment and abundance in other sardines (Checkley et al. 2017) and is related to the optimal temperature windows for sardines (Takasuka et al. 2007).",
   Response="$N_t$ and $S_t$",
   Cov="3-year average SST",
@@ -126,7 +134,7 @@ kable(hyptable, "latex", caption=fullcap, escape=FALSE) %>%
 thecap = "Continued."
 
 fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
-hyptable = rbind(HL1, HL2, HL3, HA1, HA2)[,c("Hyp","Des")]
+hyptable = rbind(HL1, HL2, HL3, HA1, HA2,HA3)[,c("Hyp","Des")]
 colnames(hyptable)=c("Hypothesis", "Description")
 
 kable(hyptable, "latex", caption=fullcap, escape=FALSE) %>%
