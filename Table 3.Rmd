@@ -44,10 +44,6 @@ covnames=c("SST.2.10.mon6to9.0", "Bakun.UPW.mon6to9.0","SST.2.10.3.yr.runsum.0")
 dat$cov0=dat[[covnames[1]]]
 dat$cov1=dat[[covnames[2]]]
 dat$cov2=dat[[covnames[3]]]
-m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
-a=anova(m1,m2,m3, test="F")
 
 ## Header
 blanktmp = data.frame(Model="Mod", Residual.df="", MASE="", MAE="", RMSE="", LOOCV="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
@@ -57,6 +53,10 @@ tmp2$Model = "$V_t$ = Jun-Sep SST current season"
 tmp3$Model = "$W_{t}$ = Jun-Sep Bakun-UPW current season"
 tmp4$Model = "$Z_{t}$ = 2.5-year average SST"
 seltable=rbind(tmp1,tmp2,tmp3,tmp4)
+
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
 
 i=1; mod=paste("m",i,sep="")
 aa = summary(get(mod))
@@ -104,8 +104,8 @@ tmp1=data.frame(
   AIC=round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
-m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
-m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov2, sp=0.6), data=dat)
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov2, sp=0.6), data=dat)
 a=anova(m1,m2, test="F")
 
 i=2; mod=paste("m",i,sep="")

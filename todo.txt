@@ -7,7 +7,7 @@ test of autocorrelation of residuals and normality
 
 Need to do influence analysis via cross-validation (LOO).  1994 catch is influential and outlier.
 
-cross-validation test of the catch models
+DONE cross-validation test of the catch models
 
 show correlation between CHl and UPW?.
 
