@@ -9,30 +9,6 @@ output:
 ```{r child = 'setup.Rmd'}
 ```
 
-```{r table3-cov-models, eval=FALSE}
-# run to check that they work
-dat=dat.spawners
-Yr1 = min(dat$Year)
-Yr2 = max(dat$Year)
-covnames=c("SST.2.10.mon6to9.", "SST.UPW.4.mon6to9.")
-covtits =  c("Jun-Sep SST current season", "Jun-Sep UPW current season")
-dat$cov0=dat[["SST.2.10.mon6to9.0"]]
-dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
-m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
-
-dat=dat.nonspawners
-Yr1 = min(dat$Year)
-Yr2 = max(dat$Year)
-covnames=c("SST.2.10.mon3to5.", "SST.UPW.4.mon6to9.")
-covtits =  c("Mar-May SST current season", "Jun-Sept SST current season")
-dat$cov0=dat[["SST.2.10.mon3to5.0"]]
-dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
-m0 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
-```
-
 ```{r seltable3, echo=FALSE}
 dat=dat.spawners
 Yr1 = min(dat$Year)
