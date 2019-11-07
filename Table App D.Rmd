@@ -1,0 +1,357 @@
+---
+title: "Influential Years Analysis"
+output:
+  pdf_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
+---
+
+```{r child = 'setup.Rmd'}
+```
+
+```{r funs, echo=FALSE}
+ret <- function(mod, resfun){
+    if(resfun=="aic") return(mod$aic)
+    if(resfun=="loo") return(SardineForecast:::loogam(mod)$RMSE)
+    if(resfun=="r2") return(summary(mod)$r.sq)
+  }
+rmyr <- c(1986, 1994)
+```
+
+## Validation of the Jul-Sep landings base models
+
+To evaluate the base model for the Jul-Sep landings using only prior catch as covariates, GAM and linear models with Jul-Sep and Oct-Mar in the prior season and two seasons prior as covariates were fit to the 1984-2015 landings. The models were fit leaving one year out (year shown on the x-axis). The far right shows the fit to all years. 
+
+In Figure 1D, the $\Delta$AIC values are the AIC minus the AIC of the best model (model with lowest AIC). Models with $\Delta$AIC with 0.5 are similar and "best". Models within 2 of the best models are competitive. Models with $\Delta$AIC greater than 2 are uncompetitive.
+
+The Figure 1D shows that with an year left out the set of models that is best was always GAM with Oct-Mar and Jul-Sep landings in the prior season, GAM with Oct-Mar landings in the prior season, or a linear model with Oct-Mar landings in the prior season. There were cases where deleting a year removed one of these three from the 'best' category, but they were still in the 'competitive category.
+
+```{r table-appD-spawner, echo=FALSE}
+spawnerinf <- function(rmyr=1900, resfun="aic"){
+
+  covnames=c("nspawners1", "spawners1",
+           "nspawners2", "spawners2")
+modnames=c("Oct-Mar(t-1)", "Jul-Sep(t-1)",
+           "Oct-Mar(t-2)", "Jul-Sep(t-2)")
+
+tests=list(c(2),c(2,4),c(1),c(1,3),c(2,3), c(1,4),c(1,2))
+## SPAWNERS
+dat=dat.spawners
+dat$spawners0[dat$Year%in%rmyr]=NA
+m0 = gam(spawners0 ~ spawners1, data=dat)
+res = data.frame(model="base", None=ret(m0, resfun))
+
+for(val in tests){
+  if(length(val)==1){
+  dat$cov1=dat[[covnames[val[1]]]]
+  m0 = gam(spawners0 ~ cov1, data=dat)
+  tmp = data.frame(model=paste0("lin(", modnames[val[1]],")"), None=ret(m0, resfun))
+  res = rbind(res, tmp)
+  m0 = gam(spawners0 ~ s(cov1, sp=0.6), data=dat)
+  tmp = data.frame(model=paste0("gam(", modnames[val[1]],")"), None=ret(m0, resfun))
+  res = rbind(res, tmp)
+  }else{
+    dat$cov1=dat[[covnames[val[1]]]]
+    dat$cov2=dat[[covnames[val[2]]]]
+    m0 = gam(spawners0 ~ cov1 + cov2, data=dat)
+    tmp = data.frame(model=paste0("lin(", modnames[val[1]], "), lin(", modnames[val[2]], ")"), None=ret(m0, resfun))
+    res = rbind(res, tmp)
+    m0 = gam(spawners0 ~ s(cov1,sp=0.6) + s(cov2,sp=0.6), data=dat)
+    tmp = data.frame(model=paste0("gam(", modnames[val[1]], "), gam(", modnames[val[2]], ")"), None=ret(m0, resfun))
+    res = rbind(res, tmp)
+    # m0 = gam(spawners0 ~ s(cov1,sp=0.6) + cov2, data=dat)
+    # tmp = data.frame(model=paste0("gam(", modnames[val[1]], "), lin(", modnames[val[2]], ")"), None=ret(m0, resfun))
+    # res = rbind(res, tmp)
+    # m0 = gam(spawners0 ~ cov1 + s(cov2,sp=0.6), data=dat)
+    # nm = 
+    # tmp = data.frame(model=paste0("lin(", modnames[val[1]], "), gam(", modnames[val[2]], ")"), None=ret(m0, resfun))
+    # res = rbind(res, tmp)
+  }
+}
+
+for(yr in 1984:max(dat$Year)){
+  bad = yr
+  dat2=dat
+  dat2$spawners0[dat$Year%in%bad]=NA
+  m0 = gam(spawners0 ~ spawners1, data=dat2)
+  tmpres = data.frame(model="Intercept only",None=ret(m0, resfun))
+  
+  for(val in tests){
+    if(length(val)==1){
+      dat2$cov1=dat[[covnames[val[1]]]]
+      m0 = gam(spawners0 ~ cov1, data=dat2)
+      tmp = data.frame(model=paste0("lm(", modnames[val[1]],")"), None=ret(m0, resfun))
+      tmpres = rbind(tmpres, tmp)
+      m0 = gam(spawners0 ~ s(cov1, sp=0.6), data=dat2)
+      tmp = data.frame(model=paste0("gam(", modnames[val[1]],")"), None=ret(m0, resfun))
+      tmpres = rbind(tmpres, tmp)
+    }else{
+      dat2$cov1=dat[[covnames[val[1]]]]
+      dat2$cov2=dat[[covnames[val[2]]]]
+      m0 = gam(spawners0 ~ cov1 + cov2, data=dat2)
+      tmp = data.frame(model=paste0("lm(", modnames[val[1]], ", ", covnames[val[2]], ")"), None=ret(m0, resfun))
+      tmpres = rbind(tmpres, tmp)
+      m0 = gam(spawners0 ~ s(cov1,sp=0.6) + s(cov2,sp=0.6), data=dat2)
+      tmp = data.frame(model=paste0("gam(", modnames[val[1]], ", ", covnames[val[2]],")"), None=ret(m0, resfun))
+      tmpres = rbind(tmpres, tmp)
+      # m0 = gam(spawners0 ~ s(cov1,sp=0.6) + cov2, data=dat2)
+      # tmp = data.frame(model=paste0("gam(", modnames[val[1]], "), lin(", modnames[val[2]], ")"), None=ret(m0, resfun))
+      # tmpres = rbind(tmpres, tmp)
+      # m0 = gam(spawners0 ~ cov1 + s(cov2,sp=0.6), data=dat2)
+      # tmp = data.frame(model=paste0("lin(", modnames[val[1]], "), gam(", modnames[val[2]], ")"), None=ret(m0, resfun))
+      # tmpres = rbind(tmpres, tmp)
+    }
+  }
+  colnames(tmpres)=c("model", yr)
+  res=cbind(res,tmpres[,2,drop=FALSE])
+}
+return(res)
+}
+```
+
+```{r appD-spawners-aic, echo=FALSE,fig.cap="Figure 1D. Delta AIC for the Jul-Sep landings base models with one year deleted. Deleted year is shown on the x-axis.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+res <- spawnerinf()
+res <- res[-1,]
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[1,2:ncol(res)]),nrow=1)
+delaic=res[,2:ncol(res)]-baseres
+rownames(delaic)=res$model
+
+minrow <- apply(res[2:ncol(res)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
+delaic2=res[,2:ncol(res)]-baseres
+rownames(delaic2)=res$model
+
+library(tidyverse)
+df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
+df$DelAIC <- cut(df$aic, c(-0.001, .5, 2, 4, 100))
+levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelAIC), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+
+Because the covariate tests indicated that `r paste(rmyr, collapse=" and ")` `r ifelse(length(rmyr)==1,"is","are")` very influential for the environmental covariates, `r ifelse(length(rmyr)==1,"these years were","this year was")` removed. The Leave-one-out base model selection tests were therefore repeated with 1994 removed. Thus these tests have 1994 and one other year removed. With 1994 only removed, a linear model with Oct-Mar landings in the prior season was the only 'best' model for all but 3 years and for 2 of those 3, it was still within $\Delta$AIC of 2 of the best model and the year where $\Delta$AIC > 2 was 2.71.
+
+
+
+```{r appd-spawners2-aic2, echo=FALSE,fig.cap=paste0("Figure 2D. Delta AIC for the Jul-Sep landings base models with ", paste(rmyr, collapse=" and "), " and one other year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+res <- spawnerinf(rmyr)
+res <- res[-1,]
+
+minrow <- apply(res[2:ncol(res)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
+delaic2=res[,2:ncol(res)]-baseres
+delaic2=delaic2[,!(colnames(delaic2)%in%rmyr)]
+rownames(delaic2)=res$model
+
+library(tidyverse)
+df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
+df$DelAIC <- cut(df$aic, c(-0.001, .5, 2, 4, 100))
+levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelAIC), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+
+```{r appd-spawners-r2, echo=FALSE,fig.cap=paste0("Figure 3D. R-squared for the Jul-Sep landings base models with ", paste(rmyr, collapse=" and "), " and one additional year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+res <- spawnerinf(resfun="r2")
+res <- res[-1,]
+
+library(tidyverse)
+df <- gather(res, year, lev, 2:ncol(res))
+df$r2 <- cut(df$lev, c(0, .2, .3, .4, .5, .6, .7))
+#levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = r2), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+```{r appd-spawners-loo, echo=FALSE,fig.cap=paste0("Figure 3D. R-squared for the Jul-Sep landings base models with ", paste(rmyr, collapse=" and "), " and one additional year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+# res2 <- spawnerinf(resfun="loo")
+# res <- nspawnerinf(resfun="loo")
+# save(res, res2, file="basemodsloo.RData")
+load("basemodsloo.RData")
+vals=res
+vals <- vals[-1,]
+minrow <- apply(vals[2:ncol(vals)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(vals),1)%*%matrix(as.numeric(vals[cbind(minrow,2:ncol(vals))]),nrow=1)
+baseres=matrix(1,nrow(vals),1)%*%matrix(as.numeric(vals[cbind(6,2:ncol(vals))]),nrow=1)
+tmp=vals[,2:ncol(vals)]-baseres
+rownames(tmp)=vals$model
+
+library(tidyverse)
+df <- gather(cbind(model=vals$model, tmp), year, lev, 2:ncol(tmp))
+df$r2 <- cut(df$lev, c(-1,-.2,-.1,-.01,0.01,.05,1))
+#levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = r2), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+
+## Validation of the Oct-Mar landings base models
+ 
+```{r table-appD-nspawner, echo=FALSE}
+nspawnerinf <- function(rmyr=1900, resfun="aic"){
+
+  covnames=c("nspawners1", "spawners1",
+           "nspawners2", "spawners2")
+modnames=c("Oct-Mar(t-1)", "Jul-Sep(t-1)",
+           "Oct-Mar(t-2)", "Jul-Sep(t-2)")
+
+tests=list(c(2),c(2,4),c(1),c(1,3),c(2,3), c(1,4),c(1,2))
+## SPAWNERS
+dat=dat.nonspawners
+dat$nspawners0[dat$Year%in%rmyr]=NA
+m0 = gam(nspawners0 ~ nspawners1, data=dat)
+res = data.frame(model="base", None=ret(m0, resfun))
+
+for(val in tests){
+  if(length(val)==1){
+  dat$cov1=dat[[covnames[val[1]]]]
+  m0 = gam(nspawners0 ~ cov1, data=dat)
+  tmp = data.frame(model=paste0("lin(", modnames[val[1]],")"), None=ret(m0, resfun))
+  res = rbind(res, tmp)
+  m0 = gam(nspawners0 ~ s(cov1, sp=0.6), data=dat)
+  tmp = data.frame(model=paste0("gam(", modnames[val[1]],")"), None=ret(m0, resfun))
+  res = rbind(res, tmp)
+  }else{
+    dat$cov1=dat[[covnames[val[1]]]]
+    dat$cov2=dat[[covnames[val[2]]]]
+    m0 = gam(nspawners0 ~ cov1 + cov2, data=dat)
+    tmp = data.frame(model=paste0("lin(", modnames[val[1]], "), lin(", modnames[val[2]], ")"), None=ret(m0, resfun))
+    res = rbind(res, tmp)
+    m0 = gam(nspawners0 ~ s(cov1,sp=0.6) + s(cov2,sp=0.6), data=dat)
+    tmp = data.frame(model=paste0("gam(", modnames[val[1]], "), gam(", modnames[val[2]], ")"), None=ret(m0, resfun))
+    res = rbind(res, tmp)
+    # m0 = gam(nspawners0 ~ s(cov1,sp=0.6) + cov2, data=dat)
+    # tmp = data.frame(model=paste0("gam(", modnames[val[1]], "), lin(", modnames[val[2]], ")"), None=ret(m0, resfun))
+    # res = rbind(res, tmp)
+    # m0 = gam(nspawners0 ~ cov1 + s(cov2,sp=0.6), data=dat)
+    # nm = 
+    # tmp = data.frame(model=paste0("lin(", modnames[val[1]], "), gam(", modnames[val[2]], ")"), None=ret(m0, resfun))
+    # res = rbind(res, tmp)
+  }
+}
+
+for(yr in 1984:max(dat$Year)){
+  bad = yr
+  dat2=dat
+  dat2$nspawners0[dat$Year%in%bad]=NA
+  #dat2$nspawners1[dat$Year%in%(bad+1)]=NA
+  m0 = gam(nspawners0 ~ nspawners1, data=dat2)
+  tmpres = data.frame(model="base",None=ret(m0, resfun))
+  
+  for(val in tests){
+    if(length(val)==1){
+      dat2$cov1=dat[[covnames[val[1]]]]
+      m0 = gam(nspawners0 ~ cov1, data=dat2)
+      tmp = data.frame(model=paste0("lm(", modnames[val[1]],")"), None=ret(m0, resfun))
+      tmpres = rbind(tmpres, tmp)
+      m0 = gam(nspawners0 ~ s(cov1, sp=0.6), data=dat2)
+      tmp = data.frame(model=paste0("gam(", modnames[val[1]],")"), None=ret(m0, resfun))
+      tmpres = rbind(tmpres, tmp)
+    }else{
+      dat2$cov1=dat[[covnames[val[1]]]]
+      dat2$cov2=dat[[covnames[val[2]]]]
+      m0 = gam(nspawners0 ~ cov1 + cov2, data=dat2)
+      tmp = data.frame(model=paste0("lm(", modnames[val[1]], ", ", covnames[val[2]], ")"), None=ret(m0, resfun))
+      tmpres = rbind(tmpres, tmp)
+      m0 = gam(nspawners0 ~ s(cov1,sp=0.6) + s(cov2,sp=0.6), data=dat2)
+      tmp = data.frame(model=paste0("gam(", modnames[val[1]], ", ", covnames[val[2]],")"), None=ret(m0, resfun))
+      tmpres = rbind(tmpres, tmp)
+      # m0 = gam(nspawners0 ~ s(cov1,sp=0.6) + cov2, data=dat2)
+      # tmp = data.frame(model=paste0("gam(", modnames[val[1]], "), lin(", modnames[val[2]], ")"), None=ret(m0, resfun))
+      # tmpres = rbind(tmpres, tmp)
+      # m0 = gam(nspawners0 ~ cov1 + s(cov2,sp=0.6), data=dat2)
+      # tmp = data.frame(model=paste0("lin(", modnames[val[1]], "), gam(", modnames[val[2]], ")"), None=ret(m0, resfun))
+      # tmpres = rbind(tmpres, tmp)
+    }
+  }
+  colnames(tmpres)=c("model", yr)
+  res=cbind(res,tmpres[,2,drop=FALSE])
+}
+return(res)
+}
+```
+
+```{r appD-nspawners-aic, echo=FALSE,fig.cap="Figure 3D. Delta AIC for the Oct-Mar landings base models with one year deleted. Deleted year is shown on the x-axis.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+res <- nspawnerinf()
+res <- res[-1,]
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[1,2:ncol(res)]),nrow=1)
+delaic=res[,2:ncol(res)]-baseres
+rownames(delaic)=res$model
+
+minrow <- apply(res[2:ncol(res)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
+delaic2=res[,2:ncol(res)]-baseres
+rownames(delaic2)=res$model
+
+library(tidyverse)
+df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
+df$DelAIC <- cut(df$aic, c(-0.001, .5, 2, 4, 100))
+levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelAIC), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+
+The Figure 3D shows that for Oct-Mar landings the best model was always GAM with Oct-Mar in the prior season and Jul-Sep landings two seasons prior.
+Again `r paste(rmyr, collapse=" and ")` `r ifelse(length(rmyr)==1,"was","were")` deleted and the leave-one-out analysis was repeated. The Figure 4D shows the best model is still always GAM with Oct-Mar in the prior season and Jul-Sep landings two seasons prior.
+
+
+```{r appd-nspawners-cov2, echo=FALSE,fig.cap=paste0("Figure 4D. Delta AIC for the Oct-Mar landings base models with ", paste(rmyr, collapse=" and "), " and one additional year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+res <- nspawnerinf(rmyr)
+res <- res[-1,]
+
+minrow <- apply(res[2:ncol(res)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
+delaic2=res[,2:ncol(res)]-baseres
+rownames(delaic2)=res$model
+delaic2=delaic2[,!(colnames(delaic2)%in%rmyr)]
+
+library(tidyverse)
+df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
+df$DelAIC <- cut(df$aic, c(-0.001, .5, 2, 4, 30))
+levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelAIC), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+
+```{r appd-nspawners-r2, echo=FALSE,fig.cap=paste0("Figure 5D. R-squared for the Oct-Mar landings base models with ", paste(rmyr, collapse=" and "), " and one additional year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+res <- nspawnerinf(rmyr, resfun="r2")
+res <- res[-1,]
+res=res[,!(colnames(res)%in%rmyr)]
+
+library(tidyverse)
+df <- gather(res, year, lev, 2:ncol(res))
+df$r2 <- cut(df$lev, c(0, .2, .3, .4, .5, .6, .7, .8))
+#levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = r2), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
