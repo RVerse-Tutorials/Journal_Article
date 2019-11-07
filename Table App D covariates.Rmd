@@ -20,11 +20,11 @@ rmyr <- c(1987)
 
 ## Validation of the Jul-Sep landings base models
 
-To evaluate the base model for the Jul-Sep landings using only prior catch as covariates, GAM and linear models with Jul-Sep and Oct-Mar in the prior season and two seasons prior as covariates were fit to the 1984-2015 landings. The models were fit leaving one year out (year shown on the x-axis). The far right shows the fit to all years. 
+To evaluate the environmental covariates, GAM and linear models were fit leaving one year out (year shown on the x-axis). The far right shows the fit to all years. 
 
 In Figure 1D, the $\Delta$AIC values are the AIC minus the AIC of the best model (model with lowest AIC). Models with $\Delta$AIC with 0.5 are similar and "best". Models within 2 of the best models are competitive. Models with $\Delta$AIC greater than 2 are uncompetitive.
 
-The Figure 1D shows that with an year left out the set of models that is best was always GAM with Oct-Mar and Jul-Sep landings in the prior season, GAM with Oct-Mar landings in the prior season, or a linear model with Oct-Mar landings in the prior season. There were cases where deleting a year removed one of these three from the 'best' category, but they were still in the 'competitive category.
+The Figure 1D shows that the best model was always one of GAM with Oct-Mar and Jul-Sep landings in the prior season, GAM with Oct-Mar landings in the prior season, or a linear model with Oct-Mar landings in the prior season. There were cases where deleting a year removed one of these three from the 'best' category, but they were still in the 'competitive category.
 
 ```{r table-appD-spawner-cov, echo=FALSE}
 spawnerinfcov <- function(rmyr=1900, resfun="aic", mod=2){
@@ -178,6 +178,10 @@ df$r2 <- cut(df$lev, c(-.7,-.2,-.05,0.05,.7))
 p <- ggplot(df, aes(year, model)) +
   geom_tile(aes(fill = r2), colour = "grey50")
 p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
 ```
 
 

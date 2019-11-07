@@ -1,5 +1,5 @@
 ---
-title: "Influential Years Analysis"
+title: "Influential Years Analysis: only past catch"
 output:
   pdf_document: default
   word_document: default
@@ -24,7 +24,11 @@ To evaluate the base model for the Jul-Sep landings using only prior catch as co
 
 In Figure 1D, the $\Delta$AIC values are the AIC minus the AIC of the best model (model with lowest AIC). Models with $\Delta$AIC with 0.5 are similar and "best". Models within 2 of the best models are competitive. Models with $\Delta$AIC greater than 2 are uncompetitive.
 
-The Figure 1D shows that with an year left out the set of models that is best was always GAM with Oct-Mar and Jul-Sep landings in the prior season, GAM with Oct-Mar landings in the prior season, or a linear model with Oct-Mar landings in the prior season. There were cases where deleting a year removed one of these three from the 'best' category, but they were still in the 'competitive category.
+The Figure 1D shows that with an year left out the set of models that has the lowest AIC was always GAM with Oct-Mar and Jul-Sep landings in the prior season, GAM with Oct-Mar landings in the prior season, or a linear model with Oct-Mar landings in the prior season. There were cases where deleting a year removed one of these three from the 'best' category, but they were still in the 'competitive category. However, when we look at the Leave-one-out predictive performance (Figure 2D), we see that the additional parameters in the model with Jul-Sep landings reduces the predictive performance. The GAM with Oct-Mar landings in the prior season always has better LOO predictive performance--except when 1994 or 1995 is left out.
+
+The analysis was repeated with 1994 and 1995 removed (Figure 3D and 4D). GAM with Oct-Mar landings in prior season is the model with lowest AIC and LOO predictive performance is similar for AM with Oct-Mar and Jul-Sep landings in the prior season and GAM with Oct-Mar landings in the prior season. GAM with Oct-Mar landings in the prior season was choosen as the base model for Jul-Sep landings.
+
+It should be noted that none of the models has a particularly high adjusted R$^2$ (Figure 5D). The values are generally less than 0.3. The Jul-Sep landings tend to be highly variable and not related to the catch in prior years. This is during the monsoon which fishing is not always possible due to sea-state and there is a 6-week fishing ban during this time.
 
 ```{r table-appD-spawner, echo=FALSE}
 spawnerinf <- function(rmyr=1900, resfun="aic"){
@@ -109,7 +113,7 @@ return(res)
 }
 ```
 
-```{r appD-spawners-aic, echo=FALSE,fig.cap="Figure 1D. Delta AIC for the Jul-Sep landings base models with one year deleted. Deleted year is shown on the x-axis.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+```{r appD-spawners-aic, echo=FALSE, fig.cap="Figure 1D. Delta AIC for the Jul-Sep landings base models with one year deleted. Delta AIC is AIC of the model minus the AIC of the best (lowest AIC model) in the set. Pink models are similarly best (with 0.5 AIC of each other). Green are models within 2 of the best model, thus competitive. Deleted year is shown on the x-axis.", fig.width=8, fig.height=8, message=FALSE, warning=FALSE}
 res <- spawnerinf()
 res <- res[-1,]
 baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[1,2:ncol(res)]),nrow=1)
@@ -129,6 +133,77 @@ levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)
 
 p <- ggplot(df, aes(year, model)) +
   geom_tile(aes(fill = DelAIC), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+```{r appd-spawners-loo, echo=FALSE, fig.cap="Figure 2D. Leave-one-out predictive performance (leave out a year, fit, predict that year) for the Jul-Sep landings base models. The performance (DelLOO) is the RSME (root mean square error) from LOO minus the LOO RSME for the GAM(Oct-Mar(t-1)) model. Thus results are relative to the GAM(Oct-Mar(t-1)) model. Pink is better than this model, blue and purple is worse, and green is similar.", fig.width=8, fig.height=8, message=FALSE, warning=FALSE}
+
+# res2 <- spawnerinf(resfun="loo")
+# res <- nspawnerinf(resfun="loo")
+# save(res, res2, file="basemodsloo.RData")
+load("basemodsloo.RData")
+vals=res2
+vals <- vals[-1,]
+minrow <- apply(vals[2:ncol(vals)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(vals),1)%*%matrix(as.numeric(vals[cbind(minrow,2:ncol(vals))]),nrow=1)
+baseres=matrix(1,nrow(vals),1)%*%matrix(as.numeric(vals[cbind(6,2:ncol(vals))]),nrow=1)
+tmp=vals[,2:ncol(vals)]-baseres
+rownames(tmp)=vals$model
+
+library(tidyverse)
+df <- gather(cbind(model=vals$model, tmp), year, lev, 2:ncol(tmp))
+df$DelLOO <- cut(df$lev, c(-1,-.2,-.1,-.01,0.01,.05,1))
+#levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelLOO), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+
+```{r appd-spawners2-aic-9495, echo=FALSE,fig.cap="Figure 3D. Delta AIC for the Jul-Sep landings base models with 1994, 1995 and one other year deleted. Deleted year is shown on the x-axis.", fig.width=8, fig.height=8, message=FALSE, warning=FALSE}
+res <- spawnerinf(c(1994,1995))
+res <- res[-1,]
+
+minrow <- apply(res[2:ncol(res)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
+delaic2=res[,2:ncol(res)]-baseres
+delaic2=delaic2[,!(colnames(delaic2)%in%rmyr)]
+rownames(delaic2)=res$model
+
+library(tidyverse)
+df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
+df$DelAIC <- cut(df$aic, c(-0.001, .5, 2, 4, 100))
+levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelAIC), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
+```{r appd-spawners-loo-9495, echo=FALSE,fig.cap="Figure 4D. Leave-one-out predictive performance for the Jul-Sep landings base models with 1994 and 1995 removed. See Figure 2D for details on the figure.", fig.width=8, fig.height=8, message=FALSE, warning=FALSE}
+# res2 <- spawnerinf(resfun="loo")
+# res <- nspawnerinf(resfun="loo")
+# save(res, res2, file="basemodsloo.RData")
+load("basemodsloo.RData")
+vals=res2.9495
+vals <- vals[-1,]
+minrow <- apply(vals[2:ncol(vals)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(vals),1)%*%matrix(as.numeric(vals[cbind(minrow,2:ncol(vals))]),nrow=1)
+baseres=matrix(1,nrow(vals),1)%*%matrix(as.numeric(vals[cbind(6,2:ncol(vals))]),nrow=1)
+tmp=vals[,2:ncol(vals)]-baseres
+rownames(tmp)=vals$model
+
+library(tidyverse)
+df <- gather(cbind(model=vals$model, tmp), year, lev, 2:ncol(tmp))
+df$DelLOO <- cut(df$lev, c(-1,-.2,-.1,-.01,0.01,.05,1))
+#levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelLOO), colour = "grey50")
 p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
 ```
 
@@ -159,7 +234,7 @@ p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.rat
 ```
 
 
-```{r appd-spawners-r2, echo=FALSE,fig.cap=paste0("Figure 3D. R-squared for the Jul-Sep landings base models with ", paste(rmyr, collapse=" and "), " and one additional year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+```{r appd-spawners-r2, echo=FALSE,fig.cap=paste0("Figure 5D. R-squared for the Jul-Sep landings base models with one year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
 res <- spawnerinf(resfun="r2")
 res <- res[-1,]
 
@@ -174,32 +249,14 @@ p <- ggplot(df, aes(year, model)) +
 p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
 ```
 
-```{r appd-spawners-loo, echo=FALSE,fig.cap=paste0("Figure 3D. R-squared for the Jul-Sep landings base models with ", paste(rmyr, collapse=" and "), " and one additional year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
-# res2 <- spawnerinf(resfun="loo")
-# res <- nspawnerinf(resfun="loo")
-# save(res, res2, file="basemodsloo.RData")
-load("basemodsloo.RData")
-vals=res
-vals <- vals[-1,]
-minrow <- apply(vals[2:ncol(vals)],2,function(x){which(x==min(x))})
-baseres=matrix(1,nrow(vals),1)%*%matrix(as.numeric(vals[cbind(minrow,2:ncol(vals))]),nrow=1)
-baseres=matrix(1,nrow(vals),1)%*%matrix(as.numeric(vals[cbind(6,2:ncol(vals))]),nrow=1)
-tmp=vals[,2:ncol(vals)]-baseres
-rownames(tmp)=vals$model
-
-library(tidyverse)
-df <- gather(cbind(model=vals$model, tmp), year, lev, 2:ncol(tmp))
-df$r2 <- cut(df$lev, c(-1,-.2,-.1,-.01,0.01,.05,1))
-#levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
-#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
-
-p <- ggplot(df, aes(year, model)) +
-  geom_tile(aes(fill = r2), colour = "grey50")
-p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
 ```
 
-
 ## Validation of the Oct-Mar landings base models
+
+The Figure 3D shows that for Oct-Mar landings the best model was always GAM with Oct-Mar in the prior season and Jul-Sep landings two seasons prior.  Again `r paste(rmyr, collapse=" and ")` `r ifelse(length(rmyr)==1,"was","were")` deleted and the leave-one-out analysis was repeated. The Figure 4D shows the best model is still always GAM with Oct-Mar in the prior season and Jul-Sep landings two seasons prior.
+
  
 ```{r table-appD-nspawner, echo=FALSE}
 nspawnerinf <- function(rmyr=1900, resfun="aic"){
@@ -308,9 +365,30 @@ p <- ggplot(df, aes(year, model)) +
 p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
 ```
 
+```{r appd-nspawners-loo, echo=FALSE,fig.cap="Figure 5D. Leave-one-out predictive performance for the Out-Mar landings base models.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+# res2 <- spawnerinf(resfun="loo")
+# res <- nspawnerinf(resfun="loo")
+# save(res, res2, file="basemodsloo.RData")
+load("basemodsloo.RData")
+vals=res
+vals <- vals[-1,]
+minrow <- apply(vals[2:ncol(vals)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(vals),1)%*%matrix(as.numeric(vals[cbind(minrow,2:ncol(vals))]),nrow=1)
+baseres=matrix(1,nrow(vals),1)%*%matrix(as.numeric(vals[cbind(6,2:ncol(vals))]),nrow=1)
+tmp=vals[,2:ncol(vals)]-baseres
+rownames(tmp)=vals$model
 
-The Figure 3D shows that for Oct-Mar landings the best model was always GAM with Oct-Mar in the prior season and Jul-Sep landings two seasons prior.
-Again `r paste(rmyr, collapse=" and ")` `r ifelse(length(rmyr)==1,"was","were")` deleted and the leave-one-out analysis was repeated. The Figure 4D shows the best model is still always GAM with Oct-Mar in the prior season and Jul-Sep landings two seasons prior.
+library(tidyverse)
+df <- gather(cbind(model=vals$model, tmp), year, lev, 2:ncol(tmp))
+df$r2 <- cut(df$lev, c(-1,-.2,-.1,-.01,0.01,.05,1))
+#levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = r2), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = 4/3)
+```
+
 
 
 ```{r appd-nspawners-cov2, echo=FALSE,fig.cap=paste0("Figure 4D. Delta AIC for the Oct-Mar landings base models with ", paste(rmyr, collapse=" and "), " and one additional year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
