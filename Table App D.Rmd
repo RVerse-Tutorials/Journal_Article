@@ -14,6 +14,7 @@ library(mgcv)
 ret <- function(mod, resfun){
     if(resfun=="aic") return(mod$aic)
     if(resfun=="loo") return(SardineForecast:::loogam(mod)$RMSE)
+    if(resfun=="looMd") return(SardineForecast:::loogam(mod)$MdAE)
     if(resfun=="r2") return(summary(mod)$r.sq)
   }
 rmyr <- c(1986, 1994)
