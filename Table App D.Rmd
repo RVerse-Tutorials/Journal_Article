@@ -42,7 +42,7 @@ This suggests that the better predictive performance is due to better prediction
 
 It should be noted that none of the models has a particularly high adjusted R$^2$ (Figure 5D). The values are generally less than 0.3. The Jul-Sep landings tend to be highly variable and not related to the catch in prior years. Jul-Sep is during the monsoon during which fishing is not always possible due to sea-state and there is a 6-week fishing ban during this time.
 
-```{r table-appD-spawner, echo=FALSE}
+```{r table-appD-fits, echo=FALSE}
 spawnerinf <- function(rmyr=1900, resfun="aic", data=dat.nonspawners){
 
   covnames=c("nspawners1", "spawners1",
@@ -125,6 +125,63 @@ return(res)
 }
 ```
 
+```{r table-appD-fits-loofits, echo=FALSE}
+fits <- function(rmyr=1900, resp="spawners0", data=dat.nonspawners){
+
+  covnames=c("nspawners1", "spawners1",
+           "nspawners2", "spawners2")
+modnames=c("Oct-Mar(t-1)", "Jul-Sep(t-1)",
+           "Oct-Mar(t-2)", "Jul-Sep(t-2)")
+
+tests=list(c(2),c(2,4),c(1),c(1,3),c(2,3), c(1,4),c(1,2))
+## SPAWNERS
+dat=data
+dat[[resp]][dat$Year%in%rmyr]=NA
+dat$resp = dat[[resp]]
+m0 = gam(resp ~ 1, data=dat)
+m0$data = dat[,c("Year","resp")]
+res = list(intercept=m0)
+resloo = list(intercept=list(data=dat[,c("Year","resp")],
+                             pred=SardineForecast:::loogam(m0)$pred))
+
+for(val in tests){
+  if(length(val)==1){
+  dat$cov1=dat[[covnames[val[1]]]]
+  m0 = gam(resp ~ cov1, data=dat)
+  m0$data = dat[,c("Year","resp", "cov1")]
+  modname = paste0("lin(", modnames[val[1]],")")
+  res[[modname]] = m0
+  resloo[[modname]] = list(data=dat[,c("Year","resp", "cov1")],
+                           pred=SardineForecast:::loogam(m0)$pred)
+  m0 = gam(resp ~ s(cov1, sp=0.6), data=dat)
+  m0$data = dat[,c("Year","resp", "cov1")]
+  modname = paste0("gam(", modnames[val[1]],")")
+  res[[modname]] = m0
+  resloo[[modname]] = list(data=dat[,c("Year","resp", "cov1")],
+                           pred=SardineForecast:::loogam(m0)$pred)
+  }else{
+    dat$cov1=dat[[covnames[val[1]]]]
+    dat$cov2=dat[[covnames[val[2]]]]
+    m0 = gam(resp ~ cov1 + cov2, data=dat)
+    m0$data = dat[,c("Year","resp", "cov1", "cov2")]
+    modname=paste0("lin(", modnames[val[1]], "), lin(", modnames[val[2]], ")")
+    res[[modname]] = m0
+    resloo[[modname]] = list(data=dat[,c("Year","resp", "cov1", "cov2")],
+                             pred=SardineForecast:::loogam(m0)$pred)
+    m0 = gam(resp ~ s(cov1,sp=0.6) + s(cov2,sp=0.6), data=dat)
+    m0$data = dat[,c("Year","resp", "cov1", "cov2")]
+    modname=paste0("gam(", modnames[val[1]], "), gam(", modnames[val[2]], ")")
+    res[[modname]] = m0
+    resloo[[modname]] = list(data=dat[,c("Year","resp", "cov1", "cov2")],
+                             pred=SardineForecast:::loogam(m0)$pred)
+  }
+}
+
+return(list(Fitted=res, LooPred=resloo))
+}
+```
+
+
 ```{r appD-spawners-aic, echo=FALSE, fig.cap="Figure 1D. Delta AIC for the Jul-Sep landings base models with one year deleted. Delta AIC is AIC of the model minus the AIC of the best (lowest AIC model) in the set. Black models were the best models in the set and within 0.5 AIC of each other. Green are models within 2 of the best model, thus competitive to the best models. Deleted year is shown on the x-axis.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}
 res <- spawnerinf(resfun="aicc")
 res <- res[res$model%in%modelset,]
@@ -146,6 +203,117 @@ levels(df$DelAICc) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4
 p <- ggplot(df, aes(year, model)) +
   geom_tile(aes(fill = DelAICc), colour = "grey50")
 p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = aspr) + scale_fill_manual(values=Palette4)
+```
+
+```{r appD-spawners-fits1, echo=FALSE, fig.cap="Figure 1D. Delta AIC for the Jul-Sep landings base models with one year deleted. Delta AIC is AIC of the model minus the AIC of the best (lowest AIC model) in the set. Black models were the best models in the set and within 0.5 AIC of each other. Green are models within 2 of the best model, thus competitive to the best models. Deleted year is shown on the x-axis.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}
+dforig=data.frame(Year=respdat$Year, 
+              spawners0=respdat$spawners0, spawners1=respdat$spawners1, spawners2=respdat$spawners2, 
+              nspawners0=respdat$nspawners0, nspawners1=respdat$nspawners1, 
+               nspawners2=respdat$nspawners2)
+FittedLooPred <- fits(data=dforig)
+myfits <- FittedLooPred$Fitted
+fit <- myfits[[1]]
+p <- ggplot() + geom_point(data=fit$data, aes(x=Year, y=resp, color="Actual"))
+for(fit in myfits){
+  tmp <- data.frame(Year=na.omit(fit$data)$Year, fitted=fitted(fit))
+  p <- p + geom_line(data=tmp, aes(x=Year, y=fitted, color="Predicted"))
+}
+p1 <- p + scale_color_manual( values = c( Actual="black", Predicted="blue")) +  labs(color="") + xlab('') +  ylab('Jul-Sep Catch') + theme_classic() + theme(legend.position = "none")
+
+myfits <- FittedLooPred$LooPred
+fit <- myfits[[1]]
+p <- ggplot() + geom_point(data=fit$data, aes(x=Year, y=resp, color="Actual"))
+for(fit in myfits){
+  tmp <- data.frame(Year=na.omit(fit$data)$Year, pred=fit$pred)
+  p <- p + geom_line(data=tmp, aes(x=Year, y=pred, color="Predicted"))
+}
+p2 <- p + scale_color_manual( values = c( Actual="black", Predicted="blue")) +  labs(color="LOO CV") + xlab('') +  ylab('Jul-Sep Catch') + theme_classic() + theme(legend.position = "none")
+
+FittedLooPred <- fits(rmyr=c(1956, 1957, 1986,1987, 1994, 1995), data=dforig)
+myfits <- FittedLooPred$Fitted
+fit <- myfits[[1]]
+p <- ggplot() + geom_point(data=fit$data, aes(x=Year, y=resp, color="Actual"))
+for(fit in myfits){
+  tmp <- data.frame(Year=na.omit(fit$data)$Year, fitted=fitted(fit))
+  p <- p + geom_line(data=tmp, aes(x=Year, y=fitted, color="Predicted"))
+}
+p3 <- p + scale_color_manual( values = c( Actual="black", Predicted="blue")) +  labs(color="One-step ahead") + xlab('') +  ylab('Jul-Sep Catch') + theme_classic() + theme(
+  legend.justification = c(1,0), legend.position = c(1,0),
+  legend.key = element_rect(colour = "transparent", fill = "white"))
+
+myfits <- FittedLooPred$LooPred
+fit <- myfits[[1]]
+p <- ggplot() + geom_point(data=fit$data, aes(x=Year, y=resp, color="Actual"))
+for(fit in myfits){
+  tmp <- data.frame(Year=na.omit(fit$data)$Year, pred=fit$pred)
+  p <- p + geom_line(data=tmp, aes(x=Year, y=pred, color="Predicted"))
+}
+p4 <- p + scale_color_manual( values = c( Actual="black", Predicted="blue")) +  labs(color="LOO") + xlab('') +  ylab('Jul-Sep Catch') + theme_classic() + theme(
+  legend.justification = c(1,0), legend.position = c(1,0),
+  legend.key = element_rect(colour = "transparent", fill = "white"))
+
+gridExtra::grid.arrange(p1, p3, p2, p4, nrow = 2)
+```
+
+
+
+```{r appD-spawners-fits2, echo=FALSE, fig.cap="Figure 1D. Delta AIC for the Jul-Sep landings base models with one year deleted. Delta AIC is AIC of the model minus the AIC of the best (lowest AIC model) in the set. Black models were the best models in the set and within 0.5 AIC of each other. Green are models within 2 of the best model, thus competitive to the best models. Deleted year is shown on the x-axis.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}
+library(grid)
+dforig=data.frame(Year=respdat$Year, 
+              spawners0=respdat$spawners0, spawners1=respdat$spawners1, spawners2=respdat$spawners2, 
+              nspawners0=respdat$nspawners0, nspawners1=respdat$nspawners1, 
+               nspawners2=respdat$nspawners2)
+FittedLooPred <- fits(data=dforig)
+myfits <- FittedLooPred$LooPred
+linmods = stringr::str_detect(names(myfits),"lin")
+fit <- myfits[[1]]
+p <- ggplot() + geom_point(data=fit$data, aes(x=Year, y=resp, color="Actual"))
+for(fit in myfits[linmods]){
+  tmp <- data.frame(Year=na.omit(fit$data)$Year, pred=fit$pred)
+  p <- p + geom_line(data=tmp, aes(x=Year, y=pred, color="Predicted"))
+}
+p1 <- p + scale_color_manual( values = c( Actual="black", Predicted="blue")) +  labs(color="One-step-ahead") + xlab('') +  ylab('Jul-Sep Catch') + theme_classic() + theme(
+  legend.justification = c(1,0), legend.position = c(1,0),
+  legend.key = element_rect(colour = "transparent", fill = "white"))
+grob <- grobTree(textGrob("linear models", x=0.1,  y=0.95, hjust=0, gp=gpar(col="blue", fontsize=13)))
+p1 <- p1 + annotation_custom(grob)
+
+gammods = stringr::str_detect(names(myfits),"gam")
+fit <- myfits[[1]]
+p <- ggplot() + geom_point(data=fit$data, aes(x=Year, y=resp, color="Actual"))
+for(fit in myfits[gammods]){
+  tmp <- data.frame(Year=na.omit(fit$data)$Year, pred=fit$pred)
+  p <- p + geom_line(data=tmp, aes(x=Year, y=pred, color="Predicted"))
+}
+p2 <- p + scale_color_manual( values = c( Actual="black", Predicted="blue")) +  labs(color="One-step-ahead") + xlab('') +  ylab('Jul-Sep Catch') + theme_classic() + theme(
+  legend.justification = c(1,0), legend.position = c(1,0),
+  legend.key = element_rect(colour = "transparent", fill = "white"))
+grob <- grobTree(textGrob("GAM models", x=0.1,  y=0.95, hjust=0, gp=gpar(col="blue", fontsize=13)))
+p2 <- p2 + annotation_custom(grob)
+
+gammods = stringr::str_detect(names(myfits),"gam")
+fit <- myfits[[1]]
+p <- ggplot() + geom_point(data=fit$data, aes(x=Year, y=resp, color="Actual"))
+for(fit in myfits[gammods]){
+  tmp <- data.frame(Year=na.omit(fit$data)$Year, fitted=fitted(fit))
+  p <- p + geom_line(data=tmp, aes(x=Year, y=fitted, color="Predicted"))
+}
+p3 <- p + scale_color_manual( values = c( Actual="black", Predicted="blue")) +  labs(color="One-step ahead") + xlab('') +  ylab('Jul-Sep Catch') + theme_classic() + theme(
+  legend.justification = c(1,0), legend.position = c(1,0),
+  legend.key = element_rect(colour = "transparent", fill = "white"))
+
+myfits <- FittedLooPred$LooPred
+fit <- myfits[[1]]
+p <- ggplot() + geom_point(data=fit$data, aes(x=Year, y=resp, color="Actual"))
+for(fit in myfits){
+  tmp <- data.frame(Year=na.omit(fit$data)$Year, pred=fit$pred)
+  p <- p + geom_line(data=tmp, aes(x=Year, y=pred, color="Predicted"))
+}
+p4 <- p + scale_color_manual( values = c( Actual="black", Predicted="blue")) +  labs(color="LOO") + xlab('') +  ylab('Jul-Sep Catch') + theme_classic() + theme(
+  legend.justification = c(1,0), legend.position = c(1,0),
+  legend.key = element_rect(colour = "transparent", fill = "white"))
+
+gridExtra::grid.arrange(p1, p3, p2, p4, nrow = 2)
 ```
 
 ```{r appd-spawners-loo, echo=FALSE, fig.cap="Figure 2D. Leave-one-out predictive performance (leave out a year, fit, predict that year) for the Jul-Sep landings base models. The performance (DelLOO) is the RSME (root mean square error) from LOO from all models was compared to the LOO RSME for a base model: GAM(Oct-Mar(t-1)). Thus results are relative to the GAM(Oct-Mar(t-1)) model. Black is better predictive performance relative to this model, green is similar, and yellow and orange are worse.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}

@@ -4,6 +4,9 @@ to do
 update discussion of the years
 Redo with AICc
 
+11-15
+Working on the App D figures. Add the stoc level and dlm model to right panels of the one-step-ahead (with LOO) figures.
+
 Look at untitled2. choose model based on on mean and median errors with 86 and 94 removed.
 
 Create a detailed version of the hypotheses table with references in the appendix.
