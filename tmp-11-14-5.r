@@ -19,10 +19,10 @@ lines(df3$Year, fitted(fit1, one.step.ahead=TRUE))
 
 
 "SST.UPW.4.mon6to9.0"
-  covs = matrix(df3[["SST.2.10.3.yr.runsum.0"]], nrow=1)
-  fit2 <- MARSS(df3$nspawners0, model=list(U=matrix(0),d=covs), silent=TRUE, method="BFGS")
-  fit2$AICc
-  plot(df3$Year, df3$nspawners0, pch=16)
+covs = matrix(df3[["SST.2.10.3.yr.runsum.0"]], nrow=1)
+fit2 <- MARSS(df3$nspawners0, model=list(U=matrix(0),d=covs), silent=TRUE, method="BFGS")
+fit2$AICc
+plot(df3$Year, df3$nspawners0, pch=16)
 lines(df3$Year, fitted(fit2, one.step.ahead=TRUE))
 lines(df3$Year, fitted(fit1, one.step.ahead=TRUE), col="red")
 

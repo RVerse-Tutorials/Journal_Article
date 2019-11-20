@@ -29,3 +29,12 @@ resm.8694 <- nspawnerinf(c(1986,1994), resfun="looMd")
 save(resm.all, res2m.all, resm.9495, res2m.9495, resm.94, res2m.94, 
      resm.95, res2m.95, 
      res2m.8694, resm.8694, file="basemodslooMd.RData")
+
+dforig=data.frame(Year=respdat$Year, 
+                  spawners0=respdat$spawners0, spawners1=respdat$spawners1, spawners2=respdat$spawners2, 
+                  nspawners0=respdat$nspawners0, nspawners1=respdat$nspawners1, 
+                  nspawners2=respdat$nspawners2)
+dforig <- na.omit(dforig)
+res.all <- spawnerinf(resfun="loo", data=dforig)
+res2.all <- nspawnerinf(resfun="loo", data=dforig)
+save(res.all, res2.all, file="basemodsloo1956-2015.RData")
