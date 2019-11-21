@@ -635,6 +635,50 @@ The Figure 6D shows that for Oct-Mar landings the best model was always GAM with
 
 Again `r paste(rmyr, collapse=" and ")` `r ifelse(length(rmyr)==1,"was","were")` deleted and the leave-one-out analysis was repeated. The Figure 4D shows the best model is still always GAM with Oct-Mar in the prior season and Jul-Sep landings two seasons prior.
 
+```{r appD-nspawners-aic, echo=FALSE,fig.cap="Figure 4D. Delta AIC for the Oct-Mar landings base models with one year deleted. The deleted year is shown on the x-axis.", fig.width=8,fig.height=figh,message=FALSE,warning=FALSE}
+res <- resinf2(resfun="aicc", type="ns1956")
+#res <- resinf(resfun="aicc", resp="nspawners0", data=dforig)
+#res <- res[res$model%in%modelset,]
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[1,2:ncol(res)]),nrow=1)
+delaic=res[,2:ncol(res)]-baseres
+rownames(delaic)=res$model
+
+minrow <- apply(res[,2:ncol(res)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
+delaic2=res[,2:ncol(res)]-baseres
+rownames(delaic2)=res$model
+
+library(tidyverse)
+df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
+df$DelAICc <- cut(df$aic, c(-0.001, .5, 2, 4, 100))
+levels(df$DelAICc) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelAICc), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = aspr) + scale_fill_manual(values=Palette4)
+```
+
+
+
+```{r appd-nspawners-aic2, echo=FALSE,fig.cap=paste0("Figure 8D. Delta AIC for the Oct-Mar landings base models with ", paste(rmyr, collapse=" and "), " and one additional year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=figh,message=FALSE,warning=FALSE, eval=FALSE}
+res <- resinf2(resfun="aicc", type="ns1984")
+
+minrow <- apply(res[,2:ncol(res)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
+delaic2=res[,2:ncol(res)]-baseres
+rownames(delaic2)=res$model
+
+library(tidyverse)
+df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
+df$DelAIC <- cut(df$aic, c(-0.001, .5, 2, 4, 30))
+levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelAIC), colour = "grey50")
+p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = aspr) + scale_fill_manual(values=Palette4)
+```
+
+
 ```{r appD-nspawners-fits2, echo=FALSE, fig.cap="Figure 3D. Leave one out (LOO) one step ahead prediction errors for the linear, GAM, and DLM models of Oct-Mar landings. In panels A-C, the data point at year t on the x-axis is predicted from the data up to year t-1, and the model is fit to all data except year t. In panel D, the predictions use all the data; the model is still fit without year t. The predictions in panel D are called the smoothed predictions. The dashed line in the DLM plots is the best overall model in terms of root mean squared error.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}
 library(grid)
 dforig=data.frame(Year=respdat$Year, 
@@ -646,7 +690,7 @@ dforig <- na.omit(dforig)
 # save(FittedLooPred, file="FittedLooPred.Rdata")
 load("FittedLooPred.Rdata")
 
-myfits <- FittedLooPred.np$LooPred
+myfits <- FittedLooPred.np1956$LooPred
 linmods = stringr::str_detect(names(myfits),"lin")
 fit <- myfits[[1]]
 p <- ggplot() + geom_point(data=fit$data, aes(x=Year, y=resp, color="Actual")) +
@@ -718,50 +762,6 @@ p4 <- p4 + annotation_custom(grob)
 gridExtra::grid.arrange(p1, p3, p2, p4, nrow = 2)
 ```
 
-```{r appD-nspawners-aic, echo=FALSE,fig.cap="Figure 4D. Delta AIC for the Oct-Mar landings base models with one year deleted. The deleted year is shown on the x-axis.", fig.width=8,fig.height=figh,message=FALSE,warning=FALSE}
-res <- resinf(resfun="aicc", resp="nspawners0", data=dforig)
-res <- res[res$model%in%modelset,]
-baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[1,2:ncol(res)]),nrow=1)
-delaic=res[,2:ncol(res)]-baseres
-rownames(delaic)=res$model
-
-minrow <- apply(res[,2:ncol(res)],2,function(x){which(x==min(x))})
-baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
-delaic2=res[,2:ncol(res)]-baseres
-rownames(delaic2)=res$model
-
-library(tidyverse)
-df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
-df$DelAICc <- cut(df$aic, c(-0.001, .5, 2, 4, 100))
-levels(df$DelAICc) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
-
-p <- ggplot(df, aes(year, model)) +
-  geom_tile(aes(fill = DelAICc), colour = "grey50")
-p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = aspr) + scale_fill_manual(values=Palette4)
-```
-
-
-
-```{r appd-nspawners-aic2, echo=FALSE,fig.cap=paste0("Figure 8D. Delta AIC for the Oct-Mar landings base models with ", paste(rmyr, collapse=" and "), " and one additional year deleted. Deleted year is shown on the x-axis."), fig.width=8,fig.height=figh,message=FALSE,warning=FALSE, eval=FALSE}
-rmyr <- 1994:1995
-res <- resinf(rmyr, resfun="aicc", resp="nspawner0")
-res <- res[res$model%in%modelset,]
-
-minrow <- apply(res[,2:ncol(res)],2,function(x){which(x==min(x))})
-baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
-delaic2=res[,2:ncol(res)]-baseres
-rownames(delaic2)=res$model
-delaic2=delaic2[,!(colnames(delaic2)%in%rmyr)]
-
-library(tidyverse)
-df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
-df$DelAIC <- cut(df$aic, c(-0.001, .5, 2, 4, 30))
-levels(df$DelAIC) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
-
-p <- ggplot(df, aes(year, model)) +
-  geom_tile(aes(fill = DelAIC), colour = "grey50")
-p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = aspr) + scale_fill_manual(values=Palette4)
-```
 
 ```{r appd-nspawners-loo-9495, echo=FALSE,fig.cap=paste0("Figure 9D. Leave-one-out predictive performance for the Oct-Sep landings base models with ", paste(rmyr, collapse=" and "), " and one additional year deleted. See Figure 7D for details on the figure."), fig.width=8, fig.height=figh, message=FALSE, warning=FALSE,eval=FALSE}
 # res2 <- resinf(resfun="loo", resp="spawner0")
