@@ -14,12 +14,17 @@ library(mgcv)
 library(SardineForecast)
 library(ggplot2)
 library(MARSS)
+library(grid)
+
 ret <- function(mod, resfun){
     if(resfun=="aic") return(AIC(mod))
     if(resfun=="aicc") return(SardineForecast:::AICc(mod))
     if(resfun=="loo") return(SardineForecast:::loogam(mod)$RMSE)
     if(resfun=="looMd") return(SardineForecast:::loogam(mod)$MdAE)
-    if(resfun=="r2") return(summary(mod)$r.sq)
+    if(resfun=="r2"){
+      if(class(mod)[1]=="gam") return(summary(mod)$r.sq)
+      if(class(mod)[1]=="lm") return(summary(mod)$adj.r.squared)
+    } 
   }
 rmyr <- c(1986, 1994)
 Palette4 <- c("#000000", "#999999", "#F0E442", "#D55E00")
@@ -30,16 +35,48 @@ modelset <- mods[seq(3,15,2)]
 modelset <- mods[2:13]
 aspr <- 3/3
 figh <- 3.5
+
+dforig=data.frame(Year=respdat$Year, 
+              spawners0=respdat$spawners0, spawners1=respdat$spawners1, spawners2=respdat$spawners2, 
+              nspawners0=respdat$nspawners0, nspawners1=respdat$nspawners1, 
+               nspawners2=respdat$nspawners2)
+dforig <- na.omit(dforig)
+
 ```
 
 ## Validation of the Jul-Sep landings base models
 
-To evaluate the base model for the Jul-Sep landings using only prior catch as covariates, three types of models were fit. The first two were GAM and linear models with Jul-Sep and Oct-Mar in the prior season and two seasons prior as covariates:
-$$GAM: S_t = \alpha + s(c_t) + e_t \\
-Linear: S_t = \alpha + \beta c_t + e_t$$
-These types of models do not allow the model parameters (the intercept $\alpha$ and effect parameter $\beta$) to vary in time.  The second type of models were dynamic linear models (DLMs). These models allow the parameters to evolve in time. Two types of DLMs were used, an intercept only model where the intercept $\alpha$ evolves and a linear model where the effect parameter $\beta$ is allowed to evolve.  The models were fit to the 1956-2015 landings (full data) and 1984-2015 (data that overlap the environmental covariates). 
+To evaluate the base model for the Jul-Sep landings using only prior catch as covariates, three types of models were fit. The first two were GAM and linear models with Jul-Sep and Oct-Mar in the prior season only or prior season and two seasons prior as covariates:
+\begin{align*}
+\text{GAM t-1}: S_t = \alpha + s(c_{t-1}) + e_t \\
+\text{Linear t-1}: S_t = \alpha + \beta c_{t-1} + e_t \\
+\text{GAM t-1, t-2}: S_t = \alpha + s(c_{t-1}) + s(d_{t-2}) + e_t \\
+\text{Linear t-1, t-2}: S_t = \alpha + \beta c_{t-1} + d_{t-2} + e_t
+\end{align*}
+where $c_{t-1}$ was either $S_{t-1}$ (Jul-Sep landings in prior season) or $N_{t-1}$ (Oct-Mar landings in prior season) and $d_{t-2}$ was the same but 2 seasons prior.
+
+These types of models do not allow the model parameters (the intercept $\alpha$ and effect parameter $\beta$) to vary in time.  The second type of models were dynamic linear models (DLMs). DLMs allow the parameters to evolve in time. Two types of DLMs were used, an intercept only model where the intercept $\alpha$ evolves and a linear model where the effect parameter $\beta$ is allowed to evolve:
+\begin{align*}
+\text{DLM intercept only}: S_t = \alpha_t + e_t \\
+\text{DLM intercept and slope}: S_t = \alpha_t + \beta_t t + e_t \\
+\text{DLM intercept and effect}: S_t = \alpha_t + \beta_t c_{t-1} + e_t
+\end{align*}
+
+In addition to the GAM, linear and DLM models, three null models were included in the tested model sets: 
+\begin{align*}
+\text{intercept only}: S_t = \alpha + e_t \\
+\text{intercept and prior catch}: S_t = \alpha_t + S_{t-1} + e_t \\
+\text{prior catch only}: S_t = S_{t-1} + e_t
+\end{align*}
+The 'intercept only' is a flat level model. The 'prior catch only' simply uses the prior value of the time series (in this case landings) as the prediction and is a standard null model for prediction. The 'intercept and prior catch' combines these two null models.
+
+The models were fit to the 1956-2015 landings (full data) and 1984-2015 (data that overlap the environmental covariates). 
 
 The model performance is shown as the leave-one-out (LOO) one-step-ahead prediction errors. The data point $t$ is omitted and the model is fit to the remaining data. This is the LOO model. The prediction error is the data point $t$ minus the predited value for data point $t$. This is repeated for all data points $t$. The AICc values for the models are also shown. AICc is based on the log-likelihood which is calculated from the one-step-ahead prediction errors for the full data (no data left out).
+
+### Results
+
+Figures 1D and 2D show the $\Delta$AICc values for the model set.
 
 The Figure 1D shows the one step ahead predictions for the models broken out in the three categories: GAM, linear, and DLM.
 
@@ -141,6 +178,129 @@ resinf <- function(rmyr=1900, resfun="aic", data=dat.nonspawners, resp="spawners
 }
 ```
 
+```{r table-appD-resinf2, echo=FALSE}
+resinf2 <- function(resfun=c("aic","aicc","looRMSE","looMdAE","r2"), 
+                    type=c("s1956","ns1956","s1984","ns1984")){
+  type <- match.arg(type)
+  load("FittedLooPred.Rdata")
+  loomods <- switch(type,
+         s1956 = FittedLooPred1956$LooPred,
+         ns1956 = FittedLooPred.np1956$LooPred,
+         s1984 = FittedLooPred1984$LooPred,
+         ns1984 = FittedLooPred.np1984$LooPred
+         )
+  mods <- switch(type,
+         s1956 = FittedLooPred1956$Fitted,
+         ns1956 = FittedLooPred.np1956$Fitted,
+         s1984 = FittedLooPred1984$Fitted,
+         ns1984 = FittedLooPred.np1984$Fitted
+         )
+  loovals <- switch(resfun,
+         aic = lapply(loomods, function(x){x$AIC}),
+         aicc = lapply(loomods, function(x){x$AICc}),
+         looRMSE = lapply(loomods, function(x){x$looRMSE}),
+         looMdAE = lapply(loomods, function(x){x$looMdAE}),
+         r2 = lapply(loomods, function(x){x$adj.r.sq})
+         )
+  vals <- switch(resfun,
+         aic = lapply(mods, AIC),
+         aicc = lapply(mods, AICc),
+         looRMSE = lapply(mods, function(x){ret(x, "loo")}),
+         looMdAE = lapply(mods,  function(x){ret(x, "looMd")}),
+         r2 = lapply(mods,  function(x){ret(x, "r2")})
+         )
+  vals <- unlist(vals)
+  yr1 <- min(mods[[1]]$data$Year)
+  yr2 <- max(mods[[1]]$data$Year)
+  
+  res <- c()
+  for(i in 1:length(loovals)){
+     res <- rbind(res, loovals[[i]])
+  }
+  colnames(res) <- yr1:yr2
+  res <- cbind(res, None=vals)
+  res <- as.data.frame(res)
+  res <- cbind(model=names(mods), res)
+
+    
+    
+  
+  dat$cov1=dat[[str_replace(resp,"0","1")]]
+  m0 = gam(resp ~ offset(cov1), data=dat)
+  tmp = data.frame(model="null offset w intercept",None=ret(m0, resfun))
+  res = rbind(res, tmp)
+  
+  m0 = lm(resp ~ -1 + offset(cov1), data=dat)
+  tmp = data.frame(model="null offset only",None=ret(m0, resfun))
+  res = rbind(res, tmp)
+  
+  for(val in tests){
+    if(length(val)==1){
+      dat$cov1=dat[[covnames[val[1]]]]
+      m0 = gam(resp ~ cov1, data=dat)
+      tmp = data.frame(model=paste0("lin(", modnames[val[1]],")"), None=ret(m0, resfun))
+      res = rbind(res, tmp)
+      m0 = gam(resp ~ s(cov1, sp=0.6), data=dat)
+      tmp = data.frame(model=paste0("gam(", modnames[val[1]],")"), None=ret(m0, resfun))
+      res = rbind(res, tmp)
+    }else{
+      dat$cov1=dat[[covnames[val[1]]]]
+      dat$cov2=dat[[covnames[val[2]]]]
+      m0 = gam(resp ~ cov1 + cov2, data=dat)
+      tmp = data.frame(model=paste0("lin(", modnames[val[1]], "), lin(", modnames[val[2]], ")"), None=ret(m0, resfun))
+      res = rbind(res, tmp)
+      m0 = gam(resp ~ s(cov1,sp=0.6) + s(cov2,sp=0.6), data=dat)
+      tmp = data.frame(model=paste0("gam(", modnames[val[1]], "), gam(", modnames[val[2]], ")"), None=ret(m0, resfun))
+      res = rbind(res, tmp)
+    }
+  }
+  
+  for(yr in min(dat$Year):max(dat$Year)){
+    bad = yr
+    dat2=dat
+    dat2$resp[dat$Year%in%bad]=NA
+    m0 = gam(resp ~ 1, data=dat2)
+    #colname will be renamed below from None to year deleted
+    tmpres = data.frame(model="null intercept",None=ret(m0, resfun))
+    
+    dat2$cov1=dat[[str_replace(resp,"0","1")]]
+    m0 = gam(resp ~ offset(cov1), data=dat2)
+    #colname will be renamed below from None to year deleted
+    tmp = data.frame(model="null offset w intercept",None=ret(m0, resfun))
+    tmpres = rbind(tmpres, tmp)
+    
+    m0 = lm(spawners0 ~ -1 + offset(cov1), data=dat2)
+    #colname will be renamed below from None to year deleted
+    tmp = data.frame(model="null offset only",None=ret(m0, resfun))
+    tmpres = rbind(tmpres, tmp)
+    
+    for(val in tests){
+      if(length(val)==1){
+        dat2$cov1=dat[[covnames[val[1]]]]
+        m0 = gam(resp ~ cov1, data=dat2)
+        tmp = data.frame(model=paste0("lm(", modnames[val[1]],")"), None=ret(m0, resfun))
+        tmpres = rbind(tmpres, tmp)
+        m0 = gam(resp ~ s(cov1, sp=0.6), data=dat2)
+        tmp = data.frame(model=paste0("gam(", modnames[val[1]],")"), None=ret(m0, resfun))
+        tmpres = rbind(tmpres, tmp)
+      }else{
+        dat2$cov1=dat[[covnames[val[1]]]]
+        dat2$cov2=dat[[covnames[val[2]]]]
+        m0 = gam(resp ~ cov1 + cov2, data=dat2)
+        tmp = data.frame(model=paste0("lm(", modnames[val[1]], ", ", covnames[val[2]], ")"), None=ret(m0, resfun))
+        tmpres = rbind(tmpres, tmp)
+        m0 = gam(resp ~ s(cov1,sp=0.6) + s(cov2,sp=0.6), data=dat2)
+        tmp = data.frame(model=paste0("gam(", modnames[val[1]], ", ", covnames[val[2]],")"), None=ret(m0, resfun))
+        tmpres = rbind(tmpres, tmp)
+      }
+    }
+    colnames(tmpres)=c("model", yr)
+    res=cbind(res,tmpres[,2,drop=FALSE])
+  }
+  return(res)
+}
+```
+
 ```{r table-appD-fits-loofits, echo=FALSE}
 fits <- function(rmyr=1900, resp="spawners0", data=dat.nonspawners){
 
@@ -151,31 +311,44 @@ modnames=c("Oct-Mar(t-1)", "Jul-Sep(t-1)",
 
 tests=list(c(2),c(2,4),c(1),c(1,3),c(2,3), c(1,4))
 
+retloodf <- function(mod, modname){
+  loofit <- SardineForecast:::loogam(mod, LOO=TRUE)
+  ret = list(model=modname, 
+                           data=mod$data,
+                           pred=loofit$pred,
+                           AIC=loofit$AIC,
+                           AICc=loofit$AICc,
+                           adj.r.sq=loofit$adj.r.sq,
+                           looRMSE=loofit$looRMSE,
+                           looMdAE=loofit$looMdAE)
+  return(ret)
+}
+
+resloo = list()
+
 dat=data
 dat[[resp]][dat$Year%in%rmyr]=NA
 dat$resp = dat[[resp]]
 m0 = gam(resp ~ 1, data=dat)
 m0$data = dat[,c("Year","resp")]
 res = list(`null intercept`=m0)
-resloo = list( `null intercept`=list(model="null intercept", 
-                                     data=dat[,c("Year","resp")],
-                             pred=SardineForecast:::loogam(m0)$pred))
+modname = "null intercept"
+resloo[[modname]] = retloodf(m0, modname)
+cat("\n", modname)
 
   dat$cov1=dat[[str_replace(resp,"0","1")]]
   m0 = gam(resp ~ offset(cov1), data=dat)
   m0$data = dat[,c("Year","resp","cov1")]
   modname = "null offset w intercept"
   res[[modname]] = m0
-  resloo[[modname]] = list(model=modname, data=dat[,c("Year","resp", "cov1")],
-                           pred=SardineForecast:::loogam(m0)$pred)
-cat("\n", modname)
+  resloo[[modname]] = retloodf(m0, modname)
+  cat("\n", modname)
   
   m0 = lm(resp ~ -1 + offset(cov1), data=dat)
   m0$data = dat[,c("Year","resp","cov1")]
   modname = "null offset only"
   res[[modname]] = m0
-  resloo[[modname]] = list(model=modname, data=dat[,c("Year","resp", "cov1")],
-                           pred=SardineForecast:::loogam(m0)$pred)
+  resloo[[modname]] = retloodf(m0, modname)
 cat("\n", modname)
  
 for(val in tests){
@@ -185,17 +358,15 @@ for(val in tests){
   m0$data = dat[,c("Year","resp", "cov1")]
   modname = paste0("lin(", modnames[val[1]],")")
   res[[modname]] = m0
-  resloo[[modname]] = list(model=modname, data=dat[,c("Year","resp", "cov1")],
-                           pred=SardineForecast:::loogam(m0)$pred)
-cat("\n", modname)
+  resloo[[modname]] = retloodf(m0, modname)
+  cat("\n", modname)
 
   m0 = gam(resp ~ s(cov1, sp=0.6), data=dat)
   m0$data = dat[,c("Year","resp", "cov1")]
   modname = paste0("gam(", modnames[val[1]],")")
   res[[modname]] = m0
-  resloo[[modname]] = list(model=modname, data=dat[,c("Year","resp", "cov1")],
-                           pred=SardineForecast:::loogam(m0)$pred)
-cat("\n", modname)
+  resloo[[modname]] = retloodf(m0, modname)
+  cat("\n", modname)
 
   }else{
     dat$cov1=dat[[covnames[val[1]]]]
@@ -204,40 +375,54 @@ cat("\n", modname)
     m0$data = dat[,c("Year","resp", "cov1", "cov2")]
     modname=paste0("lin(", modnames[val[1]], "), lin(", modnames[val[2]], ")")
     res[[modname]] = m0
-    resloo[[modname]] = list(model=modname, 
-                             data=dat[,c("Year","resp", "cov1", "cov2")],
-                             pred=SardineForecast:::loogam(m0)$pred)
-cat("\n", modname)
+    resloo[[modname]] = retloodf(m0, modname)
+    cat("\n", modname)
 
     m0 = gam(resp ~ s(cov1,sp=0.6) + s(cov2,sp=0.6), data=dat)
     m0$data = dat[,c("Year","resp", "cov1", "cov2")]
     modname=paste0("gam(", modnames[val[1]], "), gam(", modnames[val[2]], ")")
     res[[modname]] = m0
-    resloo[[modname]] = list(model=modname, 
-                             data=dat[,c("Year","resp", "cov1", "cov2")],
-                             pred=SardineForecast:::loogam(m0)$pred)
-cat("\n", modname)
+    resloo[[modname]] = retloodf(m0, modname)
+    cat("\n", modname)
   }
 }
 
+retloodfmarss <- function(modlist, inits.list, modname, dat){
+pred <- pred.smooth <- aics <- aiccs <- loos <- loomds <- c()
+for(t in 1:length(dat$resp)){
+  tmp <- dat$resp; tmp[t]=NA
+  fit <- MARSS(tmp, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
+  pred <- c(pred, fitted(fit, one.step.ahead = TRUE)[t])
+  pred.smooth <- c(pred.smooth, fitted(fit)[t])
+  aics <- c(aics, AIC(fit))
+  aiccs <- c(aiccs, AICc(fit))
+  loos <- c(loos, sqrt(mean(fitted(fit, one.step.ahead = TRUE)[1,]^2)))
+  loomds <- c(loomds, median(abs(fitted(fit, one.step.ahead = TRUE)[1,])))
+  cat(t, " ")
+}
+ret = list(model=modname, 
+                         data=dat[,c("Year","resp")], 
+                         pred=pred, pred.smooth=pred.smooth,
+                         AIC=aics,
+                         AICc=aiccs,
+                         adj.r.sq=NULL,
+                         looRMSE=loos,
+                         looMdAE=loomds)
+return(ret)
+}
+
+
+#dlm intercept
 inits.list = list(x0=matrix(dat$resp[1]))
-m0 <- MARSS(dat$resp, model=list(U=matrix(0)), silent=TRUE, method="BFGS", inits=inits.list)
+modlist <- list(U=matrix(0))
+m0 <- MARSS(dat$resp, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
 m0$data = dat[,c("Year","resp")]
 modname="dlm(intercept)"
 res[[modname]] = m0
 cat("\n", modname)
-pred <- pred.smooth <- c()
-for(t in 1:length(dat$resp)){
-  tmp <- dat$resp; tmp[t]=NA
-  fit <- MARSS(tmp, model=list(U=matrix(0)), silent=TRUE, method="BFGS", inits=inits.list)
-  pred <- c(pred, fitted(fit, one.step.ahead = TRUE)[t])
-  pred.smooth <- c(pred.smooth, fitted(fit)[t])
-  cat(t, " ")
-}
-resloo[[modname]] = list(model=modname, 
-                         data=dat[,c("Year","resp")], 
-                         pred=pred, pred.smooth=pred.smooth)
+resloo[[modname]] = retloodfmarss(modlist, inits.list, modname, m0$data)
 
+#dlm intercept + slope
 Zt = array(1, dim=c(1,2,length(dat$resp)))
 dat$cov1=1:length(dat$resp)
 Zt[1,2,] = 1:length(dat$resp)
@@ -250,17 +435,7 @@ m0$data = dat[,c("Year","resp","cov1")]
 modname="dlm(intercept, slope)"
 res[[modname]] = m0
 cat("\n", modname)
-pred <- pred.smooth <- c()
-for(t in 1:length(dat$resp)){
-  tmp <- dat$resp; tmp[t]=NA
-  fit <- MARSS(tmp, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
-  pred <- c(pred, fitted(fit, one.step.ahead = TRUE)[t])
-  pred.smooth <- c(pred.smooth, fitted(fit)[t])
-  cat(t, " ")
-}
-resloo[[modname]] = list(model=modname, 
-                         data=dat[,c("Year","resp","cov1")], 
-                         pred=pred, pred.smooth=pred.smooth)
+resloo[[modname]] = resloo[[modname]] = retloodfmarss(modlist, inits.list, modname, m0$data)
 
 #dlm with time-varying multiplier on Oct-Mar t-1 catch
 dat$cov1=dat[[covnames[1]]]
@@ -276,17 +451,7 @@ m0$data = dat[,c("Year","resp","cov1")]
 modname = paste0("dlm(", modnames[1],")")
 res[[modname]] = m0
 cat("\n", modname)
-pred <- pred.smooth <- c()
-for(t in 1:length(dat$resp)){
-  tmp <- dat$resp; tmp[t]=NA
-  fit <- MARSS(tmp, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
-  pred <- c(pred, fitted(fit, one.step.ahead = TRUE)[t])
-  pred.smooth <- c(pred.smooth, fitted(fit)[t])
-  cat(t, " ")
-}
-resloo[[modname]] = list(model=modname, 
-                         data=dat[,c("Year","resp","cov1")], 
-                         pred=pred, pred.smooth=pred.smooth)
+resloo[[modname]] = resloo[[modname]] = retloodfmarss(modlist, inits.list, modname, m0$data)
 
 #dlm with Jul-Sep t-1 catch
 dat$cov1=dat[[covnames[2]]]
@@ -302,32 +467,64 @@ m0$data = dat[,c("Year","resp", "cov1")]
 modname = paste0("dlm(", modnames[2],")")
 res[[modname]] = m0
 cat("\n", modname)
-pred <- pred.smooth <- c()
-for(t in 1:length(dat$resp)){
-  tmp <- dat$resp; tmp[t]=NA
-  fit <- MARSS(tmp, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
-  pred <- c(pred, fitted(fit, one.step.ahead = TRUE)[t])
-  pred.smooth <- c(pred.smooth, fitted(fit)[t])
-  cat(t, " ")
-}
-resloo[[modname]] = list(model=modname, 
-                         data=dat[,c("Year","resp","cov1")], 
-                         pred=pred, pred.smooth=pred.smooth)
+resloo[[modname]] = resloo[[modname]] = retloodfmarss(modlist, inits.list, modname, m0$data)
 
 return(list(Fitted=res, LooPred=resloo))
 }
 ```
 
+```{r appD-spawners-aic1956, echo=FALSE, fig.cap="Figure 1D. \\(\\Delta\\)AICc for the Jul-Sep landings base models with one year deleted using the full landings data set 1956-2015. Delta AIC is AIC of the model minus the AIC of the best (lowest AIC model) in the set. Black models were the best models in the set and within 0.5 AIC of each other. Green are models within 2 of the best model, thus competitive to the best models. Deleted year is shown on the x-axis; the last column, None, has no year removed.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}
+res <- resinf(resfun="aicc", data=dforig)
+#res <- res[res$model%in%modelset,]
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[1,2:ncol(res)]),nrow=1)
+delaic=res[,2:ncol(res)]-baseres
+rownames(delaic)=res$model
+
+minrow <- apply(res[2:ncol(res)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
+delaic2=res[,2:ncol(res)]-baseres
+rownames(delaic2)=res$model
+
+library(tidyverse)
+df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
+df$DelAICc <- cut(df$aic, c(-0.001, .5, 2, 4, 100))
+levels(df$DelAICc) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelAICc), colour = "grey50")
+p <- p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = aspr) + scale_fill_manual(values=Palette4)
+p <- p + scale_x_discrete(breaks=c(seq(1960,max(dforig$Year),5),"None"))
+p + xlab('year removed')
+```
+
+```{r appD-spawners-aic1984, echo=FALSE, fig.cap="Figure 2D. Delta AICc for the Jul-Sep landings base models with one year deleted using only the landings data that overlap with the environmental data 1984-2015. See Figure 1D for an explantion of the figure.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}
+res <- resinf(resfun="aicc", data=dat.nonspawners)
+#res <- res[res$model%in%modelset,]
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[1,2:ncol(res)]),nrow=1)
+delaic=res[,2:ncol(res)]-baseres
+rownames(delaic)=res$model
+
+minrow <- apply(res[2:ncol(res)],2,function(x){which(x==min(x))})
+baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
+delaic2=res[,2:ncol(res)]-baseres
+rownames(delaic2)=res$model
+
+library(tidyverse)
+df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
+df$DelAICc <- cut(df$aic, c(-0.001, .5, 2, 4, 100))
+levels(df$DelAICc) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
+
+p <- ggplot(df, aes(year, model)) +
+  geom_tile(aes(fill = DelAICc), colour = "grey50")
+p <- p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = aspr) + scale_fill_manual(values=Palette4)
+p <- p + scale_x_discrete(breaks=c(seq(1960,max(dforig$Year),5),"None"))
+p + xlab('year removed')
+```
 
 
 ```{r appD-spawners-fits2, echo=FALSE, fig.cap="Figure 1D. Leave one out (LOO) one step ahead prediction errors for the linear, GAM, and DLM models of Jul-Sep landings. In panels A-C, the data point at year t on the x-axis is predicted from the data up to year t-1, and the model is fit to all data except year t. In panel D, the predictions use all the data; the model is still fit without year t. The predictions in panel D are called the smoothed predictions. The dashed line in the DLM plots is the best overall model in terms of root mean squared error.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}
-library(grid)
-dforig=data.frame(Year=respdat$Year, 
-              spawners0=respdat$spawners0, spawners1=respdat$spawners1, spawners2=respdat$spawners2, 
-              nspawners0=respdat$nspawners0, nspawners1=respdat$nspawners1, 
-               nspawners2=respdat$nspawners2)
-dforig <- na.omit(dforig)
 # FittedLooPred <- fits(data=dforig)
+# FittedLooPred.np <- fits(data=dforig, resp="nspawners0")
 # save(FittedLooPred, file="FittedLooPred.Rdata")
 load("FittedLooPred.Rdata")
 
@@ -399,28 +596,6 @@ p4 <- p4 + annotation_custom(grob)
 gridExtra::grid.arrange(p1, p3, p2, p4, nrow = 2)
 ```
 
-```{r appD-spawners-aic, echo=FALSE, fig.cap="Figure 2D. Delta AIC for the Jul-Sep landings base models with one year deleted. Delta AIC is AIC of the model minus the AIC of the best (lowest AIC model) in the set. Black models were the best models in the set and within 0.5 AIC of each other. Green are models within 2 of the best model, thus competitive to the best models. Deleted year is shown on the x-axis.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}
-res <- resinf(resfun="aicc", data=dforig)
-#res <- res[res$model%in%modelset,]
-baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[1,2:ncol(res)]),nrow=1)
-delaic=res[,2:ncol(res)]-baseres
-rownames(delaic)=res$model
-
-minrow <- apply(res[2:ncol(res)],2,function(x){which(x==min(x))})
-baseres=matrix(1,nrow(res),1)%*%matrix(as.numeric(res[cbind(minrow,2:ncol(res))]),nrow=1)
-delaic2=res[,2:ncol(res)]-baseres
-rownames(delaic2)=res$model
-
-library(tidyverse)
-df <- gather(cbind(model=res$model, delaic2), year, aic, 2:ncol(delaic2))
-df$DelAICc <- cut(df$aic, c(-0.001, .5, 2, 4, 100))
-levels(df$DelAICc) <- c("Best (0-0.5)", "Competitive (< 2)", "Uncompetitive (2-4)", "Poor (> 4)")
-#ggplot(df, aes(year, model, fill = aic)) + geom_raster()
-
-p <- ggplot(df, aes(year, model)) +
-  geom_tile(aes(fill = DelAICc), colour = "grey50")
-p + theme(axis.text.x = element_text(angle = 90, vjust=0.5, hjust=1), aspect.ratio = aspr) + scale_fill_manual(values=Palette4)
-```
 
 
 ```{r appd-spawners-loo, echo=FALSE, fig.cap="Figure 2D. Leave-one-out predictive performance (leave out a year, fit, predict that year) for the Jul-Sep landings base models. The performance (DelLOO) is the RSME (root mean square error) from LOO from all models was compared to the LOO RSME for a base model: GAM(Oct-Mar(t-1)). Thus results are relative to the GAM(Oct-Mar(t-1)) model. Black is better predictive performance relative to this model, green is similar, and yellow and orange are worse.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE, eval=FALSE}
