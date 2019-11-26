@@ -46,15 +46,15 @@ sqrt(mean((df3$nspawners0-fitted(fit2, one.step.ahead=TRUE))^2, na.rm=TRUE))
 ##################################
 library(MARSS)
 df3 <- na.omit(dforig)
-#df3 <- subset(df3, Year>1970)
 df3$nspawners0[df3$Year==1994]=NA
+# Time-varying intercept
 fit0 <- MARSS(df3$nspawners0, model=list(U=matrix(0)), silent=TRUE, method="BFGS")
 
 Zt = array(NA, dim=c(1,1,length(df3$spawners1)))
 Zt[1,1,] = df3$nspawners1
 A=matrix("intercept")
 R=matrix("r")
-Q=diag(.001,1)
+Q=diag(.001,1) #fix so doesn't go to zero
 inits.list = list(x0=matrix(c(1), nrow=1))
 modlist = list(Z=Zt, Q=Q, U=matrix(0, 1, 1), B=diag(1), A=A, R=R)
 fit2 <- MARSS(df3$nspawners0, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
