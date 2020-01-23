@@ -24,7 +24,7 @@ add Chidambaram and Menon to refs and to section on plankton and SST cor
 
 fix Rohit 2018 ref in endnote when return to NWFSC
 
-Remove Jr. from Checkley
+DONE Remove Jr. from Checkley
 
 From Kripa et al 2015
 
