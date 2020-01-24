@@ -1,6 +1,7 @@
 ---
 title: '\large{Fishing in a warming ocean: influence of changing temperature and upwelling intensity on Indian oil sardine (\textit{Sardinella longiceps}) landings}'
-author: \newline Eli E. Holmes$^1$, Smitha B.R.$^2$, Nimit Kumar$^3$, Sourav Maity$^3$, David M. Checkley$^4$, Mark L. Wells$^5$, Vera L. Trainer$^1$
+author: \newline Eli E. Holmes$^1$, Smitha B.R.$^2$, Nimit Kumar$^3$, \newline
+Sourav Maity$^3$, David M. Checkley$^4$, Mark L. Wells$^5$, Vera L. Trainer$^1$
 #date: '`r format(Sys.time(), "%d %B, %Y")`'
 output: 
   pdf_document: default
@@ -34,7 +35,6 @@ header-includes:
 
 5. School of Marine Sciences, University of Maine, Orono, ME.
 
-\newline\newline
 \noindent{\bf Running title}: Modeling Indian oil sardine landings
 
 # Acknowledgements {-}
