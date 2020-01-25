@@ -14,7 +14,7 @@ Need refs for the cHl section? might already be in intro
 
 test of autocorrelation of residuals and normality
 
-Need to do influence analysis via cross-validation (LOO).  1994 catch is influential and outlier.
+Semi-done. Need to check with covariates. Need to do influence analysis via cross-validation (LOO).  1994 catch is influential and outlier.
 
 DONE cross-validation test of the catch models
 
@@ -22,10 +22,12 @@ show correlation between CHl and UPW?.
 
 add Chidambaram and Menon to refs and to section on plankton and SST cor
 
-fix Rohit 2018 ref in endnote when return to NWFSC
+DONE fix Rohit 2018 ref in endnote when return to NWFSC
 
 DONE Remove Jr. from Checkley
 
+DONE added the below
+-----------------------------
 From Kripa et al 2015
 
 It is already established that stock abundance is not necessarily related directly to landings but we assume this to be so for oil sardine because:
@@ -35,6 +37,7 @@ It is already established that stock abundance is not necessarily related direct
 period of closure (that too not for Kerala coast)
 • Oil sardine shoals do not perform long distance migrations like anchovies which concentrate south of Cape Comorin during the summer monsoon period and then spread northwards along the Malabar coast during the dry
 season (November onwards).
+------------------------------
 
 =======
 Find summary review articles to cite. Rohit et al 2018, 
