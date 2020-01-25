@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.3.21)  23 JAN 2020 20:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.3.21)  24 JAN 2020 18:46
 entering extended mode
 **./OilSardine_NOAA_MoES.tex
 (OilSardine_NOAA_MoES.tex
@@ -1220,7 +1220,7 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11.10004> not available
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9.00006> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 107.
 
-Overfull \hbox (245.50204pt too wide) in paragraph at lines 107--107
+Overfull \hbox (241.75206pt too wide) in paragraph at lines 107--107
  [][] 
  []
 
@@ -1232,17 +1232,17 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <18.00003> not available
 
 {C:/Users/Eli.Holmes/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <11.40633> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 147.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 146.
 LaTeX Font Info:    Calculating math sizes for size <11.40633> on input line 14
-9.
+8.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11.40633> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 149.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 148.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8.44073> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 149.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 148.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6.84386> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 149.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 148.
 
-Underfull \hbox (badness 10000) in paragraph at lines 149--152
+Underfull \hbox (badness 10000) in paragraph at lines 148--151
 
  []
 
@@ -1251,232 +1251,232 @@ Underfull \hbox (badness 10000) in paragraph at lines 149--152
 ] [3
 
 ] [4]
-LaTeX Font Info:    Calculating math sizes for size <12.5> on input line 307.
+LaTeX Font Info:    Calculating math sizes for size <12.5> on input line 306.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12.5> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 307.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 306.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9.25006> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 307.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 306.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.50008> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 307.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 306.
 [5] [6]
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.99995> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 378.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 377.
 [7] [8] [9] [10] [11]
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 596.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 614.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ts1ptm.fd"
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [12] [13] [14] [15] [16] [17] [18] [19] [20]
-Underfull \hbox (badness 1087) in paragraph at lines 1080--1086
+) [12] [13] [14] [15] [16] [17] [18] [19] [20] [21]
+Underfull \hbox (badness 1087) in paragraph at lines 1107--1113
 [][]\T1/ptm/m/n/12.5 Habeebrehman, H., Prab-hakaran, M. P., Ja-cob, J., Sabu, P
 ., Jay-alak-shmi, K. J.,
  []
 
-[21]
-Underfull \hbox (badness 1147) in paragraph at lines 1168--1174
+[22]
+Underfull \hbox (badness 1147) in paragraph at lines 1201--1207
 [][]\T1/ptm/m/n/12.5 Lindegren, M., & Check-ley, D. M. (2012). Tem-per-a-ture d
 e-pen-dence of Pa-cific
  []
 
 
-Underfull \hbox (badness 2662) in paragraph at lines 1168--1174
+Underfull \hbox (badness 2662) in paragraph at lines 1201--1207
 \T1/ptm/m/n/12.5 sar-dine (Sardinops sagax) re-cruit-ment in the Cal-i-for-nia 
 Cur-rent Ecosys-tem re-vis-ited
  []
 
 
-Underfull \hbox (badness 1389) in paragraph at lines 1168--1174
+Underfull \hbox (badness 1389) in paragraph at lines 1201--1207
 \T1/ptm/m/n/12.5 and re-vised. \T1/ptm/m/it/12.5 Cana-dian Jour-nal of Fish-eri
 es and Aquatic Sci-ences\T1/ptm/m/n/12.5 , \T1/ptm/m/it/12.5 70\T1/ptm/m/n/12.5
  (2), 245--252.
  []
 
-[22]
-Underfull \hbox (badness 1297) in paragraph at lines 1175--1181
+
+Underfull \hbox (badness 1297) in paragraph at lines 1208--1214
 \T1/ptm/m/n/12.5 (2013). Cli-mate, fish-ing, and fluc-tu-a-tions of sar-dine an
 d an-chovy in the Cal-i-for-nia
  []
 
 
-Underfull \hbox (badness 1448) in paragraph at lines 1175--1181
+Underfull \hbox (badness 1448) in paragraph at lines 1208--1214
 \T1/ptm/m/n/12.5 Cur-rent. \T1/ptm/m/it/12.5 Pro-ceed-ings of the Na-tional Aca
 demy of Sci-ences\T1/ptm/m/n/12.5 , \T1/ptm/m/it/12.5 110\T1/ptm/m/n/12.5 (33),
  13672--13677.
  []
 
 
-Underfull \hbox (badness 1430) in paragraph at lines 1182--1187
+Underfull \hbox (badness 1430) in paragraph at lines 1215--1220
 [][]\T1/ptm/m/n/12.5 Lloret, J., Lleonart, J., & Sole, I. (2000). Time se-ries 
 mod-elling of land-ings
  []
 
 
-Underfull \hbox (badness 2293) in paragraph at lines 1182--1187
+Underfull \hbox (badness 2293) in paragraph at lines 1215--1220
 \T1/ptm/m/n/12.5 in North-west Mediter-ranean Sea. \T1/ptm/m/it/12.5 ICES Jour-
 nal of Ma-rine Sci-ence\T1/ptm/m/n/12.5 , \T1/ptm/m/it/12.5 57\T1/ptm/m/n/12.5 
 , 171--184.
  []
 
 [23]
-Underfull \hbox (badness 1237) in paragraph at lines 1249--1255
+Underfull \hbox (badness 1237) in paragraph at lines 1282--1288
 \T1/ptm/m/n/12.5 ma-tu-rity of In-dian oil sar-dine Sar-dinella long-i-ceps (Va
 -len-ci-ennes, 1847) along south-
  []
 
 [24]
-Overfull \hbox (17.27934pt too wide) in paragraph at lines 1300--1306
+Overfull \hbox (17.27934pt too wide) in paragraph at lines 1334--1340
 \T1/ptm/m/it/12.5 Jour-nal of Oceanog-ra-phy and Ma-rine Sci-ences\T1/ptm/m/n/1
 2.5 , \T1/ptm/m/it/12.5 3\T1/ptm/m/n/12.5 (3), 56--67. []https://doi.org/10.589
 7/JOMS12.006[] 
  []
 
-[25]
-Underfull \hbox (badness 1048) in paragraph at lines 1390--1396
+[25] [26]
+Underfull \hbox (badness 1048) in paragraph at lines 1423--1429
 [][]\T1/ptm/m/n/12.5 Takasuka, A., Oozeki, Y., & Aoki, I. (2007). Op-ti-mal gro
 wth tem-per-a-ture hy-
  []
 
 
-Underfull \hbox (badness 1565) in paragraph at lines 1390--1396
+Underfull \hbox (badness 1565) in paragraph at lines 1423--1429
 \T1/ptm/m/n/12.5 ocean regime? \T1/ptm/m/it/12.5 Cana-dian Jour-nal of Fish-eri
 es and Aquatic Sci-ences\T1/ptm/m/n/12.5 , \T1/ptm/m/it/12.5 64\T1/ptm/m/n/12.5
  , 768--776.
  []
 
-[26] [27] [28
+[27] [28] [29
 
 ]
 
-LaTeX Warning: Float too large for page by 8.56781pt on input line 1548.
+LaTeX Warning: Float too large for page by 8.56781pt on input line 1583.
 
-[29] [30] [31] [32
+[30] [31] [32] [33
 
-] [33
+] [34
 
 ]
-Overfull \hbox (10.3876pt too wide) in alignment at lines 1690--1702
+Overfull \hbox (10.3876pt too wide) in alignment at lines 1725--1737
  [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (10.3876pt too wide) in alignment at lines 1702--1707
+Overfull \hbox (10.3876pt too wide) in alignment at lines 1737--1742
  [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (10.3876pt too wide) in alignment at lines 1707--1737
+Overfull \hbox (10.3876pt too wide) in alignment at lines 1742--1772
  [] [] [] [] [] [] 
  []
 
 
-Overfull \hbox (10.3876pt too wide) in alignment at lines 1737--1748
+Overfull \hbox (10.3876pt too wide) in alignment at lines 1772--1783
  [] [] [] [] [] [] 
  []
 
-[34
+[35
 
 ]
 <C:/Users/Eli.Holmes/Documents/R/win-library/3.6/SardineForecast/docs/kerala_st
-udy_area_with_inset.jpg, id=350, 597.7532pt x 844.6757pt>
+udy_area_with_inset.jpg, id=355, 597.7532pt x 844.6757pt>
 File: C:/Users/Eli.Holmes/Documents/R/win-library/3.6/SardineForecast/docs/kera
 la_study_area_with_inset.jpg Graphic file (type jpg)
 
 <use C:/Users/Eli.Holmes/Documents/R/win-library/3.6/SardineForecast/docs/keral
 a_study_area_with_inset.jpg>
 Package pdftex.def Info: C:/Users/Eli.Holmes/Documents/R/win-library/3.6/Sardin
-eForecast/docs/kerala_study_area_with_inset.jpg used on input line 1754.
+eForecast/docs/kerala_study_area_with_inset.jpg used on input line 1789.
 (pdftex.def)             Requested size: 351.3123pt x 496.43393pt.
-[35 <C:/Users/Eli.Holmes/Documents/R/win-library/3.6/SardineForecast/docs/keral
+[36 <C:/Users/Eli.Holmes/Documents/R/win-library/3.6/SardineForecast/docs/keral
 a_study_area_with_inset.jpg>]
-<OilSardine_NOAA_MoES_files/figure-latex/fig-qtrly-catch-1.pdf, id=356, 578.16p
+<OilSardine_NOAA_MoES_files/figure-latex/fig-qtrly-catch-1.pdf, id=361, 578.16p
 t x 433.62pt>
 File: OilSardine_NOAA_MoES_files/figure-latex/fig-qtrly-catch-1.pdf Graphic fil
 e (type pdf)
 <use OilSardine_NOAA_MoES_files/figure-latex/fig-qtrly-catch-1.pdf>
 Package pdftex.def Info: OilSardine_NOAA_MoES_files/figure-latex/fig-qtrly-catc
-h-1.pdf used on input line 1765.
+h-1.pdf used on input line 1800.
 (pdftex.def)             Requested size: 469.75385pt x 352.31538pt.
-[36
+[37
 
 
  <./OilSardine_NOAA_MoES_files/figure-latex/fig-qtrly-catch-1.pdf>]
 <C:/Users/Eli.Holmes/Documents/R/win-library/3.6/SardineForecast/docs/cartoon.p
-ng, id=368, 624.8946pt x 529.0164pt>
+ng, id=374, 624.8946pt x 529.0164pt>
 File: C:/Users/Eli.Holmes/Documents/R/win-library/3.6/SardineForecast/docs/cart
 oon.png Graphic file (type png)
 
 <use C:/Users/Eli.Holmes/Documents/R/win-library/3.6/SardineForecast/docs/carto
 on.png>
 Package pdftex.def Info: C:/Users/Eli.Holmes/Documents/R/win-library/3.6/Sardin
-eForecast/docs/cartoon.png used on input line 1773.
+eForecast/docs/cartoon.png used on input line 1808.
 (pdftex.def)             Requested size: 401.50447pt x 339.90125pt.
-[37
+[38
 
  <C:/Users/Eli.Holmes/Documents/R/win-library/3.6/SardineForecast/docs/cartoon.
 png>]
-<OilSardine_NOAA_MoES_files/figure-latex/cov.mon-1.pdf, id=377, 578.16pt x 578.
+<OilSardine_NOAA_MoES_files/figure-latex/cov.mon-1.pdf, id=382, 578.16pt x 578.
 16pt>
 File: OilSardine_NOAA_MoES_files/figure-latex/cov.mon-1.pdf Graphic file (type 
 pdf)
 <use OilSardine_NOAA_MoES_files/figure-latex/cov.mon-1.pdf>
 Package pdftex.def Info: OilSardine_NOAA_MoES_files/figure-latex/cov.mon-1.pdf 
-used on input line 1784.
+used on input line 1819.
 (pdftex.def)             Requested size: 469.75385pt x 469.75385pt.
-[38
+[39
 
  <./OilSardine_NOAA_MoES_files/figure-latex/cov.mon-1.pdf>]
-<OilSardine_NOAA_MoES_files/figure-latex/sst.mon2-1.pdf, id=389, 578.16pt x 433
+<OilSardine_NOAA_MoES_files/figure-latex/sst.mon2-1.pdf, id=394, 578.16pt x 433
 .62pt>
 File: OilSardine_NOAA_MoES_files/figure-latex/sst.mon2-1.pdf Graphic file (type
  pdf)
 <use OilSardine_NOAA_MoES_files/figure-latex/sst.mon2-1.pdf>
 Package pdftex.def Info: OilSardine_NOAA_MoES_files/figure-latex/sst.mon2-1.pdf
- used on input line 1792.
+ used on input line 1827.
 (pdftex.def)             Requested size: 469.75385pt x 352.31538pt.
-[39
+[40
 
  <./OilSardine_NOAA_MoES_files/figure-latex/sst.mon2-1.pdf>]
-<OilSardine_NOAA_MoES_files/figure-latex/cov-effects-1.pdf, id=403, 578.16pt x 
+<OilSardine_NOAA_MoES_files/figure-latex/cov-effects-1.pdf, id=408, 578.16pt x 
 433.62pt>
 File: OilSardine_NOAA_MoES_files/figure-latex/cov-effects-1.pdf Graphic file (t
 ype pdf)
 <use OilSardine_NOAA_MoES_files/figure-latex/cov-effects-1.pdf>
 Package pdftex.def Info: OilSardine_NOAA_MoES_files/figure-latex/cov-effects-1.
-pdf used on input line 1800.
+pdf used on input line 1835.
 (pdftex.def)             Requested size: 469.75385pt x 352.31538pt.
-[40
+[41
 
  <./OilSardine_NOAA_MoES_files/figure-latex/cov-effects-1.pdf>]
-<OilSardine_NOAA_MoES_files/figure-latex/fitted-1.pdf, id=414, 578.16pt x 578.1
+<OilSardine_NOAA_MoES_files/figure-latex/fitted-1.pdf, id=419, 578.16pt x 578.1
 6pt>
 File: OilSardine_NOAA_MoES_files/figure-latex/fitted-1.pdf Graphic file (type p
 df)
 <use OilSardine_NOAA_MoES_files/figure-latex/fitted-1.pdf>
 Package pdftex.def Info: OilSardine_NOAA_MoES_files/figure-latex/fitted-1.pdf u
-sed on input line 1808.
+sed on input line 1843.
 (pdftex.def)             Requested size: 469.75385pt x 469.75385pt.
-[41
+[42
 
  <./OilSardine_NOAA_MoES_files/figure-latex/fitted-1.pdf>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1814.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1814.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1849.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1849.
 (OilSardine_NOAA_MoES.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1814.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1814.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1849.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1849.
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.5pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1814.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1849.
  ) 
 Here is how much of TeX's memory you used:
- 17163 strings out of 493333
- 255210 string characters out of 3139179
- 397701 words of memory out of 3000000
+ 17165 strings out of 493333
+ 255235 string characters out of 3139179
+ 397702 words of memory out of 3000000
  20209 multiletter control sequences out of 15000+200000
  75616 words of font info for 132 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,13n,49p,1983b,395s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,13n,49p,1983b,373s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}{C:/Program Files/Mi
 KTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}<C:/Program Files/MiKTeX 2.9/fonts/type1/
 public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/a
@@ -1486,9 +1486,9 @@ sers/Eli.Holmes/AppData/Roaming/MiKTeX/2.9/fonts/type1/urw/symbol/usyr.pfb><C:/
 Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files/MiK
 TeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/typ
 e1/urw/times/utmri8a.pfb>
-Output written on OilSardine_NOAA_MoES.pdf (41 pages, 4934399 bytes).
+Output written on OilSardine_NOAA_MoES.pdf (42 pages, 4937026 bytes).
 PDF statistics:
- 556 PDF objects out of 1000 (max. 8388607)
- 189 named destinations out of 1000 (max. 500000)
+ 561 PDF objects out of 1000 (max. 8388607)
+ 191 named destinations out of 1000 (max. 500000)
  196 words of extra memory for PDF output out of 10000 (max. 10000000)
 
