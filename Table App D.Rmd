@@ -1,15 +1,20 @@
 ---
 title: 'Influential Years Analysis: only past catch'
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
   word_document: default
 header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
 ```{r child = 'setup.Rmd'}
 ```
+
+```{r}
+currls <- ls()
+```
+
 
 ```{r funs, echo=FALSE}
 library(mgcv)
@@ -739,9 +744,6 @@ p
 p <- looplot1(resfun="looRMSE", type="ns1956")
 p
 ```
-
-
-
 
 
 ```{r, results="asis", echo=FALSE}
