@@ -44,6 +44,14 @@ cat("\\clearpage")
 cat("\\clearpage")
 ```
 
+```{r child = 'Table App B nonspawner covariates M wo S2.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+
 <!-- ```{r child = 'Table App B nonspawner covariates M wo S2.Rmd'} -->
 <!-- ``` -->
 
