@@ -438,13 +438,75 @@ tmp1=data.frame(
   F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
   AIC=round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
+
+load("FittedLooPred.Rdata")
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="")
+tmp2 = data.frame(
+  Model=paste("Time varying test D ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="", 
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#DLM
+mod <- FittedLooPred.np1984$Fitted[["dlm(intercept)"]]
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha_t$ + $\\epsilon_t$", 
+  Residual.df=attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
+  Adj.R2="", 
+  F="", p.value="", 
+  AIC=round(mod$AIC, digits=2))
+seltable=rbind(seltable,tmp1)
+
+mod <- FittedLooPred.np1984$Fitted[["dlm(intercept, slope)"]]
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha_t$ + $\beta_t t$ + $\\epsilon_t$", 
+  Residual.df=attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
+  Adj.R2="", 
+  F="", p.value="", 
+  AIC=round(mod$AIC, digits=2))
+seltable=rbind(seltable,tmp1)
+
+mod <- FittedLooPred.np1984$Fitted[["dlm(Jul-Sep(t-1))"]]
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha_t$ + $\beta_t ln(S_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
+  Adj.R2="", 
+  F="", p.value="", 
+  AIC=round(mod$AIC, digits=2))
+seltable=rbind(seltable,tmp1)
+
+mod <- FittedLooPred.np1984$Fitted[["dlm(Oct-Mar(t-1))"]]
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha_t$ + $\beta_t ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
+  Adj.R2="", 
+  F="", p.value="", 
+  AIC=round(mod$AIC, digits=2))
+seltable=rbind(seltable,tmp1)
+
 ```
 
 ```{r print-table2Ab, echo=FALSE}
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of time-dependency the $N_t$ model using non-linear responses instead of linear responses as in Table",ref("tabappA:nonspawner-model-time-a", pre="A"), "See Table",ref("tabappA:nonspawner-model-time-a", pre="A"), "for an explanation of the parameters and model set-up.")
+thecap=paste("Model selection tests of time-dependency the $N_t$ model using non-linear or time-varying linear responses instead of time-constant linear responses as in Table",ref("tabappA:nonspawner-model-time-a", pre="A"), "See Table",ref("tabappA:nonspawner-model-time-a", pre="A"), "for an explanation of the parameters and model set-up.")
 fullcap=paste("Table ", ref("tabappA:nonspawner-model-time-b", pre="A"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, escape=FALSE)
 ```
