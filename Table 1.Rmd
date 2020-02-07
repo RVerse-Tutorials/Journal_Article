@@ -1,10 +1,21 @@
 ---
 title: 'Table 1: Monsoon Catch Model'
 output:
-  word_document: default
-  html_document: default
   pdf_document: default
-header-includes: \usepackage[labelformat=empty]{caption}
+  html_document: default
+  word_document: default
+header-includes:
+- \usepackage[labelformat=empty]{caption}
+- \usepackage{setspace}
+- \onehalfspacing
+- \usepackage{etoolbox}
+- \AtBeginEnvironment{tabular}{\singlespacing}
+- \setlength\parindent{24pt}
+- \usepackage{mathptmx}
+- \usepackage[margin=1in]{geometry}
+- \usepackage[fontsize=12.5pt]{scrextend}
+- \usepackage{lineno}
+- \linenumbers
 ---
 
 ```{r child = 'setup.Rmd'}
