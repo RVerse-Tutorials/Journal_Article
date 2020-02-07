@@ -8,10 +8,7 @@ output:
 header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
-```{r child = 'setup.Rmd'}
-```
-
-This file runs the model and saves in `FittedLooPred.RData` and `FittedLooPrednp.RData`. These are used in Appendix A and Appendix G tables.
+This file runs the model and saves in `FittedLooPred.RData`. This is used in Appendix A and Appendix G tables.
 
 
 ```{r AD-packages, echo=FALSE}
@@ -313,12 +310,13 @@ pred <- pred.smooth <- aics <- aiccs <- loos <- loomds <- c()
 for(t in 1:length(dat$resp)){
   tmp <- dat$resp; tmp[t]=NA
   fit <- MARSS(tmp, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
-  pred <- c(pred, fitted(fit, one.step.ahead = TRUE)[t])
-  pred.smooth <- c(pred.smooth, fitted(fit)[t])
+  pred <- c(pred, fitted(fit, type="ytt1", output="matrix")[t])
+  pred.smooth <- c(pred.smooth, fitted(fit, type="ytT", output="matrix")[t])
   aics <- c(aics, AIC(fit))
   aiccs <- c(aiccs, fit$AICc)
-  loos <- c(loos, sqrt(mean(fitted(fit, one.step.ahead = TRUE)[1,]^2)))
-  loomds <- c(loomds, median(abs(fitted(fit, one.step.ahead = TRUE)[1,])))
+  err <- tmp - fitted(fit, type="ytt1", output="matrix")[1,]
+  loos <- c(loos, sqrt(mean(err^2, na.rm=TRUE)))
+  loomds <- c(loomds, median(abs(err)))
   cat(t, " ")
 }
 ret = list(model=modname, 
@@ -394,10 +392,24 @@ return(list(Fitted=res, LooPred=resloo))
 }
 ```
 
+```{r child = 'setup.Rmd'}
+```
+
+
 ```{r}
+library(SardineForecast)
+# source("setup.Rmd")
+dforig=data.frame(Year=respdat$Year, 
+                  spawners0=respdat$spawners0, spawners1=respdat$spawners1, spawners2=respdat$spawners2, nspawners1=respdat$nspawners1, 
+                  nspawners2=respdat$nspawners2)
+dforig <- na.omit(dforig)
+dforig.np=data.frame(Year=respdat$Year, 
+                  nspawners0=respdat$nspawners0, spawners1=respdat$spawners1, spawners2=respdat$spawners2, nspawners1=respdat$nspawners1, 
+                  nspawners2=respdat$nspawners2)
+dforig.np <- na.omit(dforig.np)
 FittedLooPred1956 <- fits(data=dforig, resp="spawners0")
-FittedLooPred.np1956 <- fits(data=dforig, resp="nspawners0")
-FittedLooPred1984 <- fits(data=dat.nonspawners, resp="spawners0")
+FittedLooPred.np1956 <- fits(data=dforig.np, resp="nspawners0")
+FittedLooPred1984 <- fits(data=dat.spawners, resp="spawners0")
 FittedLooPred.np1984 <- fits(data=dat.nonspawners, resp="nspawners0")
 save(FittedLooPred1956, FittedLooPred.np1956, FittedLooPred1984, FittedLooPred.np1984, file="FittedLooPred.Rdata")
 ```
