@@ -24,7 +24,7 @@ header-includes:
 #Generic setup code common across all Rmds
 ```
 
-\noindent \large Eli E. Holmes$^1$, Smitha B.R.$^2$, Nimit Kumar$^3$, Sourav Maity$^3$, David M. Checkley$^4$, Mark L. Wells$^5$, Vera L. Trainer$^1$
+\noindent{\large Eli E. Holmes$^1$, Smitha B.R.$^2$, Nimit Kumar$^3$, Sourav Maity$^3$, David M. Checkley$^4$, Mark L. Wells$^5$, Vera L. Trainer$^1$}
 
 
 1. Northwest Fisheries Science Center, NOAA, Seattle, WA. 
@@ -292,7 +292,7 @@ Figure `r ref("fig:fitted")`.  Fitted versus observed catch with models with and
 ```{r, include=FALSE}
 #kableExtra is needed for the hypotheses table but 
 #needs to be after all the other tables. Otherwise it adds lines to them.
-library(kableExtra)
+#library(kableExtra)
 ```
 
 ```{r child = 'Figures.Rmd', echo=FALSE}
