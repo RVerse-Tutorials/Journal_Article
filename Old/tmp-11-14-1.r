@@ -40,8 +40,17 @@ res2.all <- nspawnerinf(resfun="loo", data=dforig)
 save(res.all, res2.all, file="basemodsloo1956-2015.RData")
 
 library(SardineForecast)
+# source("setup.Rmd")
+dforig=data.frame(Year=respdat$Year, 
+                  spawners0=respdat$spawners0, spawners1=respdat$spawners1, spawners2=respdat$spawners2, nspawners1=respdat$nspawners1, 
+                  nspawners2=respdat$nspawners2)
+dforig <- na.omit(dforig)
+dforig.np=data.frame(Year=respdat$Year, 
+                  nspawners0=respdat$nspawners0, spawners1=respdat$spawners1, spawners2=respdat$spawners2, nspawners1=respdat$nspawners1, 
+                  nspawners2=respdat$nspawners2)
+dforig.np <- na.omit(dforig.np)
 FittedLooPred1956 <- fits(data=dforig, resp="spawners0")
-FittedLooPred.np1956 <- fits(data=dforig, resp="nspawners0")
-FittedLooPred1984 <- fits(data=dat.nonspawners, resp="spawners0")
+FittedLooPred.np1956 <- fits(data=dforig.np, resp="nspawners0")
+FittedLooPred1984 <- fits(data=dat.spawners, resp="spawners0")
 FittedLooPred.np1984 <- fits(data=dat.nonspawners, resp="nspawners0")
 save(FittedLooPred1956, FittedLooPred.np1956, FittedLooPred1984, FittedLooPred.np1984, file="FittedLooPred.Rdata")
