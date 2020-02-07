@@ -331,12 +331,13 @@ pred <- pred.smooth <- aics <- aiccs <- loos <- loomds <- c()
 for(t in 1:length(dat$resp)){
   tmp <- dat$resp; tmp[t]=NA
   fit <- MARSS(tmp, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
-  pred <- c(pred, fitted(fit, one.step.ahead = TRUE)[t])
-  pred.smooth <- c(pred.smooth, fitted(fit)[t])
+  pred <- c(pred, fitted(fit, type="ytt1")[t])
+  pred.smooth <- c(pred.smooth, fitted(fit, type="ytT")[t])
   aics <- c(aics, AIC(fit))
   aiccs <- c(aiccs, fit$AICc)
-  loos <- c(loos, sqrt(mean(fitted(fit, one.step.ahead = TRUE)[1,]^2)))
-  loomds <- c(loomds, median(abs(fitted(fit, one.step.ahead = TRUE)[1,])))
+  err <- tmp - fitted(fit, type="ytt1", output="matrix")[1,]
+  loos <- c(loos, sqrt(mean(err^2, na.rm=TRUE)))
+  loomds <- c(loomds, median(abs(err)))
   cat(t, " ")
 }
 ret = list(model=modname, 
