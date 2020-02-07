@@ -463,7 +463,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 mod <- FittedLooPred.np1984$Fitted[["dlm(intercept)"]]
 tmp1=data.frame(
   Model="1. $ln(S_t)$ = $\\alpha_t$ + $\\epsilon_t$", 
-  Residual.df=attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
   MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
   Adj.R2="", 
   F="", p.value="", 
@@ -472,8 +472,8 @@ seltable=rbind(seltable,tmp1)
 
 mod <- FittedLooPred.np1984$Fitted[["dlm(intercept, slope)"]]
 tmp1=data.frame(
-  Model="2. $ln(S_t)$ = $\\alpha_t$ + $\beta_t t$ + $\\epsilon_t$", 
-  Residual.df=attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  Model="2. $ln(S_t)$ = $\\alpha_t$ + $\\beta_t t$ + $\\epsilon_t$", 
+  Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
   MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
   Adj.R2="", 
   F="", p.value="", 
@@ -482,8 +482,8 @@ seltable=rbind(seltable,tmp1)
 
 mod <- FittedLooPred.np1984$Fitted[["dlm(Jul-Sep(t-1))"]]
 tmp1=data.frame(
-  Model="3. $ln(S_t)$ = $\\alpha_t$ + $\beta_t ln(S_{t-1})$ + $\\epsilon_t$", 
-  Residual.df=attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  Model="3. $ln(S_t)$ = $\\alpha_t$ + $\\beta_t ln(S_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
   MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
   Adj.R2="", 
   F="", p.value="", 
@@ -492,8 +492,8 @@ seltable=rbind(seltable,tmp1)
 
 mod <- FittedLooPred.np1984$Fitted[["dlm(Oct-Mar(t-1))"]]
 tmp1=data.frame(
-  Model="3. $ln(S_t)$ = $\\alpha_t$ + $\beta_t ln(N_{t-1})$ + $\\epsilon_t$", 
-  Residual.df=attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  Model="3. $ln(S_t)$ = $\\alpha_t$ + $\\beta_t ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
   MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
   Adj.R2="", 
   F="", p.value="", 
