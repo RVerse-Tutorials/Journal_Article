@@ -44,5 +44,5 @@ cat("\\clearpage")
 ```{r, include=FALSE}
 #kableExtra is adding lines to tables in Appendix
 #this line needed to prepare the hypotheses table.
-#library(kableExtra)
+library(kableExtra)
 ```

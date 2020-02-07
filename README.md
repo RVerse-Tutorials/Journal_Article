@@ -22,9 +22,8 @@ If you do not have these packages installed, install the following from CRAN.
 
 Install SardineForecast and rmarkdown from GitHub.  While you can install rmarkdown from CRAN, I use some features that have been fixed in the GitHub version.
 
-        library(devtools)
-        install_github("eeholmes/SardineForecast")
-        install_github("rstudio/rmarkdown")
+        devtools::install_github("eeholmes/SardineForecast")
+        devtools::install_github("rstudio/rmarkdown")
 
 This requires pandoc with pandoc-citeproc installed.  That should come by default but if you get a pandoc error, try installing from http://pandoc.org/installing.html. Now you can run the Rmd files for the paper.  If the RStudio complains that it cannot make a pdf, then click the little arrow next to the 'knitr' button at top (in RStudio) and you will see 'Knit to Word'.  Click that.
 
