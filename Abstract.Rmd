@@ -1,9 +1,9 @@
 ---
 title: 'Abstract'
 output:
-  word_document: default
-  html_document: default
   pdf_document: default
+  html_document: default
+  word_document: default
 ---
 
 Commercial landings of sardine are known for strong year-to-year fluctuations. A key driver is thought to be environmental variability, to which small forage fish are especially sensitive. We examined the environmental drivers associated with landings fluctuations in the Indian oil sardine using a 32-year time series off Kerala state. Past research suggested a variety of influential variables: precipitation, upwelling intensity, SST, chlorophyll and ENSO. Using the life-history of the Indian oil sardine, we developed hypotheses concerning how these environmental variables might affect landings and tested them using generalized additive models which allow non-linear response curves. We found significant correlation for only two variables: upwelling intensity and the multi-year average nearshore SST.  Both monsoon and post-monsoon landings were correlated with upwelling intensity in June-September. Upwelling intensity has both a positive effect (fueling higher food availability) and a negative effect at extreme intensity (bringing poorly oxygenated water to the surface). However, the most significant correlation (adjusted R2 of 67.5%) was between the 2.5 year average nearshore SST and post-monsoon landings. The multi-year average SST also been identified as a predictor for Pacific sardine and southern African sardine fluctuations, suggesting that the average SST over the sardine life-span successfully captures a variety of factors which predict future abundance. The temperature in the Western Indian Ocean has been increasing faster than in other tropical oceans and the warming has been most extreme during the summer monsoon. Our work highlights that these changes in summer upwelling intensity and sea temperature are likely to affect landings. 
