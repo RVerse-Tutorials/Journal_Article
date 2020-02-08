@@ -306,7 +306,7 @@ for(val in tests){
 }
 
 retloodfmarss <- function(modlist, inits.list, modname, dat){
-pred <- pred.smooth <- aics <- aiccs <- loos <- loomds <- c()
+pred <- pred.smooth <- aics <- aiccs <- c()
 for(t in 1:length(dat$resp)){
   tmp <- dat$resp; tmp[t]=NA
   fit <- MARSS(tmp, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
@@ -314,9 +314,6 @@ for(t in 1:length(dat$resp)){
   pred.smooth <- c(pred.smooth, fitted(fit, type="ytT", output="matrix")[t])
   aics <- c(aics, AIC(fit))
   aiccs <- c(aiccs, fit$AICc)
-  err <- tmp - fitted(fit, type="ytt1", output="matrix")[1,]
-  loos <- c(loos, sqrt(mean(err^2, na.rm=TRUE)))
-  loomds <- c(loomds, median(abs(err)))
   cat(t, " ")
 }
 ret = list(model=modname, 
@@ -325,8 +322,8 @@ ret = list(model=modname,
                          AIC=aics,
                          AICc=aiccs,
                          adj.r.sq=NULL,
-                         looRMSE=loos,
-                         looMdAE=loomds)
+                         looRMSE=NULL,
+                         looMdAE=NULL)
 return(ret)
 }
 
@@ -346,7 +343,7 @@ Zt = array(1, dim=c(1,2,length(dat$resp)))
 dat$cov1=1:length(dat$resp)
 Zt[1,2,] = 1:length(dat$resp)
 R=matrix("r")
-Q=matrix(list(0),2,2); diag(Q)=c("q1","q2") 
+Q=matrix(list(0),2,2); diag(Q)=c("q1","q2")
 inits.list = list(x0=matrix(c(dat$resp[1],0), nrow=2))
 modlist = list(Z=Zt, Q=Q, U=matrix(0,1,2), B=diag(1,2), A=matrix(0), R=R)
 m0 <- MARSS(dat$resp, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
@@ -354,7 +351,7 @@ m0$data = dat[,c("Year","resp","cov1")]
 modname="dlm(intercept, slope)"
 res[[modname]] = m0
 cat("\n", modname)
-resloo[[modname]] = resloo[[modname]] = retloodfmarss(modlist, inits.list, modname, m0$data)
+resloo[[modname]] = retloodfmarss(modlist, inits.list, modname, m0$data)
 
 #dlm with time-varying multiplier on Oct-Mar t-1 catch
 dat$cov1=dat[[covnames[1]]]
@@ -370,7 +367,7 @@ m0$data = dat[,c("Year","resp","cov1")]
 modname = paste0("dlm(", modnames[1],")")
 res[[modname]] = m0
 cat("\n", modname)
-resloo[[modname]] = resloo[[modname]] = retloodfmarss(modlist, inits.list, modname, m0$data)
+resloo[[modname]] = retloodfmarss(modlist, inits.list, modname, m0$data)
 
 #dlm with Jul-Sep t-1 catch
 dat$cov1=dat[[covnames[2]]]
@@ -378,7 +375,7 @@ Zt = array(NA, dim=c(1,1,length(dat$cov1)))
 Zt[1,1,] = dat$cov1
 A=matrix("intercept")
 R=matrix("r")
-Q=matrix("q") #fix so doesn't go to zero
+Q=matrix("q") 
 inits.list = list(x0=matrix(c(0), nrow=1))
 modlist = list(Z=Zt, Q=Q, U=matrix(0), B=diag(1), A=A, R=R)
 m0 <- MARSS(dat$resp, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
@@ -386,7 +383,7 @@ m0$data = dat[,c("Year","resp", "cov1")]
 modname = paste0("dlm(", modnames[2],")")
 res[[modname]] = m0
 cat("\n", modname)
-resloo[[modname]] = resloo[[modname]] = retloodfmarss(modlist, inits.list, modname, m0$data)
+resloo[[modname]] = retloodfmarss(modlist, inits.list, modname, m0$data)
 
 return(list(Fitted=res, LooPred=resloo))
 }
