@@ -70,7 +70,7 @@ tmp2 = data.frame(
   F="", 
   p.value="", 
   AIC="",
-  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+  LOOCV=""
 )
 seltable=rbind(seltable,tmp1,tmp2)
 
@@ -529,7 +529,7 @@ seltable=rbind(seltable,tmp1,tmp2)
 #DLM
 mod <- FittedLooPred1984$Fitted[["dlm(intercept)"]]
 modloo <- FittedLooPred1984$LooPred[["dlm(intercept)"]]
-err <- mod$model$data[1,]-modloo$pred.smooth
+err <- mod$model$data[1,]-modloo$pred
 tmp1=data.frame(
   Model="1. $ln(S_t)$ = $\\alpha_t$ + $\\epsilon_t$", 
   Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
@@ -543,7 +543,7 @@ seltable=rbind(seltable,tmp1)
 
 mod <- FittedLooPred1984$Fitted[["dlm(intercept, slope)"]]
 modloo <- FittedLooPred1984$LooPred[["dlm(intercept, slope)"]]
-err <- mod$model$data[1,]-modloo$pred.smooth
+err <- mod$model$data[1,]-modloo$pred
 tmp1=data.frame(
   Model="2. $ln(S_t)$ = $\\alpha_t$ + $\\beta_t t$ + $\\epsilon_t$", 
   Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
@@ -557,7 +557,7 @@ seltable=rbind(seltable,tmp1)
 
 mod <- FittedLooPred1984$Fitted[["dlm(Jul-Sep(t-1))"]]
 modloo <- FittedLooPred1984$LooPred[["dlm(Jul-Sep(t-1))"]]
-err <- mod$model$data[1,]-modloo$pred.smooth
+err <- mod$model$data[1,]-modloo$pred
 tmp1=data.frame(
   Model="3. $ln(S_t)$ = $\\alpha$ + $\\beta_t ln(S_{t-1})$ + $\\epsilon_t$", 
   Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
@@ -571,7 +571,7 @@ seltable=rbind(seltable,tmp1)
 
 mod <- FittedLooPred1984$Fitted[["dlm(Oct-Mar(t-1))"]]
 modloo <- FittedLooPred1984$LooPred[["dlm(Oct-Mar(t-1))"]]
-err <- mod$model$data[1,]-modloo$pred.smooth
+err <- mod$model$data[1,]-modloo$pred
 tmp1=data.frame(
   Model="3. $ln(S_t)$ = $\\alpha$ + $\\beta_t ln(N_{t-1})$ + $\\epsilon_t$", 
   Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
