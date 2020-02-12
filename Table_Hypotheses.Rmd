@@ -17,7 +17,7 @@ header-includes: \usepackage[labelformat=empty]{caption}
 # Note to use, knit to pdf and edit the tex file to remove the header
 # up to the \begin{table}
 
-thecap = "Hypotheses for covariates affecting landings.  $S_t$ is quarter 3 (July-September) catch in the current season, $S_{t-1}$ is quarter 3 catch in the previous season. $N_t$ is the post-monsoon October-March catch in the current season and $N_{t-1}$ is the October-March catch in the prior season. Because the fishing season is July-June, $N_t$ spans two calendar years. DD = hypotheses related to effects of past abundance (landings) on current abundance. S = hypotheses related to catch during the spawning months. L = hypotheses related to larval and juvenile growth and survival. A = hypotheses affecting all ages. See the introduction for discussion of the literature on the effects of environmental covariates on sardine landings."
+thecap = "Hypotheses for covariates affecting landings.  $S_t$ is Jul-Sep catch in the current season, $S_{t-1}$ is Jul-Sep catch in the previous season. $N_t$ is the Oct-Mar catch in the current season and $N_{t-1}$ is the Oct-Mar catch in the prior season. DD = hypotheses related to effects of past abundance (landings) on current abundance. S = hypotheses related to catch during the spawning months. L = hypotheses related to larval and juvenile growth and survival. A = hypotheses affecting all ages. See the introduction for discussion of the literature on the effects of environmental covariates on sardine landings. ns-SST = nearshore SST. r-SST = regional (nearshore and offshore) SST $t$, $t-1$, and $t-2$ indicate current, prior, and two seasons prior."
 
 fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
 
@@ -43,7 +43,7 @@ DD3 = data.frame(
   stringsAsFactors=FALSE)
 
 HS1 = data.frame(
-  Hyp="S1 \\newline $S_t \\sim$ June-July precipitation in $t$",
+  Hyp="S1 \\newline $S_t \\sim$ Jun-Jul precipitation in $t$",
   Des = "The magnitude of precipitation in June-July directly or indirectly signals mature fish to spawn offshore, after which the spent adults migrate inshore to the fishery (Anthony Raja 1969, 1974; Srinath 1998).",
   Response="$S_t$",
   Cov="Jun-Jul precipitation in year $t$",
@@ -65,21 +65,21 @@ HS3 = data.frame(
 
 
 HS4 = data.frame(
-  Hyp="S4 \\newline $S_t \\sim$ Jun-Sep upwelling index in $t$",
+  Hyp="S4 \\newline $S_t \\sim$ Jun-Sep UPW in $t$",
   Des="High rates of upwelling drive mature fish further offshore and thus leads to lower exposure to the fishery.  This movement may be driven by advection of high phytoplankton biomass further offshore or increased inputs of low oxygenated water to the surface (Murty and Edelman 1970, Antony Raja 1973, Pillai et al. 1991).",
   Response="$S_t$",
   Cov="Jun-Sep upwelling index in year $t$",
   stringsAsFactors=FALSE)
 
 HS5 = data.frame(
-  Hyp="S5 \\newline $S_t \\sim$ SST during Mar-May in $t$ \\newline $N_t \\sim$ SST during Mar-May in $t$",
+  Hyp="S5 \\newline $S_t \\sim$ Mar-May r-SST in $t$ \\newline $N_t \\sim$ Mar-May r-SST in $t$",
   Des="Extreme heating events prior to the spring monsoon drives mature fish from the spawning areas, resulting in poor recruitment and fewer age 0 year fish in the Oct-Mar catch (Antony Raja 1973, Pillai et al 1991).",
   Response="$S_t$ and $N_t$",
   Cov="Nearshore Mar-May SST in year $t$ and $t-1$",
   stringsAsFactors=FALSE)
 
 HL1 = data.frame(
-  Hyp="L1 \\newline $S_t \\sim$ Oct-Dec nearshore SST $t-1$ \\newline $N_t \\sim$ Oct-Dec nearshore SST $t-1$",
+  Hyp="L1 \\newline $S_t \\sim$ Oct-Dec ns-SST $t-1$ \\newline $N_t \\sim$ Oct-Dec ns-SST $t-1$",
   Des="Larval and juvenile growth and survival is affected by temperature. The temperature in the critical post-monsoon window, when somatic growth of the 0-year fish is highest, should be correlated with future abundance.",
   Response="$N_t$ and $S_t$",
   Cov="Nearshore SST during Oct-Dec in year t-1",
@@ -115,7 +115,7 @@ HA3 = data.frame(
 
 
 HA1 = data.frame(
-  Hyp="A1 \\newline $S_t \\sim$ 2.5-yr ave. nearshore SST \\newline $N_t \\sim$ 2.5-yr ave. nearshore SST",
+  Hyp="A1 \\newline $S_t \\sim$ 2.5-yr ave. ns-SST \\newline $N_t \\sim$ 2.5-yr ave. ns-SST",
   Des="Spawning, early survival, and recruitment of sardines depends on a multitude of cascading factors summarized by the multi-year average  nearshore SST. The multi-year average SST has been correlated with recruitment and abundance in other sardines (Checkley et al. 2017) and is related to the optimal temperature windows for sardines (Takasuka et al. 2007).",
   Response="$N_t$ and $S_t$",
   Cov="3-year average SST",
