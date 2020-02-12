@@ -14,25 +14,25 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r child = 'Table_Hypotheses.tex'}
 ```
 
-#
 
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
+
+```{r, results="asis", echo=FALSE, eval=FALSE}
+cat("#\n\n\\clearpage")
 ```
 
-```{r child = 'Table 1.Rmd'}
+```{r child = 'Table 1.Rmd', eval=FALSE}
 ```
 
-#
 
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
+
+```{r, results="asis", echo=FALSE, eval=FALSE}
+cat("#\n\n\\clearpage")
 ```
 
-```{r child = 'Table 2.Rmd'}
+```{r child = 'Table 2.Rmd', eval=FALSE}
 ```
 
-#
+
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
