@@ -1,10 +1,6 @@
 ---
 title: '\Large Fishing in a warming ocean: influence of changing temperature and upwelling intensity on Indian oil sardine (\textit{Sardinella longiceps}) landings'
-#date: '`r format(Sys.time(), "%d %B, %Y")`'
-output: 
-  pdf_document: default
-csl: '`r system.file("docs", "apa-edit.csl", package = "SardineForecast")`'
-bibliography: '`r system.file("docs", "Sardine.bib", package = "SardineForecast")`'
+csl: `r system.file("docs", "apa-edit.csl", package = "SardineForecast")`
 header-includes:
 - \usepackage[labelformat=empty]{caption}
 - \usepackage{setspace}
@@ -17,6 +13,10 @@ header-includes:
 - \usepackage[fontsize=12.5pt]{scrextend}
 - \usepackage{lineno}
 - \linenumbers
+output:
+  word_document: default
+  pdf_document: default
+bibliography: `r system.file("docs", "Sardine.bib", package = "SardineForecast")`
 ---
 
 
@@ -42,7 +42,7 @@ header-includes:
 
 # Acknowledgements {-}
 
-We thank the U.S. National Marine Fisheries Service and the Indian Ministy of Earth Sciences for support of the the joint U.S.-Indian research project: "Collaboration on the Development of a Fisheries and Harmful Algal Bloom and Monitoring and Prediction System in Indian Seas" which supported research visits. The visits took place at the Indian National Centre for Ocean Information Services (INCOIS) and Centre for Marine Living Resources and Ecology (CMLRE). We thank these institutes for their support during the research visits. We would also like to specifically acknowledge the support of  Dr. S.S.C Shenoi (INCOIS), Dr. M. Sudhakar (CMLRE), Dr. N. Saravanane (CMRLE), Dr. Ned Cyr, Dr. Kevin Werner (NOAA) and Dr. Usha Varanasi for their support. The sardine landings data have been collected and analyzed by the Central Marine Fisheries Research Institute since the 1950s; we acknowledge the many researchers involved in this long-term data set.
+We thank the U.S. National Marine Fisheries Service and the Indian Ministy of Earth Sciences for support of the the joint U.S.-Indian research project: "Collaboration on the Development of a Fisheries and Harmful Algal Bloom and Monitoring and Prediction System in Indian Seas" which jointly provided the financial support for the research visits. The visits took place at the Indian National Centre for Ocean Information Services (INCOIS) and Centre for Marine Living Resources and Ecology (CMLRE). We thank these institutes for their support during the research visits. We would also like to specifically acknowledge the support of  Dr. S.S.C Shenoi (INCOIS), Dr. M. Sudhakar (CMLRE), Dr. N. Saravanane (CMRLE), Dr. Ned Cyr, Dr. Kevin Werner (NOAA) and Dr. Usha Varanasi for their support. The sardine landings data have been collected and analyzed by the Central Marine Fisheries Research Institute (Cochi, India) since the 1950s; we acknowledge the many researchers involved in collecting and maintaining this long-term data set.
 
 \clearpage
 
@@ -91,7 +91,7 @@ Our analysis focuses on the Kerala coast (Figure `r ref("fig:studyarea")`) regio
 ### Oil sardine life cycle and fishery
 
 <!-- life cycle of the oil sardine -->
-The Indian oil sardine fishery is restricted to the narrow strip of the western India continental shelf, within 20 km from the shore (Figure `r ref("fig:studyarea")`).  The yearly cycle (Figure `r ref("fig:cartoon")`) of the fishery begins at the start of spawning during June to July, corresponding with the onset of the southwest monsoon [@Chidambaram1950; @AntonyRaja1969] when the mature fish migrate from offshore to coastal spawning areas. The spawning begins during the southwest monsoon period when temperature, salinity and suitable food availability are conducive for larval survival [@Chidambaram1950; @MurtyEdelman1966; @JayaprakashPillai2000; @Krishnakumaretal2008; @Nairetal2016].  Although peak spawning occurs in June to July, spawning continues into September [@AntonyRaja1969; @Hornell1910; @HornellNayudu1923; @PrabhuDhulkhed1970] and early- and late-spawning cohorts are evident in the length distributions of the 0-year fish.  Spawning occurs in shallow waters outside of the traditional range of the fishery [@AntonyRaja1964], and after spawning the adults migrate closer to the coast and the spent fish become exposed to the fishery.
+The Indian oil sardine fishery is restricted to the narrow strip of the western India continental shelf, within 20 km from the shore (Figure `r ref("fig:studyarea")`).  The yearly cycle of the fishery begins at the start of spawning during June to July, corresponding with the onset of the southwest monsoon [@Chidambaram1950; @AntonyRaja1969] and the initiation of strongly cooler nearshore SST due to upwelling (Figure `r ref("fig:SSTts")`). At this time, the mature fish migrate from offshore to coastal spawning areas, and the spawning begins during the southwest monsoon period when temperature, salinity and suitable food availability are conducive for larval survival [@Chidambaram1950; @MurtyEdelman1966; @JayaprakashPillai2000; @Krishnakumaretal2008; @Nairetal2016].  Although peak spawning occurs in June to July, spawning continues into September [@AntonyRaja1969; @Hornell1910; @HornellNayudu1923; @PrabhuDhulkhed1970] and early- and late-spawning cohorts are evident in the length distributions of the 0-year fish.  Spawning occurs in shallow waters outside of the traditional range of the fishery [@AntonyRaja1964], and after spawning the adults migrate closer to the coast and the spent fish become exposed to the fishery.
 
 After eggs are spawned, they develop rapidly into larvae [@Nair1959].  The phytoplankton bloom that provide sardine larvae food is dependent upon nutrient influx from coastal upwelling and runoff from rivers during the summer monsoon and early fall. The blooms start in the south near the southern tip of India in June, increase in intensity and spread northward up the coast [@Smitha2010]. Variation in the bloom initiation time and intensity leads to changes in the food supply and to corresponding changes in the growth and survival of larvae and in the later recruitment of 0-year sardines into the fishery [@Georgeetal2012].  Oil sardines grow rapidly during their first few months, and 0-year fish (40mm to 100mm) from early spawning appear in the catch in August and September in most years [@Nairetal2016; @AntonyRaja1970].  As the phytoplankton bloom spreads northward, the oil sardines follow, and the oil sardine fishery builds from south to north during the post-monsoon period. Oil sardines remain inshore feeding throughout the winter months, until March to May when the inshore waters warm considerably and sardines move off-shore to deeper waters [@Chidambaram1950].  Catches of sardines are correspondingly low during this time for all size classes.  The age at first maturity occurs at approximately 150 mm size [@Nairetal2016], which is reached within one year.  When the summer monsoon returns, the oil sardine cycle begins anew.
 
@@ -222,10 +222,10 @@ The results on model structure were similar for models of the Oct-Mar landings (
 As diagnostic checks, we did the same model comparison for the landings data set from 1956 to 1983. The results were the same for the Jul-Sep catch (Table `r ref("tabappA:spawner-model-1956", pre="A")`) with the model with $ln(N_{t-1})$ included as a non-linear covariate with the lowest AIC and LOOCV. For the Oct-Mar catch (Table `r ref("tabappA:nonspawner-model-time-c", pre="A")`), the results were very similar but not identical. The model with $ln(N_{t-1})$ included as a non-linear covariate had the lowest LOOCV while the models with $ln(N_{t-1})$ and $ln(S_{t-2})$ or $ln(S_{t-2})$ had the lowest AIC (though less than 1 from the AIC of the $ln(N_{t-1})$ model). We also did an influential years test using Leave-One-Out crossvalidation (Appendix G). This test involved leaving out one year and repeating the model selection tests. These tests also supported the selected base models. The dynamic linear models (allowing a time-varying effect of prior catch) performed poorly for the Jul-Set catch with high AIC and LOOCV. For the Oct-Mar catch, the performance was mixed with higher AIC but lower LOOCV.
 
 Based on the model selection tests, the following non-linear model was chosen as the base model for Jul-Sep ($S_t$) catch:
-$$M1: ln(S_t) = \alpha + s(ln(N_{t-1})) + \epsilon_t.$$
+$$M0: ln(S_t) = \alpha + s(ln(N_{t-1})) + \epsilon_t.$$
 Two base non-linear models were chosen for Oct-Mar ($N_t$) catch:
-$$M2: ln(N_t) = \alpha + s_1(ln(N_{t-1})) + s_2(ln(S_{t-2})) + \epsilon_t$$
-$$M3: ln(N_t) = \alpha + s(ln(N_{t-1})) + \epsilon_t$$
+$$M1: ln(N_t) = \alpha + s_1(ln(N_{t-1})) + s_2(ln(S_{t-2})) + \epsilon_t$$
+$$M2: ln(N_t) = \alpha + s(ln(N_{t-1})) + \epsilon_t$$
 Note that although M1 was the best model for Jul-Sep catch, it was only weakly explanatory. The maximum adjusted $R^2$ was less than 30% (Table `r ref("tabappA:spawner-model-nonlinear", pre="A")`). For the Oct-Mar catch, M2 and M3 were more explanatory with an adjusted $R^2$ of 45.3% for M2 and 56.6% for M3 (Table `r ref("tabappA:nonspawner-model-time-b", pre="A")`).
 
 
@@ -286,11 +286,9 @@ names(catchmeds)=paste("Q",1:4,sep="")
 
 Figure `r ref("fig:catch")`. Quarterly catch data 1956-2014 from Kerala. The catches have a strong seasonal pattern with the highest catches in quarter 4  Note that quarter 3 is July-September and that the fishery is closed July 1 to August 15, thus the fishery is only open 1.5 months in quarter 3. The mean catch (metric tonnes) in quarters 1 to 4 are `r round(catchmeans["Q1"]/1000,1)`, `r round(catchmeans["Q2"]/1000,1)`, `r round(catchmeans["Q3"]/1000,1)`, and `r round(catchmeans["Q4"]/1000,1)` metric tonnes respectively.
 
-Figure `r ref("fig:cartoon")`.  The sardine life-cycle in the Southeast Arabian Sea and how it interacts with the fishery. 
+Figure `r ref("fig:SSTts")`.  Key oil sardine life-history events overlaid on the monthly sea surface temperature in the nearshore and offshore and the nearshore chlorophyll density.
 
 Figure `r ref("fig:COVts")`.  Remote sensing covariates used in the analysis.  All data are monthly averages over Box 4 in Figure `r ref("fig:studyarea")` on the Kerala coast off of Kochi.  Panel A) Upwelling Index. The upwelling index is the difference between the near-shore sea surface temperature (SST) and the off-shore SST defined as 3 degrees longitude offshore. Panel B) Surface chlorophyll-a (CHL).  The CHL data are only available from 1997 onward.  Panel C) Sea surface temperature constructed from Advanced Very High Resolution Radiometer (AVHRR). Panel D) Average daily rainfall (mm/day) off the Kerala coast.
-
-Figure `r ref("fig:SSTts")`.  Key oil sardine life-history events overlaid on the monthly sea surface temperature in the nearshore and offshore and the nearshore chlorophyll density.
 
 Figure `r ref("fig:cov-effects")`.  Effects of covariates estimated from the GAM models. Panel A) Effect of the 2.5 year average nearshore SST on catch during the catch during July-September (late spawning and early post-spawning) months.   Panel B) Effect of upwelling (inshore/off-shore SST differential) during June-September in the current season on July-September catch.  The index is the difference between offshore and inshore SST, thus a negative value indicates warmer coastal surface water than off-shore.  Panel C) Effect of the 2.5 year average nearshore SST on catch during the catch during October-March (post-monsoon, age-0, -1, -2 year fish).   Panel D) Effect of upwelling (inshore/off-shore SST differential) during June-September in the current season on October-March catch. Strong upwelling (positive upwelling index) in the larval and juvenile high growth period (Oct-Dec) is associated with higher early survival and larger cohorts of age-0 fish in the catch.
 
