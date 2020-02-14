@@ -321,7 +321,7 @@ seltable=rbind(seltable,tmp1)
 
 for(covname in c("SST.UPW.4.mon6to9.", "SST.2.10.mon6to9.", "Bakun.UPW.mon6to9.")){
 #set up table
-  if(covname=="Bakun.UPW.mon6to9.") covtit = "$V_t$ = Ave. Jun-Sep Bakun-UPW (L2)"
+  if(covname=="Bakun.UPW.mon6to9.") covtit = "$V_t$ = Ave. Jun-Sep Bakun-UPW (S4 and L2)"
   if(covname=="SST.UPW.4.mon6to9.") covtit = "$V_t$ = Ave. Jun-Sep UPW (S4 and L2)"
   if(covname=="SST.2.10.mon6to9.") covtit = "$V_t$ = Ave. Jun-Sep SST (S4 and L2)"
  
@@ -341,8 +341,9 @@ a=anova(m1,m2,m3, test="F")
 #model 2
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
+if(AIC(get(mod))<107) addarrow <- "$\\Rightarrow$"
 tmp1=data.frame(
-  Model="2a. $ln(S_t)$ = M + $\\beta V_t$",
+  Model=paste(addarrow, "2a. $ln(S_t)$ = M + $\\beta V_t$"),
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
@@ -354,7 +355,7 @@ seltable=rbind(seltable,tmp1)
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 addarrow <- ""
-if(AIC(get(mod))<105) addarrow <- "$\\Rightarrow$"
+if(AIC(get(mod))<107) addarrow <- "$\\Rightarrow$"
 tmp1=data.frame(
   Model=paste(addarrow, "3a. $ln(S_t)$ = M + $s(V_t)$"),
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
@@ -430,7 +431,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1), and upwelling indices as the explanatory variables ($V_t$) for the catch during monsoon months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. Three upwelling indices were tested. The nearshore-offshore temperature diferential (UPW), which is the offshore (box 13) minus nearshore (box 4) SST, the average nearshore SST along the Kerala coast (boxes 2-5), and the Bakun upwelling index based on wind stress. See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
+thecap=paste("Model selection tests of sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1), and upwelling indices as the explanatory variables ($V_t$) for the catch during monsoon months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. Three upwelling indices were tested. The nearshore-offshore temperature diferential (UPW), which is the offshore  minus nearshore SST, the average nearshore SST along the Kerala coast (boxes 2-5), and the Bakun upwelling index based on wind stress. See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
 fullcap=paste("Table ", ref("tabappB:spawner-model-upw", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
@@ -575,7 +576,7 @@ colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
 thecap=paste("Model selection tests of the multi-year average nearshore sea surface temperature and ENSO indices as the explanatory variables ($V$) for the catch during summer months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. The ENSO indices were the ONI index averaged over all months in the calendar year and the DMI index for Sep-Nov. The 2.5-year average SST is the average for Jan-Jun in the current calendar year and the prior 2 calendar years (30 months total). Thus the average does not include any months during the Jul-Sep catch.  See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
-fullcap=paste("Table ", ref("tabappB:spawner-model-upw", pre="B"), ". ", thecap, sep="")
+fullcap=paste("Table ", ref("tabappB:spawner-model-enso", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
 

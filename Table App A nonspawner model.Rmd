@@ -537,7 +537,7 @@ mod <- FittedLooPred.np1984$Fitted[["dlm(Jul-Sep(t-1))"]]
 modloo <- FittedLooPred.np1984$LooPred[["dlm(Jul-Sep(t-1))"]]
 err <- mod$model$data[1,]-modloo$pred
 tmp1=data.frame(
-  Model="3. $ln(N_t)$ = $\\alpha_t$ + $\\beta_t ln(S_{t-1})$ + $\\epsilon_t$", 
+  Model="3a. $ln(N_t)$ = $\\alpha$ + $\\beta_t ln(S_{t-1})$ + $\\epsilon_t$", 
   Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
   MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
   Adj.R2="", 
@@ -551,7 +551,7 @@ mod <- FittedLooPred.np1984$Fitted[["dlm(Oct-Mar(t-1))"]]
 modloo <- FittedLooPred.np1984$LooPred[["dlm(Oct-Mar(t-1))"]]
 err <- mod$model$data[1,]-modloo$pred
 tmp1=data.frame(
-  Model="3. $ln(N_t)$ = $\\alpha_t$ + $\\beta_t ln(N_{t-1})$ + $\\epsilon_t$", 
+  Model="3b. $ln(N_t)$ = $\\alpha$ + $\\beta_t ln(N_{t-1})$ + $\\epsilon_t$", 
   Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
   MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
   Adj.R2="", 

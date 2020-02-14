@@ -69,7 +69,7 @@ These types of models do not allow the model parameters (the intercept $\alpha$ 
 \begin{align*}
 \text{DLM intercept only}: X_t = \alpha_t + e_t \\
 \text{DLM intercept and slope}: X_t = \alpha_t + \beta_t t + e_t \\
-\text{DLM intercept and effect}: X_t = \alpha_t + \beta_t c_{t-1} + e_t
+\text{DLM intercept and effect}: X_t = \alpha + \beta_t c_{t-1} + e_t
 \end{align*}
 
 In addition to the GAM, linear and DLM models, three null models were included in the tested model sets: 
@@ -82,15 +82,15 @@ The 'intercept only' is a flat level model. The 'prior catch only' simply uses t
 
 The models were fit to the 1956-2015 landings (full data) and 1984-2015 (data that overlap the environmental covariates). 
 
-The model performance was measured by AIC, AICc and LOO prediction. The LOO prediction error is the data point $t$ minus the predited value for data point $t$. This is repeated for all data points $t$. The influence of single data points to on model performance was evaluated by leaving out one data point, fitting to the remaining data and computing the model performance (via AIC, AICc or LOO prediction error). 
+The model performance was measured by AIC, AICc and LOOCV prediction. The LOOCV prediction error is the data point $t$ minus the predited value for data point $t$. This is repeated for all data points $t$. The influence of single data points to on model performance was evaluated by leaving out one data point, fitting to the remaining data and computing the model performance (via AIC, AICc or LOO prediction error). 
 
 ## Results: Jul-Sep landings
 
-The Figure 1D and 2D show the $\Delta$AIC for the models: GAM, linear, and DLM. The figure shows that for the 1984-2015 data with any year left out, the set of models that has the lowest AIC was always the GAM or linear model with Oct-Mar in the prior season. There were cases where deleting a year removed one of these two from the 'best' category, but they were still in the 'competitive' category with a $\Delta$AIC less than 2. With the full data set, 1956 to 2015, the best models were GAM with Jul-Sept in the prior season and two seasons prior. The DLM with Oct-Mar in prior season was also supported; this model allowed the effect of Oct-Mar catch to vary over time.
+The Figure 1D shows the $\Delta$AIC for the models: GAM, linear, and DLM. The figure shows that for the 1984-2015 data with any year left out, the set of models that has the lowest AIC was always the GAM or linear model with Oct-Mar in the prior season. There were cases where deleting a year removed one of these two from the 'best' category, but they were still in the 'competitive' category with a $\Delta$AIC less than 2. 
 
-AIC gives us a measure of how well the models fit the data, with a penalty for the number of estimated parameters. We look at the one-step-ahead predictive performance (Figure 3D), we see that all the GAM, linear and DLM models have a hard time adjusting to shifts in the data (e.g. after 1998). The null models can adjust quickly but has large errors when there are rapid changes. The root mean squared error (which penalizes large predictive errors) is lowest for the models with Oct-Mar in the prior season for the more recent data (Figure 4D) and for the full data, many models have similar predictive performance.
+AIC gives us a measure of how well the models fit the data, with a penalty for the number of estimated parameters. We look at the one-step-ahead predictive performance (Figure 2D), we see that all the GAM, linear and DLM models have a hard time adjusting to shifts in the data (e.g. after 1998). The null models can adjust quickly but has large errors when there are rapid changes. The root mean squared error (which penalizes large predictive errors) is lowest for the models with Oct-Mar in the prior season  (Figure 3D).
 
-It should be noted that none of the models has a particularly high adjusted R$^2$. The values are generally less than 0.3. The Jul-Sep landings tend to be highly variable and not related to the catch in prior years. Jul-Sep is during the monsoon during which fishing is not always possible due to sea-state and there is a 6-week fishing ban during this time.
+It should be noted that none of the Jul-Sep models has a particularly high adjusted R$^2$. The values are generally less than 0.3. The Jul-Sep landings tend to be highly variable and not related to the catch in prior years. Jul-Sep is during the monsoon during which fishing is not always possible due to sea-state and there is a 6-week fishing ban during this time.
 
 ```{r table-appD-resinf, echo=FALSE}
 resinf <- function(rmyr=1900, resfun="aic", data=dat.nonspawners, resp="spawners0"){
@@ -471,7 +471,7 @@ p <- looplot1(resfun="aic", type="s1984")
 p
 ```
 
-```{r appD-spawners-aic1956, echo=FALSE, fig.cap="Figure 2D. \\(\\Delta\\)AIC for the Jul-Sep landings base models with one year deleted using the full landings data set 1956-2015. \\(\\Delta\\)AIC is AIC of the model minus the AIC of the best (lowest AIC model) in the set. Black models were the best models in the set and within 0.5 AIC of each other. Grey are models within 2 of the best model, thus competitive to the best models. Deleted year is shown on the x-axis; the farthest right column has no year removed.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}
+```{r appD-spawners-aic1956, echo=FALSE, fig.cap="Figure 2D. \\(\\Delta\\)AIC for the Jul-Sep landings base models with one year deleted using the full landings data set 1956-2015. \\(\\Delta\\)AIC is AIC of the model minus the AIC of the best (lowest AIC model) in the set. Black models were the best models in the set and within 0.5 AIC of each other. Grey are models within 2 of the best model, thus competitive to the best models. Deleted year is shown on the x-axis; the farthest right column has no year removed.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE, eval=FALSE}
 p <- looplot1(resfun="aic", type="s1956")
 p
 ```
@@ -576,7 +576,7 @@ p <- looplot1(resfun="looRMSE", type="s1984")
 p
 ```
 
-```{r appd-spawners-loo56, echo=FALSE, fig.cap="Figure 5D. Leave-one-out predictive performance (leave out a year, fit, predict that year) for the Jul-Sep landings base models. The performance (DelLOO) is the RSME (root mean square error).", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE, eval=TRUE}
+```{r appd-spawners-loo56, echo=FALSE, fig.cap="Figure 5D. Leave-one-out predictive performance (leave out a year, fit, predict that year) for the Jul-Sep landings base models. The performance (DelLOO) is the RSME (root mean square error).", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE, eval=FALSE}
 p <- looplot1(resfun="looRMSE", type="s1956")
 p
 ```
@@ -644,7 +644,7 @@ cat("\\clearpage")
 
 ## Validation of the Oct-Mar landings base models
 
-The Figure 6D shows that for Oct-Mar landings with the 1984 to 2014 data, the best model was always GAM with Oct-Mar in the prior season and Jul-Sep landings two seasons prior.  For the full data set, the simpler GAM model with only Oct-Mar landings in the prior season was best. For the one step ahead predictions, simpler models had the lower prediction errors: GAM with Oct-Mar in the prior season for the recent data and linear with Oct-Mar in the prior season for the full data set.
+The Figure 4D shows that for Oct-Mar landings with the 1984 to 2014 data, the best model was always GAM with Oct-Mar in the prior season and Jul-Sep landings two seasons prior.  For the one step ahead predictions, simpler models had the lower prediction errors: GAM with Oct-Mar in the prior season for the recent data and linear with Oct-Mar in the prior season for the full data set (Figure 6D).
 
 
 
@@ -653,7 +653,7 @@ p <- looplot1(resfun="aic", type="ns1984")
 p
 ```
 
-```{r appD-nspawners-aic1956, echo=FALSE, fig.cap="Figure 7D. \\(\\Delta\\)AIC for the Oct-Mar landings base models with one year deleted using the full landings data set 1956-2015. \\(\\Delta\\)AIC is AIC of the model minus the AIC of the best (lowest AIC model) in the set. Black models were the best models in the set and within 0.5 AIC of each other. Grey are models within 2 of the best model, thus competitive to the best models. Deleted year is shown on the x-axis; the farthest right column has no year removed.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE}
+```{r appD-nspawners-aic1956, echo=FALSE, fig.cap="Figure 7D. \\(\\Delta\\)AIC for the Oct-Mar landings base models with one year deleted using the full landings data set 1956-2015. \\(\\Delta\\)AIC is AIC of the model minus the AIC of the best (lowest AIC model) in the set. Black models were the best models in the set and within 0.5 AIC of each other. Grey are models within 2 of the best model, thus competitive to the best models. Deleted year is shown on the x-axis; the farthest right column has no year removed.", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE, eval=FALSE}
 p <- looplot1(resfun="aic", type="ns1956")
 p
 ```
@@ -741,7 +741,7 @@ p <- looplot1(resfun="looRMSE", type="ns1984")
 p
 ```
 
-```{r appd-nspawners-loo56, echo=FALSE, fig.cap="Figure 10D. Leave-one-out predictive performance (leave out a year, fit, predict that year) for the Oct-Mar landings base models. The performance (DelLOO) is the RSME (root mean square error).", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE, eval=TRUE}
+```{r appd-nspawners-loo56, echo=FALSE, fig.cap="Figure 10D. Leave-one-out predictive performance (leave out a year, fit, predict that year) for the Oct-Mar landings base models. The performance (DelLOO) is the RSME (root mean square error).", fig.width=8, fig.height=figh, message=FALSE, warning=FALSE, eval=FALSE}
 p <- looplot1(resfun="looRMSE", type="ns1956")
 p
 ```

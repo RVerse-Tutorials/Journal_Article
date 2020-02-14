@@ -341,7 +341,7 @@ colnames(seltable)=c("Model", "Residual df", "MASE", "MAE", "RMSE", "LOOCV", "Ad
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "MAE", "RMSE", "\\shortstack{LOOCV\\\\RMSE}", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 seltable = seltable[,c(1,2,7,5,10,6)]
 
-thecap=paste("Top covariates for the monsoon (Jul-Sep) and post-monsoon (Oct-Mar) catch ($S_t$ and $N_t$) models. M0, M1 and M2 are the base models with only prior catch as covariates. To the base models, the listed environmental covariates are added. The full set of covariate models and the results of the tests on the nested models sets are given in Appendix B. The fitted versus observed catches from the covariate models are shown in Figure ", ref("fig:fitted"), ".", sep="")
+thecap=paste("Top covariates for the monsoon (Jul-Sep) and post-monsoon (Oct-Mar) catch ($S_t$ and $N_t$) models. M0, M1 and M2 are the base models with only prior catch as covariates. To the base models, the listed environmental covariates are added. The full set of covariate models and the results of the tests on the nested models sets are given in Appendix B. The LOOCV RMSE (root mean square error) is the out-of-sample prediction error. The LOOCV RSME for the null model for Jul-Sep catch was 1.599 and the LOOCV RMSE for the null model for Oct-Mar catch was 1.015. The fitted versus observed catches from the covariate models are shown in Figure ", ref("fig:fitted"), ".", sep="")
 fullcap=paste("Table ", ref("tab:covariate-models"), ". ", thecap, sep="")
 kable(seltable, align=paste0("l", paste0(rep("c",dim(seltable)[2]-1),collapse="")), caption=fullcap, escape=FALSE)
 ```
