@@ -17,7 +17,7 @@ header-includes: \usepackage[labelformat=empty]{caption}
 # Note to use, knit to pdf and edit the tex file to remove the header
 # up to the \begin{table}
 
-thecap = "Hypotheses for covariates affecting landings.  $S_t$ is Jul-Sep catch in the current season, $S_{t-1}$ is Jul-Sep catch in the previous season. $N_t$ is the Oct-Mar catch in the current season and $N_{t-1}$ is the Oct-Mar catch in the prior season. DD = hypotheses related to effects of past abundance (landings) on current abundance. S = hypotheses related to catch during the spawning months. L = hypotheses related to larval and juvenile growth and survival. A = hypotheses affecting all ages. See the introduction for discussion of the literature on the effects of environmental covariates on sardine landings. ns-SST = nearshore SST. r-SST = regional (nearshore and offshore) SST $t$, $t-1$, and $t-2$ indicate current, prior, and two seasons prior."
+thecap = "Hypotheses for covariates affecting landings.  $S_t$ is Jul-Sep catch in the current season, $S_{t-1}$ is Jul-Sep catch in the previous season. $N_t$ is the Oct-Mar catch in the current season and $N_{t-1}$ is the Oct-Mar catch in the prior season. DD = hypotheses related to density-dependence. S = hypotheses related to catch during the spawning months. L = hypotheses related to larval and juvenile growth and survival. A = hypotheses affecting all ages. See the introduction for discussion of the literature on the effects of environmental covariates on sardine landings. ns-SST = nearshore SST. r-SST = regional (nearshore and offshore) SST $t$, $t-1$, and $t-2$ indicate current, prior, and two seasons prior."
 
 fullcap = paste("Table ", ref("tab:hypotheses"), ". ", thecap, sep="")
 

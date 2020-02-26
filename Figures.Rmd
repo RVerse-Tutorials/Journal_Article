@@ -102,7 +102,7 @@ for(start in yrs){
   abline(v=seq(1,12*(nyr+1),12))
   axis(1,at=seq(7,12*(nyr+1),12),labels=start:(start+nyr),cex.axis=.75,lwd=-1,lwd.ticks=-1)
   lines(dat2, col="black", lwd=1)
-  legend(length(dat2)-11.5,ymin+3,c("SST near-shore","SST off-shore","Chl-a"), lwd=c(2,1,10),col=c("red","black","grey"),bty="n",cex=1,seg.len=1)
+  legend(length(dat2)-11.5,ymin+3,c("SST near-shore","SST off-shore","Chl-a"), lwd=c(2,1,10),col=c("red","black","green"),bty="n",cex=1,seg.len=1)
   
   lev=ymax; jit=.3
   cols=c("black","green","blue","red")
@@ -136,7 +136,7 @@ for(start in yrs){
   polygon(
     c(tdat1,TT,1,1), 
     c(dat1,0,0,dat1[1]), 
-    col="grey", border=NA)
+    col="green", border=NA)
   axis(side=4)
   mtext(side = 4, line = 2.25, 'Chl-a')
   mtext(side = 2, line = 2.25, 'Ave Monthly SST')
@@ -291,21 +291,24 @@ Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 covnames=c("SST.2.10.3.yr.runsum.0")
 dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
+loc=which(dat.spawners$Year %in% c(1986, 1991, 1994, 2013))
 m0 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
 xmin=min(m1$model[,"spawners0"],m1$fitted.values,m0$fitted.values)
 xmax=jig+max(m0$model[,"spawners0"],m0$fitted.values,m1$fitted.values,m0$model[,"spawners0"],m0$fitted.values)
 plot(m0$model[,"spawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log catch in monsoon months", ylab="Predicted log catch\nwithout covariates")
+     xlab="Log Jul-Sep catch", ylab="Predicted log catch\nwithout covariates")
 lines(c(xmin,xmax),c(xmin,xmax-jig))
-legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1)), bty="n")
+legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1),"\nWithout covariates"), bty="n")
 legend("topright","A", bty="n")
+text(m0$model[loc,"spawners0"], m0$fitted.values[loc], pos=4, offset=1)
 
 plot(m1$model[,"spawners0"],m1$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log catch in monsoon months", ylab="Predicted log catch\nwith covariates")
+     xlab="Log Jul-Sep catch", ylab="Predicted log catch\nwith covariates")
 lines(c(xmin,xmax-jig),c(xmin,xmax-jig)) # -jig to keep off legend
-legend("topleft",paste("R2 =",round(100*summary(m1)$r.sq,digits=1)), bty="n")
+legend("topleft",paste("R2 =",round(100*summary(m1)$r.sq,digits=1),"\nWith multi-year SST covariate"), bty="n")
 legend("topright","B", bty="n")
+text(m0$model[loc,"spawners0"], m0$fitted.values[loc], pos=4, offset=1)
 
 dat=dat.nonspawners
 Yr1 = min(dat$Year)
@@ -313,6 +316,7 @@ Yr2 = max(dat$Year)
 covnames=c("SST.2.10.3.yr.runsum.0")
 dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
 dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
+loc=which(dat.spawners$Year %in% c(1986, 1991, 1994, 2013))
 m0 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 # m2$model=exp(m2$model); m2$fitted.values=exp(m2$fitted.values)
@@ -320,16 +324,18 @@ m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=
 xmin=min(m0$model[,"nspawners0"],m0$fitted.values,m1$fitted.values,m2$fitted.values)
 xmax=jig+max(m0$model[,"nspawners0"],m0$fitted.values,m1$fitted.values,m2$fitted.values)
 plot(m0$model[,"nspawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log catch in post-monsoon months", ylab="Predicted log catch\nwithout covariates")
+     xlab="Log Oct-Mar catch", ylab="Predicted log catch\nwithout covariates")
 lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
-legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1)), bty="n")
+legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1),"\nWithout covariates"), bty="n")
 legend("topright","C", bty="n")
+text(m0$model[loc,"spawners0"], m0$fitted.values[loc], pos=4, offset=1)
 
 plot(m1$model[,"nspawners0"],m1$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log catch in post-monsoon months", ylab="Predicted log catch\nwith covariates")
+     xlab="Log Oct-Mar catch", ylab="Predicted log catch\nwith covariates")
 lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
-legend("topleft",paste("R2 =",round(100*summary(m1)$r.sq,digits=1)), bty="n")
+legend("topleft",paste("R2 =",round(100*summary(m1)$r.sq,digits=1),"\nWith multi-year SST covariate"), bty="n")
 legend("topright","D", bty="n")
+text(m0$model[loc,"spawners0"], m0$fitted.values[loc], pos=4, offset=1)
 
 par(oldpar)
 ```
