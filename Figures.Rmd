@@ -39,18 +39,20 @@ cat("\\clearpage")
 ```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
 par(mfrow=c(1,1),mar=c(5,5,1,5))
 dat=oilsardine_qtr
-plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Quarterly Kerala Catch (1000 kg)",xlab="",bty="L", ylim=c(0,180))
+plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Quarterly Kerala Catch (1000 kg)",xlab="",bty="L", ylim=c(0,200))
 # tmp <- ringseine[!is.na(ringseine$HP),]
 # par(new = T)
 # plot(tmp$Year, tmp$Length.net, axes=FALSE, xlab=NA, ylab=NA, type="l", xlim=c(1956,2015), ylim=c(0,3000), lwd=3, col="grey")
 # axis(side = 4)
 # mtext(side = 4, line = 3, 'Ring Seine Net Length (m)')
-oldpar=par(fig = c(0.6, 1, 0.6, .97), new = T)  
+oldpar=par(fig = c(0.5, 1, 0.55, .97), new = TRUE)  
 catchmeans=tapply(dat$Kerala, dat$Qtr, mean, na.rm=TRUE)
 names(catchmeans)=c("JFM","AMJ","JAS","OND")
-barplot(catchmeans/1000,ylab="",col="grey",cex.axis=.75,cex.names=.75, line=-1, yaxt="n")
+barplot(catchmeans/1000,ylab="",col="grey",cex.axis=.75,
+        cex.names=.75, line=-1, yaxt="n", border=NA)
 axis(2)
-title("Mean Qtrly Catch",cex.main=.75)
+box(bty="L")
+title("Mean Quarterly Catch",cex.main=.75)
 par(oldpar)
 ```
 
@@ -102,7 +104,7 @@ for(start in yrs){
   abline(v=seq(1,12*(nyr+1),12))
   axis(1,at=seq(7,12*(nyr+1),12),labels=start:(start+nyr),cex.axis=.75,lwd=-1,lwd.ticks=-1)
   lines(dat2, col="black", lwd=1)
-  legend(length(dat2)-11.5,ymin+3,c("SST near-shore","SST off-shore","Chl-a"), lwd=c(2,1,10),col=c("red","black","green"),bty="n",cex=1,seg.len=1)
+  legend(length(dat2)-11.5,ymin+3,c("SST nearshore","SST offshore","Chl-a"), lwd=c(2,1,10),col=c("red","black","#228B22"),bty="n",cex=1,seg.len=1)
   
   lev=ymax; jit=.3
   cols=c("black","green","blue","red")
@@ -136,7 +138,7 @@ for(start in yrs){
   polygon(
     c(tdat1,TT,1,1), 
     c(dat1,0,0,dat1[1]), 
-    col="green", border=NA)
+    col="#228B22", border=NA)
   axis(side=4)
   mtext(side = 4, line = 2.25, 'Chl-a')
   mtext(side = 2, line = 2.25, 'Ave Monthly SST')
@@ -155,13 +157,13 @@ i=4
 covname=paste("SST.UPW.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="SST-derived Upwelling Index", xlab="",bty="n",ylim=c(-1,5),xlim=c(1980,2020))
+plot(datts,ylab="SST-derived Upwelling Index (deg C)", xlab="",bty="n",ylim=c(-1,5),xlim=c(1980,2020))
 legend("topright","A", bty="n")
 
 covname=paste("CHL.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="Surface Chlorophyll-a", xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
+plot(datts,ylab="Surface Chlorophyll-a (mg/m^3)", xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
 legend("topright","B", bty="n")
 
 covname=paste("SST.",i,sep="")
@@ -173,7 +175,7 @@ legend("topright","C", bty="n")
 covname="precip.gpcp.kerala"
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="Average daily precipitation (mm)", xlab="",bty="n",ylim=c(0,18),xlim=c(1980,2020))
+plot(datts,ylab="Average daily precipitation (mm/day)", xlab="",bty="n",ylim=c(0,18),xlim=c(1980,2020))
 legend("topright","D", bty="n")
 
 par(fig = c(0.05, .25, 0.8, 1), new = T)  #panel left-top
@@ -286,33 +288,40 @@ Define fullrespdat.
 ```{r fitted, echo=FALSE,fig.cap=paste("Figure",  ref("fig:fitted")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
 jig=.3 #keep of the legend
 oldpar=par(mfrow=c(2,2), mar=c(4,6,1,0))
+tcex=0.85
 dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 covnames=c("SST.2.10.3.yr.runsum.0")
 dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
-loc=which(dat.spawners$Year %in% c(1986, 1991, 1994, 2013))
+years = c(1986, 1994, 2013)
+loc=which(dat.spawners$Year %in% years)
 m0 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
 xmin=min(m1$model[,"spawners0"],m1$fitted.values,m0$fitted.values)
 xmax=jig+max(m0$model[,"spawners0"],m0$fitted.values,m1$fitted.values,m0$model[,"spawners0"],m0$fitted.values)
 plot(m0$model[,"spawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log Jul-Sep catch", ylab="Predicted log catch\nwithout covariates")
+     xlab="Log Jul-Sep catch", ylab="Predicted log catch")
 lines(c(xmin,xmax),c(xmin,xmax-jig))
-legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1),"\nWithout covariates"), bty="n")
+legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1),
+                       "RMSE =",round(forecast::accuracy(m0)[,"RMSE"], digits=2),
+                       "\nWithout SST"), bty="n")
 legend("topright","A", bty="n")
-text(m0$model[loc,"spawners0"], m0$fitted.values[loc], pos=4, offset=1)
-
+text(m0$model[loc,"spawners0"], m0$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
 plot(m1$model[,"spawners0"],m1$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log Jul-Sep catch", ylab="Predicted log catch\nwith covariates")
+     xlab="Log Jul-Sep catch", ylab="Predicted log catch")
 lines(c(xmin,xmax-jig),c(xmin,xmax-jig)) # -jig to keep off legend
-legend("topleft",paste("R2 =",round(100*summary(m1)$r.sq,digits=1),"\nWith multi-year SST covariate"), bty="n")
+legend("topleft",paste("R2 =",round(100*summary(m1)$r.sq,digits=1),
+                       "RMSE =",round(forecast::accuracy(m1)[,"RMSE"], digits=2),
+                       "\nWith multi-year SST "), bty="n")
 legend("topright","B", bty="n")
-text(m0$model[loc,"spawners0"], m0$fitted.values[loc], pos=4, offset=1)
+text(m1$model[loc,"spawners0"], m1$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
 
 dat=dat.nonspawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
+years = c(1986, 1991, 1994, 2013)
+loc=which(dat.spawners$Year %in% years)
 covnames=c("SST.2.10.3.yr.runsum.0")
 dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
 dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
@@ -324,18 +333,22 @@ m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=
 xmin=min(m0$model[,"nspawners0"],m0$fitted.values,m1$fitted.values,m2$fitted.values)
 xmax=jig+max(m0$model[,"nspawners0"],m0$fitted.values,m1$fitted.values,m2$fitted.values)
 plot(m0$model[,"nspawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log Oct-Mar catch", ylab="Predicted log catch\nwithout covariates")
+     xlab="Log Oct-Mar catch", ylab="Predicted log catch")
 lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
-legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1),"\nWithout covariates"), bty="n")
+legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1),
+                       "RMSE =",round(forecast::accuracy(m0)[,"RMSE"], digits=2),
+                       "\nWithout SST"), bty="n")
 legend("topright","C", bty="n")
-text(m0$model[loc,"spawners0"], m0$fitted.values[loc], pos=4, offset=1)
+text(m0$model[loc,"nspawners0"], m0$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
 
 plot(m1$model[,"nspawners0"],m1$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log Oct-Mar catch", ylab="Predicted log catch\nwith covariates")
+     xlab="Log Oct-Mar catch", ylab="Predicted log catch")
 lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
-legend("topleft",paste("R2 =",round(100*summary(m1)$r.sq,digits=1),"\nWith multi-year SST covariate"), bty="n")
+legend("topleft",paste("R2 =",round(100*summary(m1)$r.sq,digits=1),
+                       "RMSE =",round(forecast::accuracy(m1)[,"RMSE"], digits=2),
+                       "\nWith multi-year SST"), bty="n")
 legend("topright","D", bty="n")
-text(m0$model[loc,"spawners0"], m0$fitted.values[loc], pos=4, offset=1)
+text(m1$model[loc,"nspawners0"], m1$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
 
 par(oldpar)
 ```
