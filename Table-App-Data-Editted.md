@@ -289,10 +289,10 @@ Meterorological Department (Ministry of Earth Sciences).
 <a href="http://hydro.imd.gov.in/hydrometweb/">http://hydro.imd.gov.in/hydrometweb/</a>.
 </p>
 <p>
-Kothawale, D. R., and M. Rajeevan. 2017. Monthly, seasonal and annual rainfall time series for all-India, homogeneous regions and meteorological subdivisions: 1871-2016. Report, Indian Institute of Tropical Meteorology..
+Kothawale DR, Rajeevan M (2017). Monthly, seasonal and annual rainfall time series for all-India, homogeneous regions and meteorological subdivisions: 1871-2016. Report, Indian Institute of Tropical Meteorology..
 </p>
 <p>
-NCEI. (2017). Global Precipitation Climatology Project Monthly Product Version 2.3. Retrieved from National Centers for Environmental Information website:  
+NCEI (2017). Global Precipitation Climatology Project Monthly Product Version 2.3. Retrieved from National Centers for Environmental Information website:  
 <a href="https://www.ncei.noaa.gov/data/global-precipitation-climatology-project-gpcp-monthly/access/">https://www.ncei.noaa.gov/data/global-precipitation-climatology-project-gpcp-monthly/access/</a>.
 </p>
 
