@@ -53,11 +53,14 @@ seltable=rbind(seltable,tmp1)
 tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 
-for(covname in c("log.CHL.4.mon7to9.")){
+for(covname in c("log.CHL.2.5.mon7to9.")){
 #set up table
   if(covname=="log.CHL.4.mon1to3.")   covtit = "$V_t$ = Jan-Mar Chlorophyll"
   if(covname=="log.CHL.4.mon7to9.")   covtit = "$V_t$ = Jul-Sep Chlorophyll"
   if(covname=="log.CHL.4.mon10to12.") covtit = "$V_t$ = Oct-Dec Chlorophyll"
+  if(covname=="log.CHL.2.5.mon1to3.")   covtit = "$V_t$ = Jan-Mar ns-CHL"
+  if(covname=="log.CHL.2.5.mon7to9.")   covtit = "$V_t$ = Jul-Sep ns-CHL"
+  if(covname=="log.CHL.2.5.mon10to12.") covtit = "$V_t$ = Oct-Dec ns-CHL"
 
 #var header
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
@@ -125,11 +128,14 @@ tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em
 seltable=rbind(seltable,tmp1)
 }
 
-for(covname in c("log.CHL.4.mon10to12.", "log.CHL.4.mon1to3.")){
+for(covname in c("log.CHL.2.5.mon10to12.", "log.CHL.2.5.mon1to3.")){
 #set up table
-  if(covname=="log.CHL.4.mon1to3.")   covtit = "$V_t$ = Jan-Mar Chlorophyll"
-  if(covname=="log.CHL.4.mon7to9.")   covtit = "$V_t$ = Jul-Sep Chlorophyll"
-  if(covname=="log.CHL.4.mon10to12.") covtit = "$V_t$ = Oct-Dec Chlorophyll"
+  if(covname=="log.CHL.2.10.mon1to3.")   covtit = "$V_t$ = Jan-Mar r-CHL"
+  if(covname=="log.CHL.2.10.mon7to9.")   covtit = "$V_t$ = Jul-Sep r-CHL"
+  if(covname=="log.CHL.2.10.mon10to12.") covtit = "$V_t$ = Oct-Dec r-CHL"
+  if(covname=="log.CHL.2.5.mon1to3.")   covtit = "$V_t$ = Jan-Mar ns-CHL"
+  if(covname=="log.CHL.2.5.mon7to9.")   covtit = "$V_t$ = Jul-Sep ns-CHL"
+  if(covname=="log.CHL.2.5.mon10to12.") covtit = "$V_t$ = Oct-Dec ns-CHL"
 
 #var header
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
@@ -178,7 +184,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of Chlorophyll-a (CHL) as an explanatory variable for the Jul-Sep catch ($S_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_t$ is CHL in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is CHL in the prior Jul-Jun season. Only CHL in Oct-Dec and Jan-Mar in the prior season is used since for the current season, these months are after the Jul-Sep catch being modeled.  Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Jul-Sep catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This is done due to data constraints. The models are nested; the Roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M) at top.")
+thecap=paste("Model selection tests of nearshore (0-80km) chlorophyll-a (ns-CHL) as an explanatory variable for the Jul-Sep catch ($S_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. Only CHL in Oct-Dec and Jan-Mar in the current season (which runs Jul-Jun) is not used since these months are after the Jul-Sep catch being modeled.  Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Jul-Sep catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This is done due to data constraints. The models are nested; the Roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M) at top.")
 fullcap=paste("Table ", ref("tabappC:spawner-model", pre="C"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
@@ -219,11 +225,14 @@ seltable=rbind(seltable,tmp1)
 tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 
-for(covname in c("log.CHL.4.mon7to9.", "log.CHL.4.mon10to12.", "log.CHL.4.mon1to3.")){
+for(covname in c("log.CHL.2.5.mon7to9.", "log.CHL.2.5.mon10to12.", "log.CHL.2.5.mon1to3.")){
 #set up table
-  if(covname=="log.CHL.4.mon1to3.")   covtit = "$V_t$ = Jan-Mar Chlorophyll"
-  if(covname=="log.CHL.4.mon7to9.")   covtit = "$V_t$ = Jul-Sep Chlorophyll"
-  if(covname=="log.CHL.4.mon10to12.") covtit = "$V_t$ = Oct-Dec Chlorophyll"
+  if(covname=="log.CHL.4.mon1to3.")   covtit = "$V_t$ = Jan-Mar CHL"
+  if(covname=="log.CHL.4.mon7to9.")   covtit = "$V_t$ = Jul-Sep CHL"
+  if(covname=="log.CHL.4.mon10to12.") covtit = "$V_t$ = Oct-Dec CHL"
+  if(covname=="log.CHL.2.5.mon1to3.")   covtit = "$V_t$ = Jan-Mar ns-CHL"
+  if(covname=="log.CHL.2.5.mon7to9.")   covtit = "$V_t$ = Jul-Sep ns-CHL"
+  if(covname=="log.CHL.2.5.mon10to12.") covtit = "$V_t$ = Oct-Dec ns-CHL"
 
 
 #set up the cov0 and cov1 variables
@@ -331,7 +340,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of Chlorophyll-a (CHL) as an explanatory variable for Oct-Jun catch ($N_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_t$ is CHL in the current season which spans two calendar years from July to June in the next year. $V_{t-1}$ is CHL in the prior Jul-Jun season. Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Oct-Jun catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This was done due to data constraints. The models are nested; the numeral indicates the level of nestedness. Models at levels 2 and higher are shown with the component that is added to the base level model (M) at top.")
+thecap=paste("Model selection tests of nearshore (0-80km) chlorophyll-a (ns-CHL) as an explanatory variable for Oct-Jun catch ($N_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_{t-1}$ is CHL in the prior Jul-Jun season. Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Oct-Jun catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This was done due to data constraints. The models are nested; the numeral indicates the level of nestedness. Models at levels 2 and higher are shown with the component that is added to the base level model (M) at top.")
 fullcap=paste("Table ", ref("tabappC:nonspawner-model", pre="C"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
@@ -479,7 +488,7 @@ seltable=rbind(seltable,tmp1)
 seltable=seltable[1:(dim(seltable)[1]-1),]
 ```
 
-```{r print-tableAppC-nonspawners-box3, echo=FALSE}
+```{r print-tableAppC-nonspawners-box5, echo=FALSE, eval=FALSE}
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
