@@ -22,6 +22,40 @@ Yr2 = max(dat$Year)
 #naive model error
 #def of MASE is MAE/naive error
 NE=mean(abs(dat$nspawners0-dat$nspawners1))
+
+retF <- function(a, i){
+  Fval <- ifelse(is.na(a$F[i]), 0, round(a$F[i],digits=2))
+  pval <- ifelse(is.na(a$F[i]), 1, round(a[["Pr(>F)"]][i], digits=3))
+  return(list(F=Fval, p=pval))
+}
+
+# Get names
+getcovtit <- function(covname){
+  if(covname=="SST.4.mon10to12.") covtit = "$V_t$ = Oct-Dec SST (L1)"
+  if(covname=="SST.2.5.mon6to9.") covtit =  "$V_t$ = Jun-Sep ns-SST (L2)"
+  if(covname=="SST.2.5.mon9to10.") covtit =  "$V_t$ = Sep-Oct ns-SST (L1)"
+  if(covname=="SST.2.10.mon3to5.") covtit =  "$V_t$ = Mar-May r-SST (S5)"
+  if(covname=="SST.4.mon7to9.") covtit =  "$V_t$ = Jul-Sep SST"
+  if(covname=="SST.4.mon6to9.") covtit =  "$V_t$ = Jun-Sep SST"
+  if(covname=="SST.4.mon7to12.") covtit =  "$V_t$ = Jul-Dec SST"
+  if(covname=="SST.4.mon1to3.") covtit =  "$V_t$ = Jan-Mar SST"
+  if(covname=="SST.4.mon1to12.") covtit =  "$V_t$ = Jan-Dec SST"
+  if(covname=="SST.4.mon9to10.") covtit =  "$V_t$ = Sep-Oct SST"
+  if(covname=="SST.4.mon1to12.") covtit =  "$V_t$ = Jan-Dec SST"
+  if(covname=="SST.2.10.mon7to12.") covtit =  "$V_t$ = Jul-Dec r-SST"
+  if(covname=="precip.gpcp.kerala.mon6to7.") covtit = "$V_t$ = Jun-Jul Precipitation (S1)"
+  if(covname=="precip.gpcp.kerala.mon4to5.") covtit = "$V_t$ = Apr-May Precipitation (S2)"
+  if(covname=="SST.2.5.mon10to12.") covtit =  "$V_t$ = Oct-Dec ns-SST (L1)"
+  if(covname=="Bakun.UPW.mon6to9.") covtit = "$V_t$ = Jun-Sep Bakun-UPW (L2)"
+  if(covname=="SST.UPW.4.mon6to9.") covtit = "$V_t$ = Jun-Sep UPW (L2)"
+  if(covname=="SST.2.5.mon6to9.") covtit = "$V_t$ = Jun-Sep ns-SST (L2)"
+  if(covname=="SST.2.5.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave ns-SST (A1)"
+  if(covname=="ONI.mon1to12.") covtit = "$V_t$ = ONI (A2)"
+  if(covname=="DMI.mon9to11.") covtit = "$V_t$ = Sep-Nov DMI (A3)"
+  
+  return(covtit)
+}
+
 ```
 
 ```{r table-appB-nspawner-precipM2, echo=FALSE}
@@ -63,9 +97,7 @@ tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em
 seltable=rbind(seltable,tmp1)
 
 for(covname in c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.")){
-#set up table
-  if(covname=="precip.gpcp.kerala.mon6to7.") covtit = "$V_t$ = Jun-Jul Precipitation (S1)"
-  if(covname=="precip.gpcp.kerala.mon4to5.") covtit = "$V_t$ = Apr-May Precipitation (S2)"
+  covtit <- getcovtit(covname)
 
 #var header
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
@@ -86,7 +118,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -98,7 +130,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -115,7 +147,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -127,7 +159,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -194,20 +226,7 @@ tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em
 seltable=rbind(seltable,tmp1)
 
 for(covname in c("SST.2.10.mon3to5.")){
-#set up table
-  if(covname=="SST.4.mon10to12.") covtit = "$V_t$ = Oct-Dec SST (L1)"
-  if(covname=="SST.4.mon7to12.") covtit =  "$V_t$ = Jul-Dec SST"
-  if(covname=="SST.4.mon1to3.") covtit =  "$V_t$ = Jan-Mar SST"
-  if(covname=="SST.4.mon7to9.") covtit =  "$V_t$ = Jul-Sep SST (S4)"
-  if(covname=="SST.4.mon6to9.") covtit =  "$V_t$ = Ave Jun-Sep SST (L2)"
-  if(covname=="SST.4.mon1to12.") covtit =  "$V_t$ = Ave Jan-Dec SST"
-  if(covname=="SST.4.mon9to10.") covtit =  "$V_t$ = Ave Sep-Oct SST"
-  if(covname=="SST.4.mon1to12.") covtit =  "$V_t$ = Ave Jan-Dec SST"
-  if(covname=="SST.2.10.mon6to9.") covtit =  "$V_t$ = Ave Jun-Sep SST (L2)"
-  if(covname=="SST.2.10.mon9to10.") covtit =  "$V_t$ = Sep-Oct SST (L1)"
-  if(covname=="SST.2.10.mon1to12.") covtit =  "$V_t$ = Ave Jan-Dec SST"
-  if(covname=="SST.2.10.mon3to5.") covtit =  "$V_t$ = Ave Mar-May SST (S5)"
-  if(covname=="SST.2.10.mon7to12.") covtit =  "$V_t$ = Ave Jul-Dec SST"
+  covtit <- getcovtit(covname)
 
 #var header
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
@@ -227,7 +246,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -239,7 +258,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -256,7 +275,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -268,7 +287,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -277,9 +296,8 @@ seltable=rbind(seltable,tmp1)
 tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 }
-for(covname in c("SST.2.10.mon10to12.")){
-#set up table
-  if(covname=="SST.2.10.mon10to12.") covtit =  "$V_t$ = Ave Oct-Dec SST (L1)"
+for(covname in c("SST.2.5.mon10to12.")){
+  covtit <- getcovtit(covname)
 
 #var header
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
@@ -300,7 +318,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -312,7 +330,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -321,13 +339,8 @@ tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em
 seltable=rbind(seltable,tmp1)
 
 }
-for(covname in c("SST.UPW.4.mon6to9.", "SST.2.10.mon6to9.", "Bakun.UPW.mon6to9.")){
-#set up table
-  if(covname=="Bakun.UPW.mon6to9.") covtit = "$V_t$ = Ave. Jun-Sep Bakun-UPW (L2)"
-  if(covname=="SST.UPW.4.mon6to9.") covtit = "$V_t$ = Ave. Jun-Sep UPW (L2)"
-  if(covname=="SST.2.10.mon6to9.") covtit = "$V_t$ = Ave. Jun-Sep SST (L2)"
-  if(covname=="SST.2.10.3.yr.runsum.") covtit = "$V_t$ = 3-year average SST (A1)"
-  if(covname=="ONI.mon1to12.") covtit = "$V_t$ = ONI (A2)"
+for(covname in c("SST.UPW.4.mon6to9.", "SST.2.5.mon6to9.", "Bakun.UPW.mon6to9.")){
+  covtit <- getcovtit(covname)
 
 #var header
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
@@ -349,7 +362,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -361,7 +374,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -380,7 +393,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -392,7 +405,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -458,9 +471,8 @@ seltable=rbind(seltable,tmp1)
 tmp1 = data.frame(Model="\\kern 1em", Residual.df="\\kern 1em", MASE="\\kern 1em", Adj.R2="\\kern 1em", F="\\kern 1em", p.value="\\kern 1em", AIC="")
 seltable=rbind(seltable,tmp1)
 
-for(covname in c("SST.2.10.3.yr.runsum.")){
-#set up table
-  if(covname=="SST.2.10.3.yr.runsum.") covtit = "$V_t$ = 2.5-year average SST (A1)"
+for(covname in c("SST.2.5.3.yr.runsum.")){
+  covtit <- getcovtit(covname)
 
 #var header
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
@@ -475,24 +487,28 @@ a=anova(m1,m2,m3, test="F")
 #model 2
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
+addarrow <- ""
+if(AIC(get(mod))<80) addarrow <- "$\\Rightarrow$"
 tmp1=data.frame(
-  Model="2. $ln(N_t)$ = M + $\\beta V_t$",
+  Model=paste(addarrow, "2. $ln(N_t)$ = M + $\\beta V_t$"),
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
 #model 3
 i=3; mod=paste("m",i,sep="")
 aa = summary(get(mod))
+addarrow <- ""
+if(AIC(get(mod))<80) addarrow <- "$\\Rightarrow$"
 tmp1=data.frame(
-  Model="$\\Rightarrow$ 3. $ln(N_t)$ = M + $s(V_t)$",
+  Model=paste(addarrow, "3. $ln(N_t)$ = M + $s(V_t)$"),
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -502,9 +518,7 @@ seltable=rbind(seltable,tmp1)
 }
 
 for(covname in c("ONI.mon1to12.", "DMI.mon9to11.")){
-#set up table
-  if(covname=="ONI.mon1to12.") covtit = "$V_t$ = ONI (A2)"
-  if(covname=="DMI.mon9to11.") covtit = "$V_t$ = DMI (A3)"
+  covtit <- getcovtit(covname)
 
 #var header
 seltable = rbind(seltable, data.frame(Model=covtit, Residual.df="", MASE="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE))
@@ -524,7 +538,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -536,7 +550,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -553,7 +567,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -567,7 +581,7 @@ tmp1=data.frame(
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   Adj.R2=100*round(aa$r.sq, digits=3), 
-  F=round(a$F[i],digits=2), p.value = round(a[["Pr(>F)"]][i], digits=3), 
+  F=retF(a,i)$F, p.value = retF(a,i)$p, 
   AIC = round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
 
@@ -585,7 +599,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste0("Model selection tests of the multi-year average nearshore sea surface temperature and ENSO indices as the explanatory variables ($V$) for the catch during post-monsoon months (Oct-May) using ", Yr1," to ", Yr2, " data and base model without $S_{t-2}$.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. The ENSO indices were the ONI index averaged over all months in the calendar year and the DMI index for Sep-Nov. The 2.5-year average SST is the average for Jan-Jun in the current calendar year and the prior 2 calendar years (30 months total). Thus the average does not include any months during the Oct-Mar catch.  See Table ", ref("tabappB:nspawner-model-precip", pre="B"), " for an explanation of the models.")
+thecap=paste0("Model selection tests of the multi-year average nearshore sea surface temperature and ENSO indices as the explanatory variables ($V$) for the catch during post-monsoon months (Oct-May) using ", Yr1," to ", Yr2, " data and base model without $S_{t-2}$.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. The ENSO indices were the ONI index averaged over all months in the calendar year and the DMI index for Sep-Nov. The 2.5-year average nearshore SST is the average for Jan-Jun in the current calendar year and the prior 2 calendar years (30 months total). Thus the average does not include any months during the Oct-Mar catch.  See Table ", ref("tabappB:nspawner-model-precip", pre="B"), " for an explanation of the models.")
 fullcap=paste("Table ", ref("tabappB:nspawner-model-ensoM2", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```

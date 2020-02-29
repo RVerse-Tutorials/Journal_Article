@@ -159,18 +159,33 @@ for(i in 1:length(covnames)){
   }
 }
 for(j in c("mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
-  varname=c(paste0("SST.",c(2:5),".",j))
+  bx=c(2:5)
+  varname=c(paste0("SST.",bx,".",j))
   tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
-  varname=paste0("SST.2.10.",j)
+  varname=paste0("SST.",bx[1],".",bx[NROW(bx)],".",j)
   respdat[[varname]]=tmp
 }
 for(j in c("mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
-  varname=c(paste0("log.CHL.",c(2:5,7:10),".",j))
+  bx=c(2:5,7:10)
+  varname=c(paste0("SST.",bx,".",j))
   tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
-  varname=paste0("log.CHL.2.10.",j)
+  varname=paste0("SST.",bx[1],".",bx[NROW(bx)],".",j)
   respdat[[varname]]=tmp
 }
-
+for(j in c("mon1to3.0", "mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
+  bx=c(2:5,7:10)
+  varname=c(paste0("log.CHL.",bx,".",j))
+  tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
+  varname=paste0("log.CHL.",bx[1],".",bx[NROW(bx)],".",j)
+  respdat[[varname]]=tmp
+}
+for(j in c("mon1to3.0", "mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
+  bx=c(2:5)
+  varname=c(paste0("log.CHL.",bx,".",j))
+  tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
+  varname=paste0("log.CHL.",bx[1],".",bx[NROW(bx)],".",j)
+  respdat[[varname]]=tmp
+}
 #add lags
 for(i in colnames(respdat)){
   name=paste(str_sub(i, 1, str_length(i)-1),"1",sep="")
@@ -179,19 +194,13 @@ for(i in colnames(respdat)){
   respdat[[name]] = c(NA,NA,respdat[[i]][1:(dim(respdat)[1]-2)])
 }
 #make 2.5 year runsum of SST
-tmp=(respdat[,"SST.2.10.mon1to12.0"]*12 - respdat[,"SST.2.10.mon10to12.0"]*3 - respdat[,"SST.2.10.mon7to9.0"]*3) +
-    respdat[,"SST.2.10.mon1to12.1"]*12 +
-    respdat[,"SST.2.10.mon1to12.2"]*12
-varname="SST.2.10.3.yr.runsum.0"
+tmp=(respdat[,"SST.2.5.mon1to12.0"]*12 - respdat[,"SST.2.5.mon10to12.0"]*3 - respdat[,"SST.2.5.mon7to9.0"]*3) +
+    respdat[,"SST.2.5.mon1to12.1"]*12 +
+    respdat[,"SST.2.5.mon1to12.2"]*12
+varname="SST.2.5.3.yr.runsum.0"
 respdat[[varname]]=tmp/(12+12+6)
-#make 2 year runsum of SST
-tmp=(respdat[,"SST.2.10.mon1to12.0"]*12 +
-    respdat[,"SST.2.10.mon1to12.1"]*12 + 
-    respdat[,"SST.2.10.mon1to12.2"]*12)
-varname="SST.2.10.2.yr.runsum.0"
-respdat[[varname]]=tmp/(12+12+12)
 #create the lag 1
-for(i in c("SST.2.10.3.yr.runsum.0","SST.2.10.2.yr.runsum.0")){
+for(i in c("SST.2.5.3.yr.runsum.0")){
   name=paste(str_sub(i, 1, str_length(i)-1),"1",sep="")
   respdat[[name]]=c(NA,respdat[[i]][1:(dim(respdat)[1]-1)])
   name=paste(str_sub(i, 1, str_length(i)-1),"2",sep="")
@@ -203,17 +212,18 @@ fullrespdat = respdat
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
 covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", 
-             "SST.4.mon1to12.", "SST.4.mon6to9.", 
+             "SST.4.mon6to9.", 
              "SST.UPW.4.mon6to9.", "Bakun.UPW.mon6to9.",
-             "SST.2.10.mon6to9.", "SST.2.10.mon9to10.", "SST.2.10.mon1to12.",
-             "SST.2.10.mon3to5.", "SST.2.10.mon10to12.",
-             "SST.2.10.3.yr.runsum.", "ONI.mon1to12.",
+             "SST.2.5.mon6to9.", "SST.2.5.mon9to10.",
+             "SST.2.10.mon3to5.", "SST.2.5.mon10to12.",
+             "SST.2.5.3.yr.runsum.", "ONI.mon1to12.",
              "DMI.mon9to11.")
 ```
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
 #set up to use consistent data
-dat=fullrespdat[,c("Year","spawners0", "nspawners1", "nspawners2", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
+#I set up dat.spawners sep since that gives me 2015 for spawners0
+dat=fullrespdat[,c("Year","nspawners1", "nspawners2", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
 dat.spawners=dat
 if(any(diff(dat.spawners$Year)!=1)) stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")
@@ -223,7 +233,6 @@ if(any(diff(dat.spawners$Year)!=1)) stop("Problem in setup.Rmd.  The covariate d
 #set up to use consistent data
 dat=fullrespdat[,c("Year","nspawners0", "nspawners1", "nspawners2", 
                    "spawners0", "spawners1", "spawners2", 
-                   "CatchCal0","CatchCal1",
                    paste(covnames, "0", sep=""), 
                    paste(covnames, "1", sep=""))]
 dat=na.omit(dat)
@@ -231,27 +240,18 @@ dat.nonspawners=dat
 if(any(diff(dat.nonspawners$Year)!=1))
   stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")
 rm(dat) #make sure I don't accidentally forget to define dat
-
-dat=fullrespdat[,c("Year","nspawners0", "nspawners1", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
-dat.nonspawners.nocov=dat[dat$Year<2015,]
-rm(dat) #make sure I don't accidentally forget to define dat
 ```
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
-covnames = c("log.CHL.4.mon1to3.", "log.CHL.4.mon7to9.", "log.CHL.4.mon10to12.",
+covnames.chl = c("log.CHL.4.mon1to3.", "log.CHL.4.mon7to9.", "log.CHL.4.mon10to12.",
              "log.CHL.5.mon1to3.", "log.CHL.5.mon7to9.", "log.CHL.5.mon10to12.",
-             "precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.",
-             "SST.4.mon1to12.", "SST.4.mon6to9.", 
-             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon6to9.", "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
-             "max.SST.UPW.4.mon6to9.",
-             "SST.2.10.mon6to9.", "SST.2.10.mon9to10.", "SST.2.10.mon1to12.",
-             "SST.2.10.mon3to5.", "SST.2.10.mon10to12.",
-             "SST.2.10.3.yr.runsum.", "ONI.mon1to12.")
+             "log.CHL.2.10.mon1to3.", "log.CHL.2.10.mon7to9.", "log.CHL.2.10.mon10to12.",
+             "log.CHL.2.5.mon1to3.", "log.CHL.2.5.mon7to9.", "log.CHL.2.5.mon10to12.")
 #set up to use consistent data
 dat=fullrespdat[,c("Year", "spawners0", "nspawners0","nspawners2",
                    "nspawners1", "spawners2", "spawners1",
                    "CatchWin0", "CatchWin1", "CatchWin2",
-                   paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
+                   paste(covnames.chl, "0", sep=""), paste(covnames.chl, "1", sep=""))]
 dat=na.omit(dat)
 dat.chl=dat
 if(any(diff(dat.chl$Year)!=1))
@@ -260,15 +260,6 @@ rm(dat) #make sure I don't accidentally forget to define dat
 ```
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
-covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", 
-             "SST.4.mon1to12.", "SST.4.mon6to9.", 
-             "SST.UPW.4.mon1to3.", "SST.UPW.4.mon6to9.", 
-             "SST.UPW.4.mon10to12.", "SST.UPW.4.mon4to6.",
-             "SST.2.10.mon6to9.", "SST.2.10.mon9to10.", 
-             "SST.2.10.mon1to12.", 
-             "SST.2.10.mon3to5.", "SST.2.10.mon10to12.",
-             "SST.2.10.3.yr.runsum.", "ONI.mon1to12.",
-             "SST.2.10.2.yr.runsum.")
 #set up to use consistent data
 dat=fullrespdat[,c("Year","CatchCal0","CatchCal1",
                    paste(covnames, "0", sep=""), 

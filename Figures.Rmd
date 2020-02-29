@@ -234,8 +234,8 @@ oldpar=par(mfrow=c(2,2), mar=c(4,5,2,0))
 dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-covnames=c("SST.2.10.3.yr.runsum.0", "SST.UPW.4.mon6to9.0")
-dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
+covnames=c("SST.2.5.3.yr.runsum.0", "SST.UPW.4.mon6to9.0")
+dat$cov0=dat[["SST.2.5.3.yr.runsum.0"]]
 dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
@@ -255,7 +255,7 @@ dat=dat.nonspawners
 # dat$nspawners2[dat$Year==1996]=NA
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-covnames=c("SST.2.10.3.yr.runsum.0", "SST.UPW.4.mon6to9.0")
+covnames=c("SST.2.5.3.yr.runsum.0", "SST.UPW.4.mon6to9.0")
 dat$cov0=dat[[covnames[1]]]
 dat$cov1=dat[[covnames[2]]]
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
@@ -292,8 +292,8 @@ tcex=0.85
 dat=dat.spawners
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-covnames=c("SST.2.10.3.yr.runsum.0")
-dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
+covnames=c("SST.2.5.3.yr.runsum.0")
+dat$cov0=dat[["SST.2.5.3.yr.runsum.0"]]
 years = c(1986, 1994, 2013)
 loc=which(dat.spawners$Year %in% years)
 m0 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
@@ -322,8 +322,8 @@ Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 years = c(1986, 1991, 1994, 2013)
 loc=which(dat.spawners$Year %in% years)
-covnames=c("SST.2.10.3.yr.runsum.0")
-dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
+covnames=c("SST.2.5.3.yr.runsum.0")
+dat$cov0=dat[["SST.2.5.3.yr.runsum.0"]]
 dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
 loc=which(dat.spawners$Year %in% c(1986, 1991, 1994, 2013))
 m0 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)

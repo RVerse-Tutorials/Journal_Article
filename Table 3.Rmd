@@ -16,7 +16,7 @@ Yr2 = max(dat$Year)
 #naive model error
 NE=mean(abs(dat$spawners0-dat$spawners1))
 
-covnames=c("SST.2.10.mon6to9.0", "Bakun.UPW.mon6to9.0","SST.2.10.3.yr.runsum.0")
+covnames=c("SST.2.5.mon6to9.0", "Bakun.UPW.mon6to9.0","SST.2.5.3.yr.runsum.0")
 dat$cov0=dat[[covnames[1]]]
 dat$cov1=dat[[covnames[2]]]
 dat$cov2=dat[[covnames[3]]]
@@ -25,9 +25,9 @@ dat$cov2=dat[[covnames[3]]]
 blanktmp = data.frame(Model="Mod", Residual.df="", MASE="", MAE="", RMSE="", LOOCV="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 tmp1 <- tmp2 <- tmp3 <- tmp4 <- blanktmp
 tmp1$Model = "Jul-Sep catch models with covariates"
-tmp2$Model = "$V_t$ = Jun-Sep SST current season"
+tmp2$Model = "$V_t$ = Jun-Sep ns-SST current season"
 tmp3$Model = "$W_{t}$ = Jun-Sep Bakun-UPW current season"
-tmp4$Model = "$Z_{t}$ = 2.5-year average SST"
+tmp4$Model = "$Z_{t}$ = 2.5-year ave ns-SST"
 seltable=rbind(tmp1,tmp2,tmp3,tmp4)
 
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
@@ -51,7 +51,7 @@ seltable=rbind(seltable,tmp1)
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="$ln(S_t) = M0 + s(V_t)$", 
+  Model="$\\Rightarrow  ln(S_t) = M0 + s(V_t)$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
@@ -87,7 +87,7 @@ a=anova(m1,m2, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="$\\Rightarrow$ $ln(S_t) = M1 + s(Z_{t})$", 
+  Model="$ln(S_t) = M1 + s(Z_{t})$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
@@ -119,7 +119,7 @@ respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),
 #naive model error
 NE=mean(abs(respdat$spawners0-respdat$spawners1))
 
-covnames=c("SST.2.10.mon3to5.0", "SST.2.10.mon6to9.0","SST.2.10.3.yr.runsum.0","DMI.mon9to11.1")
+covnames=c("SST.2.10.mon3to5.0", "SST.2.5.mon6to9.0","SST.2.5.3.yr.runsum.0","DMI.mon9to11.1")
 dat$cov0=dat[[covnames[1]]]
 dat$cov1=dat[[covnames[2]]]
 dat$cov2=dat[[covnames[3]]]
@@ -133,10 +133,10 @@ a=anova(m1,m2,m3, test="F")
 blanktmp = data.frame(Model="Mod", Residual.df="", MASE="", MAE="", RMSE="", LOOCV="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
 tmp1 <- tmp2 <- tmp3 <- tmp4 <- tmp5 <- blanktmp
 tmp1$Model = "Oct-Mar catch models with covariates"
-tmp2$Model = "$V_t$ = Mar-May SST current season"
-tmp3$Model = "$W_{t}$ = Jun-Sep SST current season"
-tmp4$Model = "$Z_{t}$ = 2.5-year average SST"
-tmp5$Model = "$X_{t}$ = fall DMI prior season"
+tmp2$Model = "$U_t$ = Mar-May r-SST current season"
+tmp3$Model = "$V_{t}$ = Jun-Sep ns-SST current season"
+tmp4$Model = "$Z_{t}$ = 2.5-year ave ns-SST"
+tmp5$Model = "$X_{t-1}$ = fall DMI prior season"
 seltable=rbind(seltable,tmp1,tmp2,tmp3,tmp4,tmp5)
 
 i=1; mod=paste("m",i,sep="")
@@ -156,7 +156,7 @@ seltable=rbind(seltable,tmp1)
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="$ln(N_t) = M1 + s(V_t)$", 
+  Model="$ln(N_t) = M1 + s(U_t)$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
@@ -166,17 +166,6 @@ tmp1=data.frame(
   F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
   AIC=round(AIC(get(mod)), digits=2))
 seltable=rbind(seltable,tmp1)
-
-# i=3; mod=paste("m",i,sep="")
-# aa = summary(get(mod))
-# tmp1=data.frame(
-#   Model="3a. $ln(N_t) = M1 + s(V_t) + \\beta W_{t}$", 
-#   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
-#   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
-#   Adj.R2=100*round(aa$r.sq, digits=2), 
-#   F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
-#   AIC=round(AIC(get(mod)), digits=2))
-# seltable=rbind(seltable,tmp1)
 
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov1, data=dat)
@@ -221,7 +210,7 @@ a=anova(m1,m2, test="F")
 i=2; mod=paste("m",i,sep="")
 aa = summary(get(mod))
 tmp1=data.frame(
-  Model="$ln(N_t) = M1 + s(X_{t})$", 
+  Model="$ln(N_t) = M1 + s(X_{t-1})$", 
   Residual.df=round(a[["Resid. Df"]][i],digits=1), 
   MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
   MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
@@ -341,7 +330,7 @@ colnames(seltable)=c("Model", "Residual df", "MASE", "MAE", "RMSE", "LOOCV", "Ad
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "MAE", "RMSE", "\\shortstack{LOOCV\\\\RMSE}", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 seltable = seltable[,c(1,2,7,5,10,6)]
 
-thecap=paste("Top covariates for the monsoon (Jul-Sep) and post-monsoon (Oct-Mar) catch ($S_t$ and $N_t$) models. M0, M1 and M2 are the base models with only prior catch as covariates. To the base models, the listed environmental covariates are added. The full set of covariate models and the results of the tests on the nested models sets are given in Appendix B. The LOOCV RMSE (root mean square error) is the out-of-sample prediction error. The LOOCV RSME for the null model for Jul-Sep catch was 1.599 and the LOOCV RMSE for the null model for Oct-Mar catch was 1.015. The fitted versus observed catches from the covariate models are shown in Figure ", ref("fig:fitted"), ".", sep="")
+thecap=paste("Top covariates for the monsoon (Jul-Sep) and post-monsoon (Oct-Mar) catch ($S_t$ and $N_t$) models. M0, M1 and M2 are the base models with only prior catch as covariates. To the base models, the  environmental covariates are added. ns-SST is nearshore (0-80km) and r-SST is regional (0-160km). The full set of nested covariate models and tests are given in Appendix B. The LOOCV RMSE (root mean square error) is the out-of-sample prediction error. The LOOCV RSME for the null model for Jul-Sep catch was 1.599 and the LOOCV RMSE for the null model for Oct-Mar catch was 1.015. The fitted versus observed catches from the models with and without 2.5-year average ns-SST are shown in Figure ", ref("fig:fitted"), ".", sep="")
 fullcap=paste("Table ", ref("tab:covariate-models"), ". ", thecap, sep="")
 kable(seltable, align=paste0("l", paste0(rep("c",dim(seltable)[2]-1),collapse="")), caption=fullcap, escape=FALSE)
 ```

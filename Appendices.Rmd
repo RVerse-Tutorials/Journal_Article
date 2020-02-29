@@ -1,7 +1,5 @@
 ---
-title: 'Appendices: Use of satellite data for understanding and predicting oil sardine
-  (*Sardinella longiceps*) catch variability along the southwest coast of India'
-date: '`r format(Sys.time(), "%d %B, %Y")`'
+title: 'Appendices: Influence of changing temperature and upwelling intensity on Indian oil sardine (\textit{Sardinella longiceps}) landings'
 output:
   pdf_document: default
   html_document: default
@@ -250,5 +248,9 @@ cat("\\clearpage")
 cat("\\clearpage")
 ```
 
+# Appendix H: Data
+
+```{r child = 'Table App H data.Rmd'}
+```
 
 
