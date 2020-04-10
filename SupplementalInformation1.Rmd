@@ -1,0 +1,103 @@
+---
+title: 'Supplemental Information: Full model test and diagnostics'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
+---
+
+```{r child = 'setup.Rmd'}
+```
+
+```{r echo=FALSE}
+Supplement <- TRUE
+if(!exists(".rmdenvir")) .rmdenvir = environment()
+```
+
+# Tests for prior season catch as covariate
+
+```{r child = 'Table App A spawner model.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = 'Table App A nonspawner model.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Tests for environmental variables as covariates
+
+```{r child = 'Table App B spawner covariates.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = 'Table App B nonspawner covariates M with S2.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = 'Table App B nonspawner covariates M wo S2.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Tests for Chlorophyll-a as a covariate
+
+```{r child = 'Table App C chlorophyll.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+
+# Influential years tests
+
+```{r child = 'Table App D.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Comparison of land and oceanic rainfall measurements
+
+```{r echo=FALSE}
+#set the table pre
+if(Supplement){
+  pre <- "S"
+  figset <- "figsupp:"
+}else{
+  pre <- "E"
+  figset <- "figappE:"
+}
+```
+
+```{r echo=FALSE}
+thecap=paste0("Monthly precipitation measured over land via land gauges versus the precipitation measured via remote sensing over the ocean.")
+fullcap.precip <- paste0("Figure ", ref(paste0(figset,"figprecip"), pre=pre), ". ", thecap)
+```
+
+```{r rainfall.mon.comparison, echo=FALSE,fig.cap=fullcap.precip, fig.width=6,fig.height=6,message=FALSE,warning=FALSE}
+plot(seio_covariates_mon$Precip.Kerala, seio_covariates_mon$precip.gpcp.kerala, ylab="Land precipitation",
+xlab="Ocean precipitation")
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+

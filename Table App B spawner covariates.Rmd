@@ -13,6 +13,17 @@ Generic setup code common across all Rmds; run code in setup.Rmd if not knitting
 ```{r child = 'setup.Rmd'}
 ```
 
+```{r echo=FALSE}
+#set the table pre
+if(Supplement){
+  pre <- "S"
+  figset <- "tabsupp:"
+}else{
+  pre <- "B"
+  figset <- "tabappB:"
+}
+```
+
 ```{r table-appB-spawner-dat, echo=FALSE}
 #dat.spawners defined in setup.Rmd
 dat=dat.spawners
@@ -145,7 +156,7 @@ colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
 thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch $S_t$ during monsoon months (Jul-Sep) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  The base model (M) with prior catch dependency was selected independently (Appendix A). To the base model, covariates are added. $V_t$ is the covariate in same calendar year as the Jul-Sep catch. The specific hypothesis (Table ", ref("tab:hypotheses"), ") being tested is noted in parentheses. The models are tested as nested sets.  Thus 1, 2a, 3a is a set and 1, 2b, 3b is another set. MASE is the mean absolute square error (residuals).")
-fullcap=paste("Table ", ref("tabappB:spawner-model-precip", pre="B"), ". ", thecap, sep="")
+fullcap=paste("Table ", ref(paste0(figset,"spawner-model-precip"), pre=pre), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
 
@@ -395,8 +406,8 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1), and upwelling indices as the explanatory variables ($V_t$) for the catch during monsoon months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. Three upwelling indices were tested. The nearshore-offshore temperature diferential (UPW), which is the offshore  minus nearshore SST, the average nearshore SST along the Kerala coast (boxes 2-5), and the Bakun upwelling index based on wind stress. See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
-fullcap=paste("Table ", ref("tabappB:spawner-model-upw", pre="B"), ". ", thecap, sep="")
+thecap=paste("Model selection tests of sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1), and upwelling indices as the explanatory variables ($V_t$) for the catch during monsoon months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. Three upwelling indices were tested. The nearshore-offshore temperature diferential (UPW), which is the offshore  minus nearshore SST, the average nearshore SST along the Kerala coast (boxes 2-5), and the Bakun upwelling index based on wind stress. See Table ", ref(paste0(figset,"spawner-model-precip"), pre=pre), " for an explanation of the models.")
+fullcap=paste("Table ", ref(paste0(figset,"spawner-model-upw"), pre=pre), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
 
@@ -540,8 +551,8 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of the multi-year average nearshore sea surface temperature and ENSO indices as the explanatory variables ($V$) for the catch during summer months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. The ENSO indices were the ONI index averaged over all months in the calendar year and the DMI index for Sep-Nov. The 2.5-year average nearshore SST is the average for Jan-Jun in the current calendar year and the prior 2 calendar years (30 months total). Thus the average does not include any months during the Jul-Sep catch.  See Table ", ref("tabappB:spawner-model-precip", pre="B"), " for an explanation of the models.")
-fullcap=paste("Table ", ref("tabappB:spawner-model-enso", pre="B"), ". ", thecap, sep="")
+thecap=paste("Model selection tests of the multi-year average nearshore sea surface temperature and ENSO indices as the explanatory variables ($V$) for the catch during summer months (Jul-Sep) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. The ENSO indices were the ONI index averaged over all months in the calendar year and the DMI index for Sep-Nov. The 2.5-year average nearshore SST is the average for Jan-Jun in the current calendar year and the prior 2 calendar years (30 months total). Thus the average does not include any months during the Jul-Sep catch.  See Table ", ref(paste0(figset,"spawner-model-precip"), pre=pre), " for an explanation of the models.")
+fullcap=paste("Table ", ref(paste0(figset,"spawner-model-enso"), pre=pre), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
 

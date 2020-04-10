@@ -36,30 +36,6 @@ knitr::include_graphics(figfile)
 cat("\\clearpage")
 ```
 
-```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
-par(mfrow=c(1,1),mar=c(5,5,1,5))
-dat=oilsardine_qtr
-plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Quarterly Kerala Catch (1000 kg)",xlab="",bty="L", ylim=c(0,200))
-# tmp <- ringseine[!is.na(ringseine$HP),]
-# par(new = T)
-# plot(tmp$Year, tmp$Length.net, axes=FALSE, xlab=NA, ylab=NA, type="l", xlim=c(1956,2015), ylim=c(0,3000), lwd=3, col="grey")
-# axis(side = 4)
-# mtext(side = 4, line = 3, 'Ring Seine Net Length (m)')
-oldpar=par(fig = c(0.5, 1, 0.55, .97), new = TRUE)  
-catchmeans=tapply(dat$Kerala, dat$Qtr, mean, na.rm=TRUE)
-names(catchmeans)=c("JFM","AMJ","JAS","OND")
-barplot(catchmeans/1000,ylab="",col="grey",cex.axis=.75,
-        cex.names=.75, line=-1, yaxt="n", border=NA)
-axis(2)
-box(bty="L")
-title("Mean Quarterly Catch",cex.main=.75)
-par(oldpar)
-```
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
 ```{r fig-cartoon, out.width = "400px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:cartoon")), message=FALSE, warning=FALSE, eval=FALSE}
 figfile = system.file("docs", "cartoon.png", package="SardineForecast")
 knitr::include_graphics(figfile)
@@ -80,7 +56,7 @@ datts=ts(dat,start=1956, frequency=12)
 plot(datts,ylab="Ave Monthly SST",xlab="",bty="n",ylim=c(24,31),xlim=c(2000,2005), yaxs="i", xaxs="i")
 ```
 
-```{r sst.mon2, echo=FALSE,fig.cap=paste("Figure",  ref("fig:SSTts")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
+```{r sst.mon2, echo=FALSE,fig.cap=paste("Figure",  ref("fig:SSTts")), fig.width=8.5,fig.height=6,message=FALSE,warning=FALSE}
 par(mfrow=c(1,1), mar=c(2,4,1,4))
 yrs=c(2010)
 nyr=3
@@ -140,8 +116,8 @@ for(start in yrs){
     c(dat1,0,0,dat1[1]), 
     col="#228B22", border=NA)
   axis(side=4)
-  mtext(side = 4, line = 2.25, 'Chl-a')
-  mtext(side = 2, line = 2.25, 'Ave Monthly SST')
+  mtext(side = 4, line = 2.25, expression('Surface chlorophyll-a (Chl-a mg m'^"-3"*')'))
+  mtext(side = 2, line = 2.25, expression('Average monthly SST ('*degree*'C)'))
 }
 ```
 
@@ -149,54 +125,87 @@ for(start in yrs){
 cat("\\clearpage")
 ```
 
+```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
+par(mfrow=c(1,1),mar=c(5,5,1,5))
+dat=oilsardine_qtr
+plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Quarterly Kerala Catch (1000 kg)",xlab="",bty="L", ylim=c(0,200))
+# tmp <- ringseine[!is.na(ringseine$HP),]
+# par(new = T)
+# plot(tmp$Year, tmp$Length.net, axes=FALSE, xlab=NA, ylab=NA, type="l", xlim=c(1956,2015), ylim=c(0,3000), lwd=3, col="grey")
+# axis(side = 4)
+# mtext(side = 4, line = 3, 'Ring Seine Net Length (m)')
+oldpar=par(fig = c(0.5, 1, 0.55, .97), new = TRUE)  
+catchmeans=tapply(dat$Kerala, dat$Qtr, mean, na.rm=TRUE)
+names(catchmeans)=c("JFM","AMJ","JAS","OND")
+barplot(catchmeans/1000,ylab="",col="grey",cex.axis=.75,
+        cex.names=.75, line=-1, yaxt="n", border=NA)
+axis(2)
+box(bty="L")
+title("Mean Quarterly Catch",cex.main=.75)
+par(oldpar)
+```
+
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
 
 ```{r cov.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:COVts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
 ### FIGURE covariates
-oldpar=par(mfrow=c(2,2), mar=c(2,5,2,0))
+oldpar=par(mfrow=c(2,2), mar=c(2,5,2,1))
 i=4
 covname=paste("SST.UPW.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="SST-derived Upwelling Index (deg C)", xlab="",bty="n",ylim=c(-1,5),xlim=c(1980,2020))
-legend("topright","A", bty="n")
+plot(datts,ylab="", xlab="",bty="n",ylim=c(-1,5),xlim=c(1980,2020))
+yl <- expression('SST-derived upwelling index ('*degree*'C)')
+mtext(yl, side=2, line=2)
+#legend("topright","A", bty="n")
 
 covname=paste("CHL.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="Surface Chlorophyll-a (mg/m^3)", xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
-legend("topright","B", bty="n")
+yl <- expression('Surface chlorophyll-a (mg m'^"-3"*')')
+plot(datts,ylab="", xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
+mtext(yl, side=2, line=2)
+#legend("topright","B", bty="n")
 
 covname=paste("SST.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="Sea surface temperature (deg C)", xlab="",bty="n",ylim=c(24,35),xlim=c(1980,2020))
-legend("topright","C", bty="n")
+yl <- expression('Nearshore SST ('*degree*'C)')
+plot(datts,ylab="", xlab="",bty="n",ylim=c(24,35),xlim=c(1980,2020))
+mtext(yl, side=2, line=2)
+#legend("topright","C", bty="n")
 
 covname="precip.gpcp.kerala"
 dat=seio_covariates_mon[[covname]]
 datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="Average daily precipitation (mm/day)", xlab="",bty="n",ylim=c(0,18),xlim=c(1980,2020))
-legend("topright","D", bty="n")
+plot(datts,ylab="", xlab="",bty="n",ylim=c(0,18),xlim=c(1980,2020))
+yl<-expression('Average daily precipitation (mm day'^"-1"*')')
+mtext(yl, side=2, line=2)
+#legend("topright","D", bty="n")
 
-par(fig = c(0.05, .25, 0.8, 1), new = T)  #panel left-top
+xr <- 0.3
+par(fig = c(0.05, xr, 0.8, 1), new = T)  #panel left-top
 covname=paste("SST.UPW.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
 catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
 names(catchmeans)=1:12
 barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,1.5), col="grey", xaxt="n")
-title("Mthly Mean",cex.main=.75)
+title("Monthly mean",cex.main=.75)
 
-par(fig = c(0.05+.5, .25+.5, 0.8, 1), new = T)  # panel right-top
+par(fig = c(0.05+.5, xr+.5, 0.8, 1), new = T)  # panel right-top
 covname=paste("CHL.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
 catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
 names(catchmeans)=1:12
 barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,12),col="grey", names.arg="")
-title("Mthly Mean",cex.main=.75)
+title("Monthly mean",cex.main=.75)
 
-par(fig = c(0.05, .25, 0.8-.5, 1-.5), new = T)  #left-bottom
+par(fig = c(0.05, xr, 0.8-.5, 1-.5), new = TRUE)  #left-bottom
 covname=paste("SST.",i,sep="")
 dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
@@ -204,16 +213,16 @@ catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
 names(catchmeans)=1:12
 barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(25,30),col="grey", xpd=FALSE, bty="l", names.arg="")
 axis(1, labels=FALSE, lwd.ticks=-1)
-title("Mthly Mean",cex.main=.75)
+title("Monthly mean",cex.main=.75)
 
-par(fig = c(0.05+.5, .25+.5, 0.8-.5, 1-.5), new = T)  #right-bottom
+par(fig = c(0.05+.5, xr+.5, 0.8-.5, 1-.5), new = TRUE)  #right-bottom
 covname="precip.gpcp.kerala"
 dat=seio_covariates_mon[[covname]]
 datmon=seio_covariates_mon$Month
 catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
 names(catchmeans)=1:12
 barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,10),col="grey", names.arg="")
-title("Mthly Mean",cex.main=.75)
+title("Monthly mean",cex.main=.75)
 
 par(oldpar)
 
@@ -239,15 +248,16 @@ dat$cov0=dat[["SST.2.5.3.yr.runsum.0"]]
 dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
-plot(m1, select=2, xlab="2.5-year ave. SST", ylab="Effect")
-legend("topright","A", bty="n")
-legend("topleft","Jul-Sep Catch", bty="n")
+xl <- expression("2.5-year average SST ("*degree*"C)")
+plot(m1, select=2, xlab=xl, ylab="Effect")
+#legend("topright","A", bty="n")
+legend("topleft","Jul-Sep catch", bty="n")
 abline(h=0, col="grey")
-plot(m2, select=2, xlab="Jun-Sep upwelling index", ylab="Effect")
-legend("topright","B", bty="n")
-abline(v=0, col="blue")
+plot(m2, select=2, xlab="Jun-Sep SST-derived upwelling index", ylab="Effect")
+#legend("topright","B", bty="n")
+#abline(v=0, col="blue")
 abline(h=0, col="grey")
-legend("topleft","Jul-Sep Catch", bty="n")
+legend("topleft","Jul-Sep catch", bty="n")
 
 dat=dat.nonspawners
 # dat$nspawners0[dat$Year==1994]=NA
@@ -261,17 +271,18 @@ dat$cov1=dat[[covnames[2]]]
 m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
 m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
 #cbind(dat$Year, residuals(m0), residuals(m1), residuals(m2))
-plot(m1, select=3, xlab="2.5-year ave. SST", ylab="Effect")
-legend("topright","C", bty="n")
-legend("topleft","Oct-Mar Catch", bty="n")
+xl <- expression("2.5-year average SST ("*degree*"C)")
+plot(m1, select=3, xlab=xl, ylab="Effect")
+#legend("topright","C", bty="n")
+legend("topleft","Oct-Mar catch", bty="n")
 abline(h=0, col="grey")
-plot(m2, select=3, xlab="Jun-Sep upwelling index", ylab="Effect")
-legend("topright","D", bty="n")
-legend("topleft","Oct-Mar Catch", bty="n")
+plot(m2, select=3, xlab="Jun-Sep SST-derived upwelling index", ylab="Effect")
+#legend("topright","D", bty="n")
+legend("topleft","Oct-Mar catch", bty="n")
 abline(h=0, col="grey")
-abline(v=0, col="blue")
-text(1.25,-2.5,"upwelling\ncoast colder\nthan offshore",pos=4)
-#text(0,-2,"coast warmer\nthan offshore",pos=2)
+#abline(v=0, col="blue")
+text(1.25,-3,"high upwelling",pos=4)
+text(0,-3,"low upwelling",adj = 0)
 par(oldpar)
 ```
 
@@ -301,20 +312,27 @@ m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
 xmin=min(m1$model[,"spawners0"],m1$fitted.values,m0$fitted.values)
 xmax=jig+max(m0$model[,"spawners0"],m0$fitted.values,m1$fitted.values,m0$model[,"spawners0"],m0$fitted.values)
 plot(m0$model[,"spawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log Jul-Sep catch", ylab="Predicted log catch")
+     xlab="Observed log Jul-Sep catch", ylab="Predicted log catch")
 lines(c(xmin,xmax),c(xmin,xmax-jig))
-legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1),
-                       "RMSE =",round(forecast::accuracy(m0)[,"RMSE"], digits=2),
-                       "\nWithout SST"), bty="n")
-legend("topright","A", bty="n")
+r2 <- round(100*summary(m0)$r.sq,digits=1)
+rmse <- round(forecast::accuracy(m0)[,"RMSE"], digits=2)
+ll = bquote(paste(italic(R)^2," = ",.(r2),"  RMSE = ",.(rmse)))
+val=0.25*diff(par('usr')[3:4])/par('pin')[2]
+text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
+text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="Without 2.5-year average SST")
+legend("topright","a", bty="n")
 text(m0$model[loc,"spawners0"], m0$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
+
 plot(m1$model[,"spawners0"],m1$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log Jul-Sep catch", ylab="Predicted log catch")
+     xlab="Observed log Jul-Sep catch", ylab="Predicted log catch")
 lines(c(xmin,xmax-jig),c(xmin,xmax-jig)) # -jig to keep off legend
-legend("topleft",paste("R2 =",round(100*summary(m1)$r.sq,digits=1),
-                       "RMSE =",round(forecast::accuracy(m1)[,"RMSE"], digits=2),
-                       "\nWith multi-year SST "), bty="n")
-legend("topright","B", bty="n")
+r2 <- round(100*summary(m1)$r.sq,digits=1)
+rmse <- round(forecast::accuracy(m1)[,"RMSE"], digits=2)
+ll = bquote(paste(italic(R)^2," = ",.(r2),"  RMSE = ",.(rmse)))
+val=0.25*diff(par('usr')[3:4])/par('pin')[2]
+text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
+text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="With 2.5-year average SST")
+legend("topright","b", bty="n")
 text(m1$model[loc,"spawners0"], m1$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
 
 dat=dat.nonspawners
@@ -333,21 +351,28 @@ m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=
 xmin=min(m0$model[,"nspawners0"],m0$fitted.values,m1$fitted.values,m2$fitted.values)
 xmax=jig+max(m0$model[,"nspawners0"],m0$fitted.values,m1$fitted.values,m2$fitted.values)
 plot(m0$model[,"nspawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log Oct-Mar catch", ylab="Predicted log catch")
+     xlab="Observed log Oct-Mar catch", ylab="Predicted log catch")
 lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
-legend("topleft",paste("R2 =",round(100*summary(m0)$r.sq,digits=1),
-                       "RMSE =",round(forecast::accuracy(m0)[,"RMSE"], digits=2),
-                       "\nWithout SST"), bty="n")
-legend("topright","C", bty="n")
+r2 <- round(100*summary(m0)$r.sq,digits=1)
+rmse <- round(forecast::accuracy(m0)[,"RMSE"], digits=2)
+ll = bquote(paste(italic(R)^2," = ",.(r2),"  RMSE = ",.(rmse)))
+val=0.25*diff(par('usr')[3:4])/par('pin')[2]
+text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
+text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="Without 2.5-year average SST")
+legend("topright","c", bty="n")
 text(m0$model[loc,"nspawners0"], m0$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
 
 plot(m1$model[,"nspawners0"],m1$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Log Oct-Mar catch", ylab="Predicted log catch")
+     xlab="Observed log Oct-Mar catch", ylab="Predicted log catch")
 lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
-legend("topleft",paste("R2 =",round(100*summary(m1)$r.sq,digits=1),
-                       "RMSE =",round(forecast::accuracy(m1)[,"RMSE"], digits=2),
-                       "\nWith multi-year SST"), bty="n")
-legend("topright","D", bty="n")
+r2 <- round(100*summary(m1)$r.sq,digits=1)
+rmse <- round(forecast::accuracy(m1)[,"RMSE"], digits=2)
+ll = bquote(paste(italic(R)^2," = ",.(r2),"  RMSE = ",.(rmse)))
+val=0.25*diff(par('usr')[3:4])/par('pin')[2]
+text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
+text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="With 2.5-year average SST")
+#legend("topleft",legend=ll, bty="n")
+legend("topright","d", bty="n")
 text(m1$model[loc,"nspawners0"], m1$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
 
 par(oldpar)

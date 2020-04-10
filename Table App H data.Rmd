@@ -1,5 +1,5 @@
 ---
-title: "Data"
+title: "Raw Data"
 output:
   pdf_document: default
   word_document: default
@@ -13,6 +13,17 @@ Generic setup code common across all Rmds; run code in setup.Rmd if not knitting
 ```{r child = 'setup.Rmd'}
 ```
 
+```{r echo=FALSE}
+#set the table pre
+if(Supplement){
+  pre <- "S"
+  tabset <- "tabsupp:"
+}else{
+  pre <- "H"
+  tabset <- "tabappH:"
+}
+```
+
 ```{r table-appH-dat, echo=FALSE}
 #dat.spawners defined in setup.Rmd
 dat=fullrespdat
@@ -23,13 +34,14 @@ cols=c("Year", "nspawners0", "spawners0",
        "SST.UPW.4.mon6to9.0", "SST.2.5.mon6to9.0", "Bakun.UPW.mon6to9.0",
        "SST.2.5.3.yr.runsum.0",
        "ONI.mon1to12.0", "DMI.mon9to11.0")
+chl.names <- c("log.CHL.2.5.mon7to9.0", "log.CHL.2.5.mon10to12.0", "log.CHL.2.5.mon1to3.0")
 dat=dat[,cols]
 dat$CHL7to9=NA
-dat$CHL7to9[dat$Year %in% dat.chl$Year]=dat.chl$log.CHL.4.mon7to9.0[dat.chl$Year %in% dat$Year]
+dat$CHL7to9[dat$Year %in% dat.chl$Year]=dat.chl[,chl.names[1]][dat.chl$Year %in% dat$Year]
 dat$CHL10to12=NA
-dat$CHL10to12[dat$Year %in% dat.chl$Year]=dat.chl$log.CHL.4.mon10to12.0[dat.chl$Year %in% dat$Year]
+dat$CHL10to12[dat$Year %in% dat.chl$Year]=dat.chl[,chl.names[2]][dat.chl$Year %in% dat$Year]
 dat$CHL1to3=NA
-dat$CHL1to3[dat$Year %in% dat.chl$Year]=dat.chl$log.CHL.4.mon1to3.0[dat.chl$Year %in% dat$Year]
+dat$CHL1to3[dat$Year %in% dat.chl$Year]=dat.chl[,chl.names[3]][dat.chl$Year %in% dat$Year]
 ```
 
 ```{r print-tableH-cols, echo=FALSE}
@@ -39,7 +51,7 @@ colnames(dat)=c("Year", "N", "S",
        "Jun-Sep UPW", "Jun-Sep ns-SST", "Jun-Sep Bakun UPW",
        "2.5 yr ave ns-SST",
        "ONI", "Sep-Nov DMI",
-       "Jul-Sep log CHL", "Oct-Dec log CHL", "Jan-Mar log CHL")
+       "Jul-Sep log ns-CHL", "Oct-Dec log ns-CHL", "Jan-Mar log ns-CHL")
 
 if(isLatex) colnames(dat)=c("Year", "log N", "log S",
        "\\shortstack{Jun-Jul\\\\Precip}", "\\shortstack{Apr-May\\\\Precip}",
@@ -59,8 +71,8 @@ seltable = dat[,1:13]
 n=ncol(seltable)
 
 seltable[,2:n] <- round(seltable[,2:n], digits=2)
-thecap=paste("Landings data and environmental covariates. N=Oct-Mar Kerala landings.  S=Jul-Sep Kerala landings. Values have been rounded to 2 digits.")
-fullcap=paste("Table ", ref("tabappH:data", pre="H"), ". ", thecap, sep="")
+thecap=paste("Landings data and environmental covariates. N=Oct-Mar Kerala landings.  S=Jul-Sep Kerala landings. Values have been rounded to 2 digits. ns-SST = nearshore (0-80km) boxes 2 to 5 in Figure 1 (main text). r-SST = regional (0-160km) boxes 1 to 5 and 7 to 10.")
+fullcap=paste("Table ", ref(paste0(tabset, "data"), pre="H"), ". ", thecap, sep="")
 # kable(seltable, align=paste0("l", rep("c", n-1)), caption=fullcap, row.names=FALSE, escape=FALSE)
 al <- paste0("l", paste0(rep("c", n - 1), collapse=""))
 if(isLatex) kableExtra::landscape(knitr::kable(seltable, align=al, caption=fullcap, row.names=FALSE, escape=FALSE))
@@ -75,8 +87,8 @@ seltable = dat[,c(1,14:16)]
 n=ncol(seltable)
 
 seltable[,2:n] <- round(seltable[,2:n], digits=2)
-thecap=paste("Chlorophyll-a from Box 4.")
-fullcap=paste("Table ", ref("tabappH:data-chl", pre="H"), ". ", thecap, sep="")
+thecap=paste("Nearshore chlorophyll-a from boxes 2 to 5.")
+fullcap=paste("Table ", ref(paste0(tabset,"data-chl"), pre="H"), ". ", thecap, sep="")
 # kable(seltable, align=paste0("l", rep("c", n-1)), caption=fullcap, row.names=FALSE, escape=FALSE)
 al <- paste0("l", paste0(rep("c", n - 1), collapse=""))
 if(isLatex) kableExtra::landscape(knitr::kable(seltable, align=al, caption=fullcap, row.names=FALSE, escape=FALSE))

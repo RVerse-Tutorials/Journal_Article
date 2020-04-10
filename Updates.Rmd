@@ -7,6 +7,38 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# April 2020
+
+### April 10, 2020 To do
+
+* Move some of the main covariate tables to Appendices which will appear with the text
+* Fix the refs to supplement tables in main text
+* Add refs to each hypothesis in the results
+* Discuss the land precipitation results briefly or cut the land precipitation data.
+
+* Test of autocorrelation of residuals and normality to appendix
+* Revamp discussion per editors comments
+* Compare edited text to old text
+
+### April 9, 2020 Done
+
+* Fixed the figures
+* Changed appendices to supplement and cut some unneeded appendices
+* Fixed Chl data to nearshore
+
+
+# February-April 2020
+
+Working on getting into final form. Revision after revision.
+
+# October-November 2019
+
+Worked on revamping the analyses based on the comments from the Kochi meeting.
+
+# September, 2019
+
+Meeting in Kochi. Got comments on paper. Revamped the hypotheses.
+
 # June-August, 2019
 
 I spent the summer revamping and clarifying the hypotheses to test (per comments from literature, Smitha, and Mark & Dave). I then redid all the analyses focusing on the hypotheses and then needed to rewrite results, tables, figures, and discussion.

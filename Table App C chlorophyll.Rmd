@@ -14,6 +14,17 @@ Generic setup code common across all Rmds; run code in setup.Rmd if not knitting
 ```{r child = 'setup.Rmd'}
 ```
 
+```{r echo=FALSE}
+#set the table pre
+if(Supplement){
+  pre <- "S"
+  tabset <- "tabsupp:"
+}else{
+  pre <- "C"
+  tabset <- "tabappC:"
+}
+```
+
 ```{r table-appC-dat, echo=FALSE}
 #dat.spawners defined in setup.Rmd
 dat=dat.chl
@@ -184,8 +195,8 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of nearshore (0-80km) chlorophyll-a (ns-CHL) as an explanatory variable for the Jul-Sep catch ($S_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. Only CHL in Oct-Dec and Jan-Mar in the current season (which runs Jul-Jun) is not used since these months are after the Jul-Sep catch being modeled.  Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Jul-Sep catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This is done due to data constraints. The models are nested; the Roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M) at top.")
-fullcap=paste("Table ", ref("tabappC:spawner-model", pre="C"), ". ", thecap, sep="")
+thecap=paste("Model selection tests of nearshore (0-80km boxes 2 to 5) chlorophyll-a (ns-CHL) as an explanatory variable for the Jul-Sep catch ($S_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. Only CHL in Oct-Dec and Jan-Mar in the current season (which runs Jul-Jun) is not used since these months are after the Jul-Sep catch being modeled.  Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Jul-Sep catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses.  This is done due to data constraints. The models are nested; the Roman numeral indicates the level of nestedness. Models at levels II and higher are shown with the component that is added to the base level model (M) at top.")
+fullcap=paste("Table ", ref(paste0(tabset,"spawner-model"), pre=pre), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
 
@@ -340,8 +351,8 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of nearshore (0-80km) chlorophyll-a (ns-CHL) as an explanatory variable for Oct-Jun catch ($N_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_{t-1}$ is CHL in the prior Jul-Jun season. Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Oct-Jun catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses (Appendix B).  This was done due to data constraints. The models are nested; the numeral indicates the level of nestedness. Models at levels 2 and higher are shown with the component that is added to the base level model (M) at top.")
-fullcap=paste("Table ", ref("tabappC:nonspawner-model", pre="C"), ". ", thecap, sep="")
+thecap=paste("Model selection tests of nearshore (0-80km boxes 2 to 5) chlorophyll-a (ns-CHL) as an explanatory variable for Oct-Jun catch ($N_t$) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which CHL was available. $V_{t-1}$ is CHL in the prior Jul-Jun season. Non-linearity is modeled as a 2nd-order polynomial due to data constraints and appears as $p()$ in the model equations.  The Oct-Jun catch is modeled as a function of Oct-Jun catch in the prior year only, without Jul-Sep catch 2-years prior as in the other covariate analyses.  This was done due to data constraints. The models are nested; the numeral indicates the level of nestedness. Models at levels 2 and higher are shown with the component that is added to the base level model (M) at top.")
+fullcap=paste("Table ", ref(paste0(tabset,"nonspawner-model"), pre=pre), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
 
@@ -493,6 +504,6 @@ colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
 thecap=paste("Model selection tests of Chlorophyll-a as an explanatory variable for the catch during the non-spawning months (Oct-Jun) using box 5.")
-fullcap=paste("Table ", ref("tabappC:nonspawner-model-box5", pre="C"), ". ", thecap, sep="")
+fullcap=paste("Table ", ref(paste0(tabset,"nonspawner-model-box5"), pre=pre), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```

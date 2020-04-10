@@ -10,6 +10,10 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r child = 'setup.Rmd'}
 ```
 
+```{r echo=FALSE}
+Supplement <- FALSE
+```
+
 # Appendix A: Tests for prior season catch as covariate
 
 ```{r child = 'Table App A spawner model.Rmd'}

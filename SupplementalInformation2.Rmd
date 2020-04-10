@@ -1,0 +1,35 @@
+---
+title: 'Supplemental Information: Data sources and raw data'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
+---
+
+```{r child = 'setup.Rmd'}
+```
+
+```{r echo=FALSE}
+Supplement <- TRUE
+```
+
+# Data Sources
+
+```{r child = 'Table App Data.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Raw Data
+
+```{r child = 'Table App H data.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+

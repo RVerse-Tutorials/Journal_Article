@@ -10,6 +10,17 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r child = 'setup.Rmd'}
 ```
 
+```{r echo=FALSE}
+#set the table pre
+if(Supplement){
+  pre <- "S"
+  tabset <- "tabsupp:"
+}else{
+  pre <- "A"
+  tabset <- "tabappA:"
+}
+```
+
 ```{r table-appA-set-spawner-years, echo=FALSE}
 #dat.spawners defined in setup-covariates.Rmd
 dat=dat.spawners
@@ -290,7 +301,7 @@ colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC", "LOOCV")
 
 thecap=paste("Model selection tests of time-dependency the log catch during spawning months using F-tests of nested linear models.  $S_t$ is the catch during the spawning period (Jul-Sep). $N_t$ is the catch during the non-spawning period (Oct-Jun). $S_{t-1}$ and $N_{t-1}$ are the catch during the prior season during and after the spawning period respectively. $S_{t-2}$ and $N_{t-2}$ are the same for two seasons prior.  Test A uses catch during the spawning period as the explanatory variable.  Test B uses catch during the non-spawning period as the explanatory variable.  The numbers in front of the model equation indicate the level of nestedness. For Test C, there are two nested model sets, each with a different model 3.  The Naive model is a model that uses the previous data point in the time series as the prediction; thus the Naive model has no estimated parameters.")
-fullcap=paste("Table ", ref("tabappA:spawner-model-linear", pre="A"), ". ", thecap, sep="")
+fullcap=paste("Table ", ref(paste0(tabset,"spawner-model-linear"), pre=pre), ". ", thecap, sep="")
 kable(seltable, align="lccccccc", caption=fullcap, escape=FALSE)
 ```
 
@@ -589,8 +600,8 @@ seltable=rbind(seltable,tmp1)
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC", "LOOCV")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC", "LOOCV")
 
-thecap=paste0("Model selection tests of time-dependency the catch during spawning months using non-linear or time-varying linear responses instead of time-constant linear responses as in Table ",ref("tabappA:spawner-model-linear", pre="A"), ". See Table ",ref("tabappA:spawner-model-linear", pre="A"), " for an explanation of the parameters and model set-up.")
-fullcap=paste("Table ", ref("tabappA:spawner-model-nonlinear", pre="A"), ". ", thecap, sep="")
+thecap=paste0("Model selection tests of time-dependency the catch during spawning months using non-linear or time-varying linear responses instead of time-constant linear responses as in Table ", ref(paste0(tabset,"spawner-model-linear"), pre=pre), ". See Table ", ref(paste0(tabset,"spawner-model-linear"), pre=pre), " for an explanation of the parameters and model set-up.")
+fullcap=paste("Table ", ref(paste0(tabset,"spawner-model-nonlinear"), pre=pre), ". ", thecap, sep="")
 kable(seltable, align="lccccccc", caption=fullcap, escape=FALSE)
 ```
 
@@ -813,8 +824,8 @@ seltable=rbind(seltable,tmp1)
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC", "LOOCV")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC", "LOOCV")
 
-thecap=paste0("Table ",ref("tabappA:spawner-model-nonlinear", pre="A"), " with 1956-",Yr1-1, " data instead of ", Yr1, " to ", Yr2, " data.  See Table ",ref("tabappA:spawner-model-linear", pre="A"), " for an explanation of the parameters and model set-up.")
-fullcap=paste("Table ", ref("tabappA:spawner-model-1956", pre="A"), ". ", thecap, sep="")
+thecap=paste0("Table ",ref(paste0(tabset,"spawner-model-nonlinear"), pre=pre), " with 1956-",Yr1-1, " data instead of ", Yr1, " to ", Yr2, " data.  See Table ",ref(paste0(tabset,"spawner-model-linear"), pre=pre), " for an explanation of the parameters and model set-up.")
+fullcap=paste("Table ", ref(paste0(tabset,"spawner-model-1956"), pre=pre), ". ", thecap, sep="")
 kable(seltable, align="lccccccc", caption=fullcap, escape=FALSE)
 ```
 

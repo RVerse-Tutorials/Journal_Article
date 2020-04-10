@@ -11,8 +11,8 @@ Description
 </h3>
 <p>
 A dataset containing the landings (in metric tons) of oil sardines in
-Kerala state 1956-2016. The data are collected and
-processed into a total landings estimates based on a stratified sampling
+Kerala State 1956-2015. The data are collected and
+processed into a total landings estimate based on a stratified sampling
 of landing sites along the SW coast of India throughout the year. The
 program is run by the Central Marine Fisheries Research Institute
 (CMFRI) in Cochin, India. The data were obtained from reports published
@@ -38,15 +38,15 @@ Thesis, University of Cochin.
 <p>
 1975-1984 Kerala Jacob T, Rajendran V, Pillai PKM, Andrews J, Satyavan
 UK (1987). “An appraisal of the marine fisheries in Kerala.” Central
-Marine Fisheries Research Institute.
+Marine Fisheries Research Institute. Report.
 </p>
 <p>
 1975-1984 Kernataka Kurup KN, Nair GKK, Annam VP, Kant A, Beena MR,
 Kambadkar L (1987). “An appraisal of the marine fisheries of Karnataka
-and Goa.” Central Marine Fisheries Research Institute.
+and Goa.” Central Marine Fisheries Research Institute. Report.
 </p>
 <p>
-1985-2014 Provided by CMFRI directly via a data request.
+1985-2015 Provided by CMFRI directly via a data request.
 </p>
 <hr />
 
@@ -58,9 +58,9 @@ SST Data
 Description
 </h3>
 <p>
-The SST satellite data were downloaded from the NOAA ERDDAP server using
-R Mendels <code>rerddapXtracto</code> R package which uses the ropensci
-<code>rerddap</code> R package. 
+The SST satellite data (units degree Celcius) were downloaded from the NOAA ERDDAP server using
+R Mendelssohn's **rerddapXtracto** R package which uses the ropensci
+**rerddap** R package. 
 </p>
 <h3>
 Details
@@ -69,7 +69,8 @@ Details
 For 1981 to 2003, We used the Pathfinder Version 5.2 (L3C) monthly day
 and night product on a 0.0417 degree grid. These SST data use the
 Advanced Very-High Resolution Radiometer (AVHRR) instrument on the
-Pathfinder satellites. These data were provided by GHRSST and the US
+Pathfinder satellites. These data were provided by the 
+Group for High Resolution Sea Surface Temperature (GHRSST) and the US
 National Oceanographic Data Center. This project was supported in part
 by a grant from the NOAA Climate Data Record (CDR) Program for
 satellites.
@@ -90,25 +91,24 @@ Both SST data sets were downloaded from the NOAA ERDDAP server:
 </p>
 <p>
 The SST values were averaged across thirteen 1
-degree by 1 degree boxes which roughly parallel the bathymetry (Figure 1 in main text).
+degree by 1 degree boxes which parallel the bathymetry (Figure 1 in main text).
 </p>
 <h3>
 References
 </h3>
 <p>
 These data were provided by GHRSST and the US National Oceanographic
-Data Center. This project was supported in part by a grant from the NOAA
-Climate Data Record (CDR) Program for satellites. The data were
+Data Center. The data were
 downloaded from NOAA CoastWatch-West Coast Regional Node and Southwest
-Fisheries Science Center’s Environmental Research Division. To cite
-these data in a paper, please follow the instructions in the license and
-at this link:
-<a href="https://coastwatch.pfeg.noaa.gov/erddap/information.html#citeDataset">https://coastwatch.pfeg.noaa.gov/erddap/information.html\#citeDataset</a>
+Fisheries Science Center’s Environmental Research Division. 
 </p>
 <p>
 Casey KS, Brandon TB, Cornillon P, Evans R (2010). “The past, present,
 and future of the AVHRR Pathfinder SST program.” In <em>Oceanography
 from space</em>, 273–287. Springer.
+</p>
+<p>
+Simons RA. 2019. ERDDAP. https://coastwatch.pfeg.noaa.gov/erddap . Monterey, CA: NOAA/NMFS/SWFSC/ERD.
 </p>
 <p>
 Walton C, Pichel W, Sapper J, May D (1998). “The development and
@@ -125,42 +125,43 @@ Upwelling Data
 Description
 </h3>
 <p>
-Three upwelling indices are in the ‘upw’ data object: a SST nearshore
-offshore differential, a wind-based index and the Bakun indices. The
+Three upwelling indices were used: a SST nearshore
+offshore differential (degree Celcius), a wind-based index (m s$^{-1}$) and the Bakun mass 
+transport indices (kg m$^{-1}$ s$^{-1}$). The
 upwelling indices and SST data were downloaded from the NOAA ERDDAP
-server using R Mendels <code>rerddapXtracto</code> R package which uses
-the ropensci <code>rerddap</code> R package. 
+server using R Mendelssohn's **rerddapXtracto** R package which uses
+the ropensci **rerddap** R package. See the SST data description for package references.
 </p>
 <h3>
 Details
 </h3>
 <p>
-The Wind-based monthly upwelling indices were downloaded from the NOAA
+The Wind-based monthly upwelling indices (m s$^{-1}$) were downloaded from the NOAA
 ERDDAP server. The first is 1999-2009 on a 0.125 degree grid. The second
-is 2009 to present on a 0.25 degree grid. and the second is See
+is 2009 to present on a 0.25 degree grid. Download urls with information:
 <a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdQSstressmday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdQSstressmday/index.html</a>
 and
 <a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdQAstressmday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdQAstressmday/index.html</a>.
 </p>
 <p>
-The SST differential upwelling indices were downloaded from the NOAA
+The SST differential upwelling indices (degree Celcius) were computed from SST data downloaded from the NOAA
 ERDDAP server. The first is 1981-2012 on a 0.0417 degree grid. The
 second is 2003-2016 on a 0.1 degree grid. Both are AVHRR so accurate for
 close to the coast. </br>
 <a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdPH2sstamday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdPH2sstamday/index.html</a>
 and </br>
 <a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdAGsstamday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdAGsstamday/index.html</a>.
-The UPW index is the difference between the coast box (1 to 5) and a box
-3 degrees offshore at the same latitude.
+The SST-based UPW index is the difference between the coast box (1 to 5) and a box
+3 degrees longitude offshore at the same latitude.
 </p>
 <p>
-The Bakun index (The Bakun 1973) is calculated based upon Ekman’s theory
+The Bakun index (Bakun 1973) is calculated based upon Ekman’s theory
 of mass transport due to wind stress. The index is computed from the
-ektrx and ektry, which are the x- and y- components of Ekman Transport
-obtained from the ERDDAP link below, and coast\_angle is 158 degrees for
-the India west coast near Kochi.
+ektrx and ektry, which are the x- and y- components of Ekman Transport (kg m$^-1$ s$^-1$) obtained from the ERDDAP link below, and coast_angle is 158 degrees for the India west coast near Kochi (74.5E 11.5N). The ekrtrx and ektry data were downloaded for (74.5E 11.5N) from
+
 <a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdlasFnWPr/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdlasFnWPr/index.html</a>.
-The function to compute the Bakun index is at
+
+The function to compute the Bakun index is from
 <a href="https://oceanview.pfeg.noaa.gov/products/upwelling/bakun">https://oceanview.pfeg.noaa.gov/products/upwelling/bakun</a>.
 </p>
 <pre>
@@ -218,6 +219,13 @@ Bakun A (1973). “Coastal upwelling indices, west coast of North
 America.” US Department of Commerce, NOAA Technical Report NMFS
 SSRF-671.
 </p>
+<p>
+Chamberlain S (2019). rerddap: General Purpose Client for 'ERDDAP' Servers. R package version 0.6.5, https://CRAN.R-project.org/package=rerddap.
+</p>
+<p>
+Mendelssohn R (2020). rerddapXtracto: Extracts Environmental Data from 'ERDDAP' Web Services. R package version 0.4.7, https://CRAN.R-project.org/package=rerddapXtracto.
+</p>
+
 
 Precipitation Data
 ==================
@@ -226,14 +234,15 @@ Precipitation Data
 Description
 </h3>
 <p>
-Three precipition datasets off the SW coast of India. Two are satellite
+We used three precipition datasets off the southwest coast of India. Two are satellite
 derived and one is based on land gauges.
 </p>
 <h3>
 Details
 </h3>
 <p>
-The National Climatic Data Center provides basic information on the GPCP
+The National Climatic Data Center provides basic information on the 
+Global Precipitation Climatology Project (GPCP)
 Precipitation dataset. The dataset consists of monthly precipitation
 estimates (average mm/day) from January 1979 to the present. The
 precipitation estimates merge several satellite and in situ sources into
@@ -248,7 +257,7 @@ Kerala Lat(8.75,  11.25), Lon(73.25,  75.75)
 Karnataka Lat(13.75,  16.25), Lon(71.25,  73.75)
 </p>
 <p>
-The land gauge data is monthly, seasonal and annual rainfall (in mm)
+The land gauge data are a monthly rainfall (in mm)
 area weighted average for each state in India starting from 1901
 onwards. This data set is based on rain guages. The data are provided by
 the India Meteorological Department (Ministry of Earth Sciences). The
@@ -258,11 +267,11 @@ Rainfall Statistics reports (see references).
 </p>
 <p>
 NASA’s Tropical Rainfall Measuring Mission (TRMM) website provides
-background on the TRMM data
+background on the TRMM precipitation data
 (<a href="https://pmm.nasa.gov/">https://pmm.nasa.gov/</a>). 1997 to
 2015 monthly precipitation estimates on a 0.25 degree grid were
 downloaded from the Tropical Rainfall Measuring Mission (TRMM) website.
-The data are averaged in the 2.5 x 2.5 degree boxes used for the other
+The data were averaged in the 2.5 x 2.5 degree boxes 1 to 13 used for the other
 satellite data.
 </p>
 <h3>
@@ -306,8 +315,8 @@ Description
 </h3>
 <p>
 The CHL satellite data were downloaded from the NOAA ERDDAP server using
-R Mendels <code>rerddapXtracto</code> R package which uses the ropensci
-<code>rerddap</code> R package.
+R Mendelssohn's **rerddapXtracto** R package which uses the ropensci
+**rerddap** R package (see citations in the SST data description).
 </p>
 <h3>
 Details
@@ -321,10 +330,10 @@ Center.
 For 1997 to 2002, we used the Chlorophyll-a 2014.0 Reprocessing
 (R2014.0) product from the Sea-viewing Wide Field-of-view Sensor
 (SeaWiFS) on the Orbview-2 satellite. These data are on a 0.1 degree
-grid. See reference below.
+grid with units of mg m$^{-3}$. See reference below.
 </p>
 <p>
-For 2003 to 2017, we used the MODIS-Aqua product on a 4km grid. These
+For 2003 to 2017, we used the MODIS-Aqua product on a 4km grid  with units of mg m$^{-3}$. These
 CHL data are taken from measurements gathered by the Moderate Resolution
 Imaging Spectroradiometer (MODIS) on NASA’s Aqua Spacecraft. See
 reference below.
@@ -338,7 +347,7 @@ Both CHL data sets were downloaded from the NOAA ERDDAP server:
 </p>
 <p>
 The CHL values were averaged across thirteen 1
-degree by 1 degree boxes which roughly parallel the bathymetry (Figure 1 in main text).
+degree by 1 degree boxes which parallel the bathymetry (Figure 1 in main text).
 </p>
 <h3>
 References
@@ -363,7 +372,7 @@ oceans: A novel approach based on three-band reflectance difference.”
 <em>Journal of Geophysical Research: Oceans</em>, <b>117</b>(C1).
 </p>
 
-ENSO Data
+ENSO and IOD Data
 =========
 
 <h3>
@@ -376,16 +385,17 @@ Oceanic Nino Index and Dipole Mode Index.
 Details
 </h3>
 <p>
-The ONI index is 3 month running mean of ERSST.v5 SST anomalies in the
+The Oceanic Nino Index (ONI) is one of the primary indices used to monitor the El Nino-Southern Oscillation (ENSO). The ONI index is 3 month running mean of ERSST.v5 SST anomalies in the
 Niño 3.4 region (5°N-5°S, 120°-170°W)\], based on centered 30-year base
 periods updated every 5 years.  
-The ONI was downloaded from
+The ONI was downloaded from the National Weather Service Climate Prediction Center 
 <a href="http://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt">http://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt</a>
 <p>
-The DMI is the monthly Dipole Mode Index. The DMI (also IOD index) is defined by the SSTA difference between the
+The DMI is the monthly Dipole Mode Index. The DMI is defined by the SSTA (SST anomaly) difference between the
 western Indian Ocean (10°S–10°N, 50°E–70°E) and the southeastern Indian
 Ocean (10°S–0°, 90°E–110°E). The data were downloaded from  </br>
-<a href="https://www.esrl.noaa.gov/psd/gcos_wgsp/Timeseries/Data/dmi.long.data">https://www.esrl.noaa.gov/psd/gcos_wgsp/Timeseries/Data/dmi.long.data</a>
+<a href="https://www.esrl.noaa.gov/psd/gcos_wgsp/Timeseries/Data/dmi.long.data">https://www.esrl.noaa.gov/psd/gcos_wgsp/Timeseries/Data/dmi.long.data</a> The original data source is the
+Japan Agency for Marine-Earth Science and Technology (JAMSTEC) via the page <a href="http://www.jamstec.go.jp/frcgc/research/d1/iod/e/iod/about_iod.html">http://www.jamstec.go.jp/frcgc/research/d1/iod/e/iod/about_iod.html</a>.
 </p>
 <h3>
 References
@@ -395,6 +405,9 @@ Saji NH, Yamagata T (2003). “Possible impacts of Indian Ocean Dipole
 mode events on global climate.” <em>Climate Research</em>, <b>25</b>(2),
 151-169. doi:
 <a href="https://doi.org/10.3354/cr025151">10.3354/cr025151</a>.
+</p>
+<p>Climate Prediction Center. El Nino-Southern Oscillation. <a href="https://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml">
+https://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml</a>
 </p>
 <hr />
 
