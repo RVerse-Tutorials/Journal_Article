@@ -73,6 +73,18 @@ getmodheader <- function(dat){
   stringsAsFactors=FALSE))
 }
 
+getmodheadertext <- function(text){
+  return(data.frame(
+  Model=text, 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em",
+  MAE="\\kern 1em", RMSE="\\kern 1em",
+  LOOCV="\\kern 1em",
+  Adj.R2="\\kern 1em", AIC="\\kern 1em", 
+  LOOMd="\\kern 1em", LOOMAE="\\kern 1em",
+  stringsAsFactors=FALSE))
+}
+
 # Space
 spacetmp = data.frame(Model="\\kern 1em",  Residual.df="\\kern 1em",  MASE="\\kern 1em", MAE="\\kern 1em", RMSE="\\kern 1em", LOOCV="\\kern 1em", Adj.R2="", AIC="", LOOMd="", LOOMAE="", stringsAsFactors=FALSE)
 
@@ -99,16 +111,16 @@ getcovtit <- function(covname){
   if(covname=="Wind.UPW.4.mon6to9.") covtit = "$V_t$ = Jun-Sep Wind-UPW (L2)"
   if(covname=="SST.UPW.4.mon6to9.") covtit = "$V_t$ = Jun-Sep SST-derived UPW (L2)"
   if(covname=="SST.2.5.mon6to9.") covtit = "$V_t$ = Jun-Sep ns-SST (L2)"
-  if(covname=="SST.2.10.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave r-SST (A1)"
-  if(covname=="SST.11.13.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave fo-SST (A1)"
-  if(covname=="SST.7.10.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave o-SST (A1)"
+  if(covname=="SST.2.10.3.yr.runsum.") covtit = "$V_t$ = 2.5-year average r-SST (A1)"
+  if(covname=="SST.11.13.3.yr.runsum.") covtit = "$V_t$ = 2.5-year average fo-SST (A1)"
+  if(covname=="SST.7.10.3.yr.runsum.") covtit = "$V_t$ = 2.5-year average o-SST (A1)"
   if(covname=="SST.7.13.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave o-SST (A1)"
-  if(covname=="SST.2.5.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave ns-SST (A1)"
-  if(covname=="SST.1.13.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave rr-SST (A1)"
+  if(covname=="SST.2.5.3.yr.runsum.") covtit = "$V_t$ = 2.5-year avereage ns-SST (A1)"
+  if(covname=="SST.1.13.3.yr.runsum.") covtit = "$V_t$ = 2.5-year average rr-SST (A1)"
   if(covname=="ONI.mon1to12.") covtit = "$V_t$ = ONI (A2)"
   if(covname=="DMI.mon9to11.") covtit = "$V_t$ = Sep-Nov DMI (A3)"
   if(covname=="DMI.mon6to9.") covtit = "$V_t$ = Jun-Sep DMI (A3)"
-  if(covname=="DMI.3.yr.runsum.") covtit = "$V_t$ = DMI 3-yr ave (A3)"
+  if(covname=="DMI.3.yr.runsum.") covtit = "$V_t$ = DMI 2.5-year average (A3)"
   if(covname=="log.CHL.4.mon1to3.")   covtit = "$V_t$ = Jan-Mar Chlorophyll"
   if(covname=="log.CHL.4.mon7to9.")   covtit = "$V_t$ = Jul-Sep Chlorophyll (L3)"
   if(covname=="log.CHL.4.mon10to12.") covtit = "$V_t$ = Oct-Dec Chlorophyll (L3)"
@@ -128,9 +140,10 @@ getcovtit <- function(covname){
 ```
 
 ```{r, echo=FALSE}
-makeapptable <- function(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags, m3form = "s(cov, sp=0.6)"){
+makeapptable <- function(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags, m3form = "s(cov, sp=0.6)", type=c("linear", "nonlinear"), include.num=TRUE, header=NULL, include.group=TRUE, compact=FALSE){
   
-seltable <- getmodheader(dat)
+if(missing(header)) seltable <- getmodheader(dat)
+if(!missing(header)) seltable <- getmodheadertext(header)
 
 # Null model
 m0 = lm(as.formula(nullformula), data=dat)
@@ -138,25 +151,28 @@ mod <- "m0"
 Model=paste0("null model: ", nullmod)
 tmp1 <- modfun(get(mod), Model)
 tmp1$Adj.R2 <- ""
-seltable=rbind(seltable,tmp1)
+modtable <- tmp1
 # Base model
 m1 = gam(as.formula(baseformula), data=dat)
 mod <- "m1"
-Model <- paste0("base (M) 1. ", basemod)
+    num <- ifelse(include.num, " 1.", "")
+Model <- paste0("base (M):", num, " ", basemod)
 tmp1 <- modfun(get(mod), Model)
-seltable=rbind(seltable,tmp1)
+modtable=rbind(modtable,tmp1)
 baseaic <- SardineForecast::AICc(m1)
 lg <- SardineForecast::loogam(m1)
 baseloo <- lg$RMSE
 baseloomae <- lg$MAE
 baseloomd <- lg$MdAE
 
+seltable <- rbind(seltable, modtable)
+
 seltable=rbind(seltable, spacetmp)
 
 for(covgroup in names(covnamelist)){
   #Group header
   tmp1 <- spacetmp; tmp1$Model <- paste0("**", covgroup, "**")
-  seltable = rbind(seltable, tmp1, spacetmp)
+  if(include.group) seltable = rbind(seltable, tmp1, spacetmp)
 
   for(covname in covnamelist[[covgroup]]){
   #var header
@@ -173,21 +189,106 @@ for(covgroup in names(covnamelist)){
     m2 = gam(as.formula(paste(baseformula, "+ cov")), data=dat)
     m3 = gam(as.formula(paste(baseformula, "+", m3form)), data=dat)
   
+    if("linear" %in% type){
     mod <- "m2"
-    Model=paste0("2",let,". $", resp, "$ = M + $\\beta V_{", tlab,"}$")
+    num <- ifelse(include.num, paste0("2",let,". "), "  ")
+    Model=paste0(num, "$", resp, "$ = M + $\\beta V_{", tlab,"}$")
     tmp1 <- covfun(get(mod), Model, baseaic=baseaic, baseloo=baseloo, baseloomae=baseloomae, baseloomd=baseloomd)
     seltable=rbind(seltable,tmp1)
+    }
   
+    if("nonlinear" %in% type){
+      num <- ifelse(include.num, paste0("3",let,". "), "  ")
     mod <- "m3"
     covf <- ifelse(stringr::str_detect(m3form, "poly"),"p","s")
-    Model <- paste0("3",let, ". $", resp, "$ = M + $", covf, "(V_{", tlab, "})$")
+    Model <- paste0(num, "$", resp, "$ = M + $", covf, "(V_{", tlab, "})$")
     tmp1 <- covfun(get(mod), Model, baseaic=baseaic, baseloo=baseloo, baseloomae=baseloomae, baseloomd=baseloomd)
     seltable=rbind(seltable,tmp1)
+    }
   }
-  seltable <- rbind(seltable, spacetmp)
+  if(!compact) seltable <- rbind(seltable, spacetmp)
   }
 }
 seltable
 }
 ```
 
+```{r, echo=FALSE}
+maketable3 <- function(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags, m3form = "s(cov, sp=0.6)", type=c("linear", "nonlinear"), include.num=TRUE, header=NULL, include.group=TRUE, compact=FALSE){
+  
+seltable <- getmodheadertext(header)
+
+# Null model
+m0 = lm(as.formula(nullformula), data=dat)
+mod <- "m0"
+Model=paste0("null model: ", nullmod)
+tmp1 <- modfun(get(mod), Model)
+tmp1$Adj.R2 <- ""
+modtable <- tmp1
+# Base model
+m1 = gam(as.formula(baseformula), data=dat)
+mod <- "m1"
+    num <- ifelse(include.num, " 1.", "")
+Model <- paste0("base (M):", num, " ", basemod)
+tmp1 <- modfun(get(mod), Model)
+modtable=rbind(modtable,tmp1)
+baseaic <- SardineForecast::AICc(m1)
+lg <- SardineForecast::loogam(m1)
+baseloo <- lg$RMSE
+baseloomae <- lg$MAE
+baseloomd <- lg$MdAE
+# covariate model
+if("linear" %in% type){
+  Model=paste0("linear covariate model: $", resp, "$ = M + $\\beta V_t$")
+  tmp1 <- getmodheadertext(Model)
+  modtable=rbind(modtable,tmp1)
+}
+if("nonlinear" %in% type){
+   covf <- ifelse(stringr::str_detect(m3form, "poly"),"p","s")
+    Model <- paste0("nonlinear covariate model: $", resp, "$ = M + $", covf, "(V_t)$")
+  tmp1 <- getmodheadertext(Model)
+  modtable=rbind(modtable,tmp1)
+}
+
+
+seltable <- rbind(seltable, modtable)
+
+seltable=rbind(seltable, spacetmp)
+
+for(covgroup in names(covnamelist)){
+
+  for(covname in covnamelist[[covgroup]]){
+  #var header
+  covtit <- getcovtit(covname)
+  covtit <- stringr::str_remove(covtit, "$V_t$ = ")
+
+  for(i in 1:length(covlags[[covname]])){
+    lag <- covlags[[covname]][i]
+    let <- letters[i]
+    tlab <- ifelse(lag==0, "t", "t-1")
+    dat$cov=dat[[paste(covname, lag, sep="")]]
+    m1 = gam(as.formula(baseformula), data=dat)
+    m2 = gam(as.formula(paste(baseformula, "+ cov")), data=dat)
+    m3 = gam(as.formula(paste(baseformula, "+", m3form)), data=dat)
+  
+    if("linear" %in% type){
+    mod <- "m2"
+    Model <- covtit
+    tmp1 <- covfun(get(mod), Model, baseaic=baseaic, baseloo=baseloo, baseloomae=baseloomae, baseloomd=baseloomd)
+    seltable=rbind(seltable,tmp1)
+    }
+  
+    if("nonlinear" %in% type){
+    mod <- "m3"
+     Model <- covtit
+    tmp1 <- covfun(get(mod), Model, baseaic=baseaic, baseloo=baseloo, baseloomae=baseloomae, baseloomd=baseloomd)
+    seltable=rbind(seltable,tmp1)
+    }
+  }
+  if(!compact) seltable <- rbind(seltable, spacetmp)
+  }
+  if(compact) seltable <- rbind(seltable, spacetmp)
+}
+seltable
+}
+```

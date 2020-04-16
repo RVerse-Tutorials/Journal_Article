@@ -23,16 +23,12 @@ cat("#\n\n\\clearpage")
 ```{r child = file.path('Old', 'Table 1 - Monsoon Catch.Rmd'), eval=FALSE}
 ```
 
-
-
 ```{r, results="asis", echo=FALSE, eval=FALSE}
 cat("#\n\n\\clearpage")
 ```
 
 ```{r child = file.path('Old', 'Table 2 - Post-Monsoon Catch.Rmd'), eval=FALSE}
 ```
-
-
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
