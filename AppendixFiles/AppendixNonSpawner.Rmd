@@ -29,7 +29,7 @@ if(Supplement){
 
 ```{r echo=FALSE}
 addchl = TRUE
-add1956 = TRUE
+add1956 = FALSE
 ```
 
 ```{r nonspawncovnames, echo=FALSE}
@@ -110,4 +110,4 @@ fullcap=paste("Table ", ref(paste0(tabset,"nonspawnercovariate-models"), pre=pre
 kable(seltable, align=paste0("l", paste0(rep("c",dim(seltable)[2]-1),collapse="")), caption=fullcap, escape=FALSE)
 ```
 
-Notes: LOOCV = Leave one out cross-validation. RMSE = root mean square error, AICc = Akaike Information Criterion corrected for small sample size. $\dagger$ = AIC greater than 2 below model M (base catch model). $\dagger\dagger$ = AIC greater than 5 below model M. $\ddagger$ = LOOCV RMSE 5\% below model M. $\ddagger\ddagger$ = LOOCV RMSE 10\% below model M. $t$ indicates current season (Jul-Jun) and $t-1$ is prior season. Thus a Jan-Mar covariate with $t-1$ would be in the same calendar year as the Jul-Sep catch, though in a prior fishing season. With the exception that for covariates that are calendar year (Jan-Dec) or multiyear, $t$ is the current calendar year.
+Notes: LOOCV = Leave one out cross-validation. RMSE = root mean square error. MdAE = median absolute error. AICc = Akaike Information Criterion corrected for small sample size. $\dagger$ and $\dagger\dagger$ = AICc greater than 2 and greater than 5 below model M (base catch model).  $\ddagger$, $\ddagger\ddagger$, and ${\ddagger}{\ddagger}{\ddagger}$  = LOOCV RMSE 5\%, 10\% and 20\% below model M, respectively. $t$ indicates current season (Jul-Jun) and $t-1$ is prior season. Thus a Jan-Mar covariate with $t-1$ would be in the same calendar year as the Jul-Sep catch, though in a prior fishing season. With the exception that for covariates that are calendar year (Jan-Dec) or multiyear, $t$ is the current calendar year.
