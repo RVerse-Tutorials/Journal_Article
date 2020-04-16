@@ -124,7 +124,7 @@ plot(dat2$Year, fit.dmi$states[1,], type="l", lwd=2, ylab="Time-varying effect s
 lines(dat2$Year, fit.precip$states[1,], col="grey", lwd=2)
 abline(h=0, lty=2)
 legend("bottomright", bty="n", 
-       legend=c("DMI","CHL"),
+       legend=c("DMI","Precipitation"),
        col=c("red", "grey"), lwd=c(2,2))
 legend("topleft", legend="a", bty="n")
 
@@ -163,7 +163,7 @@ lines(dat2$Year[ii+win], val[,2], col="blue", lwd=2)
 val <- valtrim(err.precip, win=win)
 lines(dat2$Year[ii+win], val[,2], col="grey", lwd=3)
 legend("topright", bty="n", 
-       legend=c("No covariates", "DMI only","CHL only", "DMI + CHL"),
+       legend=c("No covariates", "DMI only","Precip only", "DMI + Precip"),
        col=c("black", "red", "grey", "blue"), lwd=c(2,2,2,2))
 legend("topleft", legend="c", bty="n")
 ```

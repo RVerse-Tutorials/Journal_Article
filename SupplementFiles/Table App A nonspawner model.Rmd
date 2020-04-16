@@ -21,9 +21,16 @@ if(Supplement){
 }
 ```
 
+```{r child = file.path(here::here(),'AppendixFiles','Appendix-Variables.Rmd')}
+```
+
 ```{r table-appA-set-nonspawner-years, echo=FALSE}
 #dat.spawners defined in setup-covariates.Rmd
-dat=dat.nonspawners
+vars <- getnonspawnercovs()
+datcommon <- dat.nonspawners[, 
+  c("Year", "nspawners0", "spawners1", "spawners2",
+    "nspawners1", "nspawners2", vars$allcovnames)]
+dat <- na.omit(datcommon)
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 
@@ -525,7 +532,7 @@ tmp1=data.frame(
   MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
   Adj.R2="", 
   F="", p.value="", 
-  AIC=round(mod$AIC, digits=2),
+  AIC=round(mod$AICc, digits=2),
   LOOCV=round(sqrt(mean(err^2, na.rm=TRUE)), digits=3)
 )
 seltable=rbind(seltable,tmp1)
@@ -539,7 +546,7 @@ tmp1=data.frame(
   MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
   Adj.R2="", 
   F="", p.value="", 
-  AIC=round(mod$AIC, digits=2),
+  AIC=round(mod$AICc, digits=2),
   LOOCV=round(sqrt(mean(err^2, na.rm=TRUE)), digits=3)
 )
 seltable=rbind(seltable,tmp1)
@@ -553,7 +560,7 @@ tmp1=data.frame(
   MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
   Adj.R2="", 
   F="", p.value="", 
-  AIC=round(mod$AIC, digits=2),
+  AIC=round(mod$AICc, digits=2),
   LOOCV=round(sqrt(mean(err^2, na.rm=TRUE)), digits=3)
 )
 seltable=rbind(seltable,tmp1)
@@ -567,7 +574,7 @@ tmp1=data.frame(
   MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
   Adj.R2="", 
   F="", p.value="", 
-  AIC=round(mod$AIC, digits=2),
+  AIC=round(mod$AICc, digits=2),
   LOOCV=round(sqrt(mean(err^2, na.rm=TRUE)), digits=3)
 )
 seltable=rbind(seltable,tmp1)

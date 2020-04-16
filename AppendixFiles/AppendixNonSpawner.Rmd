@@ -10,6 +10,17 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r child = file.path(here::here(),'setup.Rmd')}
 ```
 
+```{r echo=FALSE}
+#set the table pre
+if(Supplement){
+  pre <- "S"
+  tabset <- "tabsupp:"
+}else{
+  pre <- "A"
+  tabset <- "tabapp:"
+}
+```
+
 ```{r child = file.path(here::here(),'AppendixFiles','Appendix-Functions.Rmd')}
 ```
 
@@ -95,7 +106,7 @@ colnames(seltable) <- c("Model", "Resid. df", "Adj. R2", "RMSE", "AICc", "LOOCV"
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Resid.\\\\df}", "\\shortstack{Adj.\\\\$R^2$}", "RMSE", "AICc", "\\shortstack{LOOCV\\\\RMSE}", "\\shortstack{LOOCV\\\\MdAE}")
 
 thecap=paste("Covariate tests for the October-March catch ($N_t$). M is the base model with prior season October-March catch ($N_{t-1}$) and July-September catch two seasons prior ($S_{t-2}$) as the covariates. To the base model, the  environmental covariates are added. ns-SST is nearshore (0-80km) and r-SST is regional (0-160km) SST. Similarly, ns-Chl is nearshore chlorophyll. The nested F-tests are given in Supporting Information. The models are nested sets, e.g. 1, 2a, 3a and 1, 2b, 3b.")
-fullcap=paste("Table ", ref("apptab:nonspawnercovariate-models", pre="A"), ". ", thecap, sep="")
+fullcap=paste("Table ", ref(paste0(tabset,"nonspawnercovariate-models"), pre=pre), ". ", thecap, sep="")
 kable(seltable, align=paste0("l", paste0(rep("c",dim(seltable)[2]-1),collapse="")), caption=fullcap, escape=FALSE)
 ```
 

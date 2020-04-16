@@ -1,9 +1,9 @@
 ---
 title: 'Table 3: Covariate tests'
 output:
-  pdf_document: default
-  html_document: default
   word_document: default
+  html_document: default
+  pdf_document: default
 header-includes: \usepackage[labelformat=empty]{caption}
 ---
 

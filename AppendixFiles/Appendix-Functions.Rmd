@@ -7,7 +7,7 @@ output:
 ---
 
 ```{r echo=FALSE}
-covfun <- function(mod, eqn, NE=NA, baseaic=-Inf, baseloo=-Inf, baseloomae=-Inf, baseloomd=-Inf){
+covfun <- function(mod, eqn, NE=NA, baseaic=-Inf, baseloo=-Inf, baseloomae=-Inf, baseloomd=-Inf, digits=3){
   # a is anova(m1, m2, etc
   aa = summary(mod)
   modrmse <- SardineForecast:::loogam(mod)$RMSE
@@ -30,30 +30,30 @@ covfun <- function(mod, eqn, NE=NA, baseaic=-Inf, baseloo=-Inf, baseloomae=-Inf,
 tmp1=data.frame(
   Model=eqn, 
   Residual.df=round(mod$df.residual,digits=1), 
-  MASE=round(mean(abs(residuals(mod)))/NE,digits=3), 
-  MAE=round(mean(abs(residuals(mod))),digits=3), 
-  RMSE=round(sqrt(mean((residuals(mod))^2)),digits=3), 
-  LOOCV=paste0(round(SardineForecast:::loogam(mod)$RMSE, digits=3), ddag),
-  Adj.R2=100*round(aa$r.sq, digits=2),
-  AIC=paste0(round(SardineForecast::AICc(mod), digits=2),dag),
-  LOOMd=paste0(round(SardineForecast:::loogam(mod)$MdAE, digits=3), ddag2),
-  LOOMAE=paste0(round(SardineForecast:::loogam(mod)$MAE, digits=3), ""))
+  MASE=round(mean(abs(residuals(mod)))/NE,digits=digits), 
+  MAE=round(mean(abs(residuals(mod))),digits=digits), 
+  RMSE=round(sqrt(mean((residuals(mod))^2)),digits=digits), 
+  LOOCV=paste0(round(SardineForecast:::loogam(mod)$RMSE, digits=digits), ddag),
+  Adj.R2=100*round(aa$r.sq, digits=3),
+  AIC=paste0(round(SardineForecast::AICc(mod), digits=1),dag),
+  LOOMd=paste0(round(SardineForecast:::loogam(mod)$MdAE, digits=digits), ddag2),
+  LOOMAE=paste0(round(SardineForecast:::loogam(mod)$MAE, digits=digits), ""))
 return(tmp1)
 }
 
-modfun <- function(mod, eqn, NE=NA){
+modfun <- function(mod, eqn, NE=NA, digits=3){
 aa = summary(mod)
 tmp1=data.frame(
   Model=eqn, 
   Residual.df=round(mod$df.residual,digits=1), 
-  MASE=round(mean(abs(residuals(mod)))/NE,digits=3), 
-  MAE=round(mean(abs(residuals(mod))),digits=3), 
-  RMSE=round(sqrt(mean((residuals(mod))^2)),digits=3),
-  LOOCV=round(SardineForecast:::loogam(mod)$RMSE, digits=3),
-  Adj.R2=100*round(aa$r.sq, digits=2), 
-  AIC=round(AICc(mod), digits=2),
-  LOOMd=round(SardineForecast:::loogam(mod)$MdAE, digits=3),
-  LOOMAE=round(SardineForecast:::loogam(mod)$MAE, digits=3),
+  MASE=round(mean(abs(residuals(mod)))/NE,digits=digits), 
+  MAE=round(mean(abs(residuals(mod))),digits=digits), 
+  RMSE=round(sqrt(mean((residuals(mod))^2)),digits=digits),
+  LOOCV=round(SardineForecast:::loogam(mod)$RMSE, digits=digits),
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  AIC=round(AICc(mod), digits=1),
+  LOOMd=round(SardineForecast:::loogam(mod)$MdAE, digits=digits),
+  LOOMAE=round(SardineForecast:::loogam(mod)$MAE, digits=digits),
   stringsAsFactors=FALSE)
 return(tmp1)
 }
@@ -62,31 +62,47 @@ return(tmp1)
 getmodheader <- function(dat){
   Yr1 <- min(dat$Year)
   Yr2 <- max(dat$Year)
+knitOut=knitr::opts_knit$get("rmarkdown.pandoc.to")
+if(length(knitOut)==0) isLatex=FALSE else isLatex=(knitOut=="latex")
+
+  space <- "&nbsp;"
+  if(isLatex) space <- "\\kern 1em"
   return(data.frame(
   Model=paste("catch only models ", Yr1,"-", Yr2, " data", sep=""), 
-  Residual.df="\\kern 1em", 
-  MASE="\\kern 1em",
-  MAE="\\kern 1em", RMSE="\\kern 1em",
-  LOOCV="\\kern 1em",
-  Adj.R2="\\kern 1em", AIC="\\kern 1em", 
-  LOOMd="\\kern 1em", LOOMAE="\\kern 1em",
+  Residual.df=space, 
+  MASE=space,
+  MAE=space, RMSE=space,
+  LOOCV=space,
+  Adj.R2=space, AIC=space, 
+  LOOMd=space, LOOMAE=space,
   stringsAsFactors=FALSE))
 }
 
 getmodheadertext <- function(text){
+  #detect if making latex
+knitOut=knitr::opts_knit$get("rmarkdown.pandoc.to")
+if(length(knitOut)==0) isLatex=FALSE else isLatex=(knitOut=="latex")
+
+  space <- "&nbsp;"
+  if(isLatex) space <- "\\kern 1em"
   return(data.frame(
   Model=text, 
-  Residual.df="\\kern 1em", 
-  MASE="\\kern 1em",
-  MAE="\\kern 1em", RMSE="\\kern 1em",
-  LOOCV="\\kern 1em",
-  Adj.R2="\\kern 1em", AIC="\\kern 1em", 
-  LOOMd="\\kern 1em", LOOMAE="\\kern 1em",
+  Residual.df=space, 
+  MASE=space,
+  MAE=space, RMSE=space,
+  LOOCV=space,
+  Adj.R2=space, AIC=space, 
+  LOOMd=space, LOOMAE=space,
   stringsAsFactors=FALSE))
 }
 
 # Space
-spacetmp = data.frame(Model="\\kern 1em",  Residual.df="\\kern 1em",  MASE="\\kern 1em", MAE="\\kern 1em", RMSE="\\kern 1em", LOOCV="\\kern 1em", Adj.R2="", AIC="", LOOMd="", LOOMAE="", stringsAsFactors=FALSE)
+knitOut=knitr::opts_knit$get("rmarkdown.pandoc.to")
+if(length(knitOut)==0) isLatex=FALSE else isLatex=(knitOut=="latex")
+
+  space <- "&nbsp;"
+  if(isLatex) space <- "\\kern 1em"
+spacetmp = data.frame(Model=space,  Residual.df=space,  MASE=space, MAE=space, RMSE=space, LOOCV=space, Adj.R2=space, AIC=space, LOOMd=space, LOOMAE=space, stringsAsFactors=FALSE)
 
 # Get names
 getcovtit <- function(covname){
@@ -222,7 +238,7 @@ seltable <- getmodheadertext(header)
 m0 = lm(as.formula(nullformula), data=dat)
 mod <- "m0"
 Model=paste0("null model: ", nullmod)
-tmp1 <- modfun(get(mod), Model)
+tmp1 <- modfun(get(mod), Model, digits=2)
 tmp1$Adj.R2 <- ""
 modtable <- tmp1
 # Base model
@@ -230,7 +246,7 @@ m1 = gam(as.formula(baseformula), data=dat)
 mod <- "m1"
     num <- ifelse(include.num, " 1.", "")
 Model <- paste0("base (M):", num, " ", basemod)
-tmp1 <- modfun(get(mod), Model)
+tmp1 <- modfun(get(mod), Model, digits=2)
 modtable=rbind(modtable,tmp1)
 baseaic <- SardineForecast::AICc(m1)
 lg <- SardineForecast::loogam(m1)
@@ -274,14 +290,14 @@ for(covgroup in names(covnamelist)){
     if("linear" %in% type){
     mod <- "m2"
     Model <- covtit
-    tmp1 <- covfun(get(mod), Model, baseaic=baseaic, baseloo=baseloo, baseloomae=baseloomae, baseloomd=baseloomd)
+    tmp1 <- covfun(get(mod), Model, baseaic=baseaic, baseloo=baseloo, baseloomae=baseloomae, baseloomd=baseloomd, digits=2)
     seltable=rbind(seltable,tmp1)
     }
   
     if("nonlinear" %in% type){
     mod <- "m3"
      Model <- covtit
-    tmp1 <- covfun(get(mod), Model, baseaic=baseaic, baseloo=baseloo, baseloomae=baseloomae, baseloomd=baseloomd)
+    tmp1 <- covfun(get(mod), Model, baseaic=baseaic, baseloo=baseloo, baseloomae=baseloomae, baseloomd=baseloomd, digits=2)
     seltable=rbind(seltable,tmp1)
     }
   }

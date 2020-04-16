@@ -439,7 +439,7 @@ return(p)
 ```
 
 
-## Validation of the landings base model
+## Test set-up
 
 This describes a variety of cross-validations used to select the base model for landing. The base model is the model with no environmental covariates only prior landings as covariates.  
 

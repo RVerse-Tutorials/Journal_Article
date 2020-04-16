@@ -16,7 +16,7 @@ if(!exists(".rmdenvir")) .rmdenvir = environment()
 # here::set_here()
 ```
 
-# Tests for prior season catch as covariate"
+# Tests for prior season catch as covariate
 
 ```{r child = file.path('SupplementFiles', 'Table App A spawner model.Rmd')}
 ```
@@ -34,38 +34,43 @@ cat("\\clearpage")
 
 # Tests for environmental variables as covariates
 
-```{r child = file.path('SupplementFiles', 'Table App B spawner covariates.Rmd')}
+```{r child = file.path('SupplementFiles', 'Table App B spawner covariates.Rmd'), eval=FALSE}
+```
+
+```{r, results="asis", echo=FALSE, eval=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = file.path('SupplementFiles', 'Table App B nonspawner covariates M with S2.Rmd'), eval=FALSE}
+```
+
+```{r, results="asis", echo=FALSE, eval=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = file.path('SupplementFiles', 'Table App B nonspawner covariates M wo S2.Rmd'), eval=FALSE}
+```
+
+```{r child = file.path('AppendixFiles', 'AppendixNonSpawner.Rmd')}
 ```
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-```{r child = file.path('SupplementFiles', 'Table App B nonspawner covariates M with S2.Rmd')}
-```
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-```{r child = file.path('SupplementFiles', 'Table App B nonspawner covariates M wo S2.Rmd')}
-```
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
+<!--
 # Tests for Chlorophyll-a as a covariate
+-->
 
-```{r child = file.path('SupplementFiles', 'Table App C chlorophyll.Rmd')}
+```{r child = file.path('SupplementFiles', 'Table App C chlorophyll.Rmd'), eval=FALSE}
 ```
 
-```{r, results="asis", echo=FALSE}
+```{r, results="asis", echo=FALSE, eval=FALSE}
 cat("\\clearpage")
 ```
 
 
-# Influential years tests
+# Validation of catch base models
 
 ```{r child = file.path('SupplementFiles', 'Table App D.Rmd')}
 ```
