@@ -20,7 +20,7 @@ header-includes: \usepackage[labelformat=empty]{caption}
 cat("#\n\n\\clearpage")
 ```
 
-```{r child = 'Table 1.Rmd', eval=FALSE}
+```{r child = file.path('Old', 'Table 1 - Monsoon Catch.Rmd'), eval=FALSE}
 ```
 
 
@@ -29,7 +29,7 @@ cat("#\n\n\\clearpage")
 cat("#\n\n\\clearpage")
 ```
 
-```{r child = 'Table 2.Rmd', eval=FALSE}
+```{r child = file.path('Old', 'Table 2 - Post-Monsoon Catch.Rmd'), eval=FALSE}
 ```
 
 

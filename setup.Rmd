@@ -20,7 +20,7 @@ if(length(knitOut)==0) isLatex=FALSE else isLatex=(knitOut=="latex")
 ```
 
 
-```{r message=FALSE,warning=FALSE, echo=FALSE}
+```{r message=FALSE, warning=FALSE, echo=FALSE}
 Qtr=3 # start of season
 reg="Kerala"
 respdat=data.frame(
@@ -45,87 +45,20 @@ respdat$Year=oilsardine_qtr$Year[oilsardine_qtr$Qtr==Qtr]
 
 #make sure the lengths match
 respdat=respdat[respdat$Year<=max(seio_covariates_mon$Year),]
+```
 
+```{r message=FALSE, warning=FALSE, echo=FALSE}
   covnames=c(
-    "log.CHL.2","log.CHL.3","log.CHL.4","log.CHL.5",
-    "log.CHL.2","log.CHL.3","log.CHL.4","log.CHL.5",
-    "log.CHL.2","log.CHL.3","log.CHL.4","log.CHL.5",
-    "log.CHL.2","log.CHL.3","log.CHL.4","log.CHL.5",
-    "log.CHL.2","log.CHL.3","log.CHL.4","log.CHL.5",
-    "log.CHL.2","log.CHL.3","log.CHL.4","log.CHL.5",
-    "log.CHL.2","log.CHL.3","log.CHL.4","log.CHL.5",
-    "log.CHL.7","log.CHL.8","log.CHL.9","log.CHL.10",
-    "log.CHL.7","log.CHL.8","log.CHL.9","log.CHL.10",
-    "log.CHL.7","log.CHL.8","log.CHL.9","log.CHL.10",
-    "log.CHL.7","log.CHL.8","log.CHL.9","log.CHL.10",
-    "log.CHL.7","log.CHL.8","log.CHL.9","log.CHL.10",
-    "log.CHL.7","log.CHL.8","log.CHL.9","log.CHL.10",
-    "log.CHL.7","log.CHL.8","log.CHL.9","log.CHL.10",
-    "SST.UPW.5","SST.UPW.4",
-    "SST.UPW.5","SST.UPW.4",
-    "SST.UPW.5","SST.UPW.4",
-    "SST.UPW.5","SST.UPW.4",
-    "SST.5","SST.4",
-    "SST.5","SST.4",
-     "SST.2","SST.3","SST.4","SST.5",
-    "SST.7","SST.8","SST.9","SST.10",
-    "SST.2","SST.3","SST.4","SST.5",
-    "SST.7","SST.8","SST.9","SST.10",
-    "SST.2","SST.3","SST.4","SST.5",
-    "SST.7","SST.8","SST.9","SST.10",
-    "SST.2","SST.3","SST.4","SST.5",
-    "SST.7","SST.8","SST.9","SST.10",
-    "SST.2","SST.3","SST.4","SST.5",
-    "SST.7","SST.8","SST.9","SST.10",
-    "SST.2","SST.3","SST.4","SST.5",
-    "SST.7","SST.8","SST.9","SST.10",
-    "SST.11","SST.12","SST.13",
-    "SST.11","SST.12","SST.13",
-    "SST.11","SST.12","SST.13",
-    "SST.11","SST.12","SST.13",
-    "SST.11","SST.12","SST.13",
-   "precip.gpcp.kerala", "precip.gpcp.kerala",
-   "ONI","DMI","Bakun.UPW")
+    paste0("log.CHL.",1:13),
+    paste0("SST.UPW.",1:5),
+    paste0("Wind.UPW.",1:5),
+    paste0("SST.", 1:13),
+    "precip.gpcp.kerala", "Precip.Kerala",
+   "ONI","DMI","Bakun.UPW", "tide.level.interp", "anomalies")
   covmon=list(
-     7:9,7:9,7:9,7:9,
-     1:3,1:3,1:3,1:3,
-     10:12,10:12,10:12,10:12,
-     9:10,9:10,9:10,9:10,
-     6:9,6:9,6:9,6:9,
-     1:12,1:12,1:12,1:12,
-     3:5,3:5,3:5,3:5,
-     7:9,7:9,7:9,7:9,
-     1:3,1:3,1:3,1:3,
-     10:12,10:12,10:12,10:12,
-     9:10,9:10,9:10,9:10,
-     6:9,6:9,6:9,6:9,
-     1:12,1:12,1:12,1:12,
-     3:5,3:5,3:5,3:5,
-     6:9,6:9,
-     1:3,1:3,
-     4:6,4:6,
-     10:12,10:12,
-     1:3,1:3,
-     1:12,1:12,
-     6:9,6:9,6:9,6:9,
-     6:9,6:9,6:9,6:9,
-     7:9,7:9,7:9,7:9,
-     7:9,7:9,7:9,7:9,
-     9:10,9:10,9:10,9:10,
-     9:10,9:10,9:10,9:10,
-     1:12,1:12,1:12,1:12,
-     1:12,1:12,1:12,1:12,
-     3:5,3:5,3:5,3:5,
-     3:5,3:5,3:5,3:5,
-     10:12,10:12,10:12,10:12,
-     10:12,10:12,10:12,10:12,
-     9:10,9:10,9:10,
-     1:12,1:12,1:12,
-     1:5,1:5,1:5,
-     6:9,6:9,6:9,
-     10:12,10:12,10:12,
-     4:5,6:7,
-     1:12, 9:11, 6:9)
+     7:9, 1:3, 10:12, 9:10, 6:9,
+     1:12, 3:5, 4:6, 1:5, 4:5, 6:7,
+     9:11, 8, 9, 7:8)
 
 #fix problem in seio_covariates_mon with SST in 1994.
   #replace with 5 year mean for that month
@@ -144,48 +77,46 @@ respdat=respdat[respdat$Year<=max(seio_covariates_mon$Year),]
 n=2 #max lag in cov to use
 for(i in 1:length(covnames)){
   covname=covnames[i]
-  mon=covmon[[i]]
+  for(j in 1:length(covmon)){
+  mon=covmon[[j]]
   varname=paste(covname,".mon",mon[1],"to",mon[length(mon)],".0",sep="")
   covdat=tapply(seio_covariates_mon2[[covname]],seio_covariates_mon2$Year,function(x){mean(x[mon],na.rm=TRUE)})
   covdat[is.infinite(covdat)]=NA
-  maxcovdat=tapply(seio_covariates_mon2[[covname]],seio_covariates_mon2$Year,function(x){max(x[mon],na.rm=TRUE)})
-  maxcovdat[is.infinite(covdat)]=NA  
+  # maxcovdat=tapply(seio_covariates_mon2[[covname]],seio_covariates_mon2$Year,function(x){max(x[mon],na.rm=TRUE)})
+  # maxcovdat[is.infinite(covdat)]=NA  
   if(str_detect(varname, "mon1to3")|str_detect(varname, "mon4to6")){
     respdat[[varname]]=c(covdat[-1],NA)
-    respdat[[paste0("max.",varname)]]=c(maxcovdat[-1],NA)
+ #   respdat[[paste0("max.",varname)]]=c(maxcovdat[-1],NA)
  }else{
     respdat[[varname]]=covdat
-    respdat[[paste0("max.",varname)]]=maxcovdat
+ #   respdat[[paste0("max.",varname)]]=maxcovdat
+ }
   }
 }
-for(j in c("mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
-  bx=c(2:5)
-  varname=c(paste0("SST.",bx,".",j))
-  tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
-  varname=paste0("SST.",bx[1],".",bx[NROW(bx)],".",j)
-  respdat[[varname]]=tmp
-}
-for(j in c("mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
-  bx=c(2:5,7:10)
-  varname=c(paste0("SST.",bx,".",j))
-  tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
-  varname=paste0("SST.",bx[1],".",bx[NROW(bx)],".",j)
-  respdat[[varname]]=tmp
-}
+for(bx in list(c(2:5), c(2:5,7:10), c(7:13), c(7,10), c(11:13), c(1:13))){
 for(j in c("mon1to3.0", "mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
-  bx=c(2:5,7:10)
-  varname=c(paste0("log.CHL.",bx,".",j))
+  for(jj in c("SST.", "log.CHL.")){
+  varname=c(paste0(jj, bx,".",j))
   tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
-  varname=paste0("log.CHL.",bx[1],".",bx[NROW(bx)],".",j)
+  varname=paste0(jj, bx[1],".",bx[NROW(bx)],".",j)
   respdat[[varname]]=tmp
+  }
 }
-for(j in c("mon1to3.0", "mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
-  bx=c(2:5)
-  varname=c(paste0("log.CHL.",bx,".",j))
-  tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
-  varname=paste0("log.CHL.",bx[1],".",bx[NROW(bx)],".",j)
-  respdat[[varname]]=tmp
 }
+# for(j in c("mon1to3.0", "mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
+#   bx=c(2:5,7:10)
+#   varname=c(paste0("log.CHL.",bx,".",j))
+#   tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
+#   varname=paste0("log.CHL.",bx[1],".",bx[NROW(bx)],".",j)
+#   respdat[[varname]]=tmp
+# }
+# for(j in c("mon1to3.0", "mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
+#   bx=c(2:5)
+#   varname=c(paste0("log.CHL.",bx,".",j))
+#   tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
+#   varname=paste0("log.CHL.",bx[1],".",bx[NROW(bx)],".",j)
+#   respdat[[varname]]=tmp
+# }
 #add lags
 for(i in colnames(respdat)){
   name=paste(str_sub(i, 1, str_length(i)-1),"1",sep="")
@@ -194,37 +125,53 @@ for(i in colnames(respdat)){
   respdat[[name]] = c(NA,NA,respdat[[i]][1:(dim(respdat)[1]-2)])
 }
 #make 2.5 year runsum of SST
-tmp=(respdat[,"SST.2.5.mon1to12.0"]*12 - respdat[,"SST.2.5.mon10to12.0"]*3 - respdat[,"SST.2.5.mon7to9.0"]*3) +
-    respdat[,"SST.2.5.mon1to12.1"]*12 +
-    respdat[,"SST.2.5.mon1to12.2"]*12
-varname="SST.2.5.3.yr.runsum.0"
+for(varn in c("SST.", "DMI", "Precip.Kerala")){
+  if(varn=="SST.") ivals <- c("2.5", "2.10", "7.10", "7.13", "11.13", "1.13")
+  if(varn=="DMI" | varn=="Precip.Kerala") ivals <- c("")
+for(i in ivals){
+tmp=(respdat[,paste0(varn,i,".mon1to12.0")]*12 -
+     respdat[,paste0(varn,i,".mon10to12.0")]*3 -
+     respdat[,paste0(varn,i,".mon7to9.0")]*3) +
+     respdat[,paste0(varn,i,".mon1to12.1")]*12 +
+     respdat[,paste0(varn,i,".mon1to12.2")]*12
+varname=paste0(varn,i,".3.yr.runsum.0")
 respdat[[varname]]=tmp/(12+12+6)
 #create the lag 1
-for(i in c("SST.2.5.3.yr.runsum.0")){
-  name=paste(str_sub(i, 1, str_length(i)-1),"1",sep="")
-  respdat[[name]]=c(NA,respdat[[i]][1:(dim(respdat)[1]-1)])
-  name=paste(str_sub(i, 1, str_length(i)-1),"2",sep="")
-  respdat[[name]] = c(NA,NA,respdat[[i]][1:(dim(respdat)[1]-2)])
+for(ii in paste0(varn,i,".3.yr.runsum.0")){
+  name=paste(str_sub(ii, 1, str_length(ii)-1),"1",sep="")
+  respdat[[name]]=c(NA,respdat[[ii]][1:(dim(respdat)[1]-1)])
+  name=paste(str_sub(ii, 1, str_length(ii)-1),"2",sep="")
+  respdat[[name]] = c(NA,NA,respdat[[ii]][1:(dim(respdat)[1]-2)])
+}
+}
 }
 
 fullrespdat = respdat
 ```
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
+runsumnames <- colnames(fullrespdat)[stringr::str_detect(colnames(fullrespdat), "runsum")]
+runsumnames <- unique(sapply(runsumnames, function(x){ str_split(x, "runsum")[[1]][1]}))
+runsumnames <- paste0(runsumnames, "runsum.")
 covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.", 
-             "SST.4.mon6to9.", 
+             "Precip.Kerala.mon6to7.", "Precip.Kerala.mon4to5.",
+             "SST.4.mon6to9.",
              "SST.UPW.4.mon6to9.", "Bakun.UPW.mon6to9.",
              "SST.2.5.mon6to9.", "SST.2.5.mon9to10.",
              "SST.2.10.mon3to5.", "SST.2.5.mon10to12.",
-             "SST.2.5.3.yr.runsum.", "ONI.mon1to12.",
-             "DMI.mon9to11.")
+             "ONI.mon1to12.", "DMI.mon9to11.", "DMI.mon6to9.", runsumnames,
+             "tide.level.interp.mon6to7.", 
+             "tide.level.interp.mon7to8.", 
+             "tide.level.interp.mon8to8.",
+             "tide.level.interp.mon9to9.", 
+             "anomalies.mon6to9.", "DMI.3.yr.runsum.", "Precip.Kerala.3.yr.runsum.")
 ```
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
 #set up to use consistent data
 #I set up dat.spawners sep since that gives me 2015 for spawners0
 dat=fullrespdat[,c("Year","nspawners1", "nspawners2", "spawners0", "spawners1", "spawners2", paste(covnames, "0", sep=""), paste(covnames, "1", sep=""))]
-dat=na.omit(dat)
+#dat=na.omit(dat)
 dat.spawners=dat
 if(any(diff(dat.spawners$Year)!=1)) stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")
 ```
@@ -235,7 +182,7 @@ dat=fullrespdat[,c("Year","nspawners0", "nspawners1", "nspawners2",
                    "spawners0", "spawners1", "spawners2", 
                    paste(covnames, "0", sep=""), 
                    paste(covnames, "1", sep=""))]
-dat=na.omit(dat)
+#dat=na.omit(dat)
 dat.nonspawners=dat
 if(any(diff(dat.nonspawners$Year)!=1))
   stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")
@@ -246,13 +193,14 @@ rm(dat) #make sure I don't accidentally forget to define dat
 covnames.chl = c("log.CHL.4.mon1to3.", "log.CHL.4.mon7to9.", "log.CHL.4.mon10to12.",
              "log.CHL.5.mon1to3.", "log.CHL.5.mon7to9.", "log.CHL.5.mon10to12.",
              "log.CHL.2.10.mon1to3.", "log.CHL.2.10.mon7to9.", "log.CHL.2.10.mon10to12.",
-             "log.CHL.2.5.mon1to3.", "log.CHL.2.5.mon7to9.", "log.CHL.2.5.mon10to12.")
+             "log.CHL.2.5.mon1to3.", "log.CHL.2.5.mon7to9.", "log.CHL.2.5.mon10to12.",
+             "DMI.mon9to11.")
 #set up to use consistent data
 dat=fullrespdat[,c("Year", "spawners0", "nspawners0","nspawners2",
                    "nspawners1", "spawners2", "spawners1",
                    "CatchWin0", "CatchWin1", "CatchWin2",
                    paste(covnames.chl, "0", sep=""), paste(covnames.chl, "1", sep=""))]
-dat=na.omit(dat)
+#dat=na.omit(dat)
 dat.chl=dat
 if(any(diff(dat.chl$Year)!=1))
   stop("Problem in setup.Rmd.  The covariate data.frame cannot have any missing years.")

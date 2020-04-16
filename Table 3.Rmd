@@ -9,14 +9,22 @@ output:
 ```{r child = 'setup.Rmd'}
 ```
 
+```{r child = file.path(here::here(),'AppendixFiles','Appendix-Variables.Rmd')}
+```
+
 ```{r seltable3, echo=FALSE}
-dat=dat.spawners
+vars <- getspawnercovs()
+datcommon <- dat.spawners[, 
+  c("Year", "spawners0", "spawners1", "spawners2",
+    "nspawners1", "nspawners2", vars$allcovnames)]
+dat <- na.omit(datcommon)
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
 #naive model error
 NE=mean(abs(dat$spawners0-dat$spawners1))
 
-covnames=c("SST.2.5.mon6to9.0", "Bakun.UPW.mon6to9.0","SST.2.5.3.yr.runsum.0")
+covnames=c("SST.2.5.mon6to9.0", "Bakun.UPW.mon6to9.0",
+           "SST.2.10.3.yr.runsum.0")
 dat$cov0=dat[[covnames[1]]]
 dat$cov1=dat[[covnames[2]]]
 dat$cov2=dat[[covnames[3]]]
@@ -27,7 +35,7 @@ tmp1 <- tmp2 <- tmp3 <- tmp4 <- blanktmp
 tmp1$Model = "Jul-Sep catch models with covariates"
 tmp2$Model = "$V_t$ = Jun-Sep ns-SST current season"
 tmp3$Model = "$W_{t}$ = Jun-Sep Bakun-UPW current season"
-tmp4$Model = "$Z_{t}$ = 2.5-year ave ns-SST"
+tmp4$Model = "$Z_{t}$ = 2.5-year ave r-SST"
 seltable=rbind(tmp1,tmp2,tmp3,tmp4)
 
 m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
@@ -112,14 +120,17 @@ tmp1 = data.frame(
   AIC="", stringsAsFactors=FALSE)
 seltable=rbind(seltable,tmp1)
 
-dat=dat.nonspawners
+vars <- getnonspawnercovs()
+datcommon <- dat.nonspawners[, 
+  c("Year", "nspawners0", "spawners1", "spawners2",
+    "nspawners1", "nspawners2", vars$allcovnames)]
+dat <- na.omit(datcommon)
 Yr1 = min(dat$Year)
 Yr2 = max(dat$Year)
-respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
 #naive model error
-NE=mean(abs(respdat$spawners0-respdat$spawners1))
+NE=mean(abs(dat$nspawners0-dat$nspawners1))
 
-covnames=c("SST.2.10.mon3to5.0", "SST.2.5.mon6to9.0","SST.2.5.3.yr.runsum.0","DMI.mon9to11.1")
+covnames=c("SST.2.10.mon3to5.0", "SST.2.5.mon6to9.0","SST.2.10.3.yr.runsum.0","DMI.mon9to11.1")
 dat$cov0=dat[[covnames[1]]]
 dat$cov1=dat[[covnames[2]]]
 dat$cov2=dat[[covnames[3]]]
@@ -135,7 +146,7 @@ tmp1 <- tmp2 <- tmp3 <- tmp4 <- tmp5 <- blanktmp
 tmp1$Model = "Oct-Mar catch models with covariates"
 tmp2$Model = "$U_t$ = Mar-May r-SST current season"
 tmp3$Model = "$V_{t}$ = Jun-Sep ns-SST current season"
-tmp4$Model = "$Z_{t}$ = 2.5-year ave ns-SST"
+tmp4$Model = "$Z_{t}$ = 2.5-year ave r-SST"
 tmp5$Model = "$X_{t-1}$ = fall DMI prior season"
 seltable=rbind(seltable,tmp1,tmp2,tmp3,tmp4,tmp5)
 

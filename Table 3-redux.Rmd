@@ -1,0 +1,248 @@
+---
+title: 'Appendices: Covariate tests'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r child = 'setup.Rmd'}
+```
+
+```{r child = file.path(here::here(),'AppendixFiles','Appendix-Variables.Rmd')}
+```
+
+```{r tabfun}
+covfun <- function(mod, eqn){
+  aa = summary(get(mod))
+tmp1=data.frame(
+  Model=eqn, 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3), 
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2))
+return(tmp1)
+}
+
+modfun <- function(mod, eqn){
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model=eqn, 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(get(mod)))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(get(mod)))^2)),digits=3),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3),
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2), stringsAsFactors=FALSE)
+return(tmp1)
+}
+
+## Header
+blanktmp = data.frame(Model="Mod", Residual.df="", MASE="", MAE="", RMSE="", LOOCV="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+
+# Space
+spacetmp = data.frame(Model="\\kern 1em",  Residual.df="\\kern 1em",  MASE="\\kern 1em", MAE="\\kern 1em", RMSE="\\kern 1em", LOOCV="\\kern 1em", Adj.R2="", F="\\kern 1em", p.value="\\kern 1em", AIC="", stringsAsFactors=FALSE)
+```
+
+```{r seltable3, echo=FALSE}
+vars <- getspawnercovs()
+datcommon <- dat.spawners[, 
+  c("Year", "spawners0", "spawners1", "spawners2",
+    "nspawners1", "nspawners2", vars$allcovnames)]
+dat <- na.omit(datcommon)
+Yr1 = min(dat$Year)
+Yr2 = max(dat$Year)
+#naive model error
+NE=mean(abs(dat$spawners0-dat$spawners1))
+
+covnames=c("SST.2.5.mon6to9.0", "Bakun.UPW.mon6to9.0","SST.2.10.3.yr.runsum.0")
+dat$cov0=dat[[covnames[1]]]
+dat$cov1=dat[[covnames[2]]]
+dat$cov2=dat[[covnames[3]]]
+
+## Header
+blanktmp = data.frame(Model="Mod", Residual.df="", MASE="", MAE="", RMSE="", LOOCV="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+tmp1 <- tmp2 <- tmp3 <- tmp4 <- blanktmp
+tmp1$Model = "Jul-Sep catch models with covariates"
+tmp2$Model = "$V_t$ = Jun-Sep ns-SST current season"
+tmp3$Model = "$W_{t}$ = Jun-Sep Bakun-UPW current season"
+tmp4$Model = "$Z_{t}$ = 2.5-year ave r-SST"
+seltable=rbind(tmp1,tmp2,tmp3,tmp4)
+
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=1; mod=paste("m",i,sep="")
+Model <- "M0: $ln(S_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$"
+tmp1 <- modfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+i=2; mod=paste("m",i,sep="")
+Model="$\\Rightarrow  ln(S_t) = M0 + s(V_t)$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + cov1, data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+Model="$ln(S_t) = M0 + \\beta W_{t}$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov2, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+Model="$ln(S_t) = M1 + s(Z_{t})$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  MAE="\\kern 1em", 
+  RMSE="\\kern 1em", 
+  LOOCV="\\kern 1em",
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", stringsAsFactors=FALSE)
+seltable=rbind(seltable,tmp1)
+
+vars <- getnonspawnercovs()
+datcommon <- dat.nonspawners[, 
+  c("Year", "nspawners0", "spawners1", "spawners2",
+    "nspawners1", "nspawners2", vars$allcovnames)]
+dat <- na.omit(datcommon)
+Yr1 = min(dat$Year)
+Yr2 = max(dat$Year)
+#naive model error
+NE=mean(abs(dat$nspawners0-dat$nspawners1))
+
+covnames=c("SST.2.10.mon3to5.0", "SST.2.5.mon6to9.0","SST.2.10.3.yr.runsum.0","DMI.mon9to11.1")
+dat$cov0=dat[[covnames[1]]]
+dat$cov1=dat[[covnames[2]]]
+dat$cov2=dat[[covnames[3]]]
+dat$cov3=dat[[covnames[4]]]
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
+m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6) + cov1, data=dat)
+a=anova(m1,m2,m3, test="F")
+
+## Header
+blanktmp = data.frame(Model="Mod", Residual.df="", MASE="", MAE="", RMSE="", LOOCV="", Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+tmp1 <- tmp2 <- tmp3 <- tmp4 <- tmp5 <- blanktmp
+tmp1$Model = "Oct-Mar catch models with covariates"
+tmp2$Model = "$U_t$ = Mar-May r-SST current season"
+tmp3$Model = "$V_{t}$ = Jun-Sep ns-SST current season"
+tmp4$Model = "$Z_{t}$ = 2.5-year ave r-SST"
+tmp5$Model = "$X_{t-1}$ = fall DMI prior season"
+seltable=rbind(seltable,tmp1,tmp2,tmp3,tmp4,tmp5)
+
+i=1; mod=paste("m",i,sep="")
+Model="M1: $ln(N_t) = \\alpha + s(ln(N_{t-1})) + s(ln(S_{t-2})) + \\epsilon_t$"
+tmp1 <- modfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+i=2; mod=paste("m",i,sep="")
+Model="$ln(N_t) = M1 + s(U_t)$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + cov1, data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+Model="$ln(N_t) = M1 + \\beta V_{t}$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov2, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+Model="$\\Rightarrow ln(N_t) = M1 + s(Z_{t})$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov3, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+Model="$ln(N_t) = M1 + s(X_{t-1})$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = spacetmp
+seltable=rbind(seltable,tmp1)
+
+## Simpler model
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=1; mod=paste("m",i,sep="")
+Model="M2: $ln(N_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$"
+tmp1 <- modfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+i=2; mod=paste("m",i,sep="")
+Model="$ln(N_t) = M2 + s(U_t)$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) , data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6)  + cov1, data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+Model="$ln(N_t) = M2 + \\beta V_{t}$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) , data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6)  + s(cov2, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+Model="$\\Rightarrow ln(N_t) = M2 + s(Z_{t})$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+
+m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
+m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov3, sp=0.6), data=dat)
+a=anova(m1,m2, test="F")
+
+i=2; mod=paste("m",i,sep="")
+Model="$ln(N_t) = M2 + s(X_{t-1})$"
+tmp1 <- covfun(mod, Model)
+seltable=rbind(seltable,tmp1)
+```
+
+
+```{r print-table3, echo=FALSE}
+colnames(seltable)=c("Model", "Residual df", "MASE", "MAE", "RMSE", "LOOCV", "Adj.R2", "F", "p value", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "MAE", "RMSE", "\\shortstack{LOOCV\\\\RMSE}", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
+seltable = seltable[,c(1,2,7,5,10,6)]
+
+thecap=paste("Top covariates for the monsoon (Jul-Sep) and post-monsoon (Oct-Mar) catch ($S_t$ and $N_t$) models. M0, M1 and M2 are the base models with only prior catch as covariates. To the base models, the  environmental covariates are added. ns-SST is nearshore (0-80km) and r-SST is regional (0-160km). The full set of nested covariate models and tests are given in Appendix B. The LOOCV RMSE (root mean square error) is the out-of-sample prediction error. The LOOCV RSME for the null model for Jul-Sep catch was 1.599 and the LOOCV RMSE for the null model for Oct-Mar catch was 1.015. The fitted versus observed catches from the models with and without 2.5-year average ns-SST are shown in Figure ", ref("fig:fitted"), ".", sep="")
+fullcap=paste("Table ", ref("tab:covariate-models"), ". ", thecap, sep="")
+kable(seltable, align=paste0("l", paste0(rep("c",dim(seltable)[2]-1),collapse="")), caption=fullcap, escape=FALSE)
+```

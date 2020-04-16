@@ -1,0 +1,260 @@
+---
+title: 'Appendices: Influence of changing temperature and upwelling intensity on Indian oil sardine (\textit{Sardinella longiceps}) landings'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
+---
+
+```{r child = 'setup.Rmd'}
+```
+
+```{r echo=FALSE}
+Supplement <- FALSE
+```
+
+# Appendix A: Tests for prior season catch as covariate
+
+```{r child = 'Table App A spawner model.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = 'Table App A nonspawner model.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Appendix B: Tests for environmental variables as covariates
+
+```{r child = 'Table App B spawner covariates.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = 'Table App B nonspawner covariates M with S2.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = 'Table App B nonspawner covariates M wo S2.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Appendix C: Tests for Chlorophyll-a as a covariate
+
+```{r child = 'Table App C chlorophyll.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Appendix D: Covariates along the SE India coast
+
+```{r child = 'setup.Rmd'}
+```
+
+```{r upw.mon, echo=FALSE,fig.cap="Figure D1. Upwelling index.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+### FIGURE Upwelling
+oldpar=par(mfrow=c(2,2), mar=c(2,5,2,0))
+for(i in 2:5){
+  covname=paste("SST.UPW.",i,sep="")
+dat=seio_covariates_mon[[covname]]
+datmon=seio_covariates_mon$Month
+datts=ts(dat,start=1956, frequency=12)
+plot(datts,ylab=paste("SST Upwelling Index Box",i),xlab="",bty="n",ylim=c(-2,5),xlim=c(1960,2015))
+#lines(ts(stats::filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2,col="red")
+}
+for(i in 2:5){
+  covname=paste("SST.UPW.",i,sep="")
+  dat=seio_covariates_mon[[covname]]
+  datmon=seio_covariates_mon$Month
+  if(i==2) oldpar=par(fig = c(0.05, .25, 0.8, 1), new = TRUE)
+  if(i==3) oldpar=par(fig = c(0.05+.5, .25+.5, 0.8, 1), new = TRUE)
+  if(i==4) oldpar=par(fig = c(0.05, .25, 0.8-.5, 1-.5), new = TRUE)
+  if(i==5) oldpar=par(fig = c(0.05+.5, .25+.5, 0.8-.5, 1-.5), new = TRUE)
+  catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
+  names(catchmeans)=1:12
+  barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,2), col="grey", xaxt="n")
+  title("Mean Mthly\nIndex",cex.main=.75)
+}
+library(maps)
+library(mapdata)
+mymap=map('worldHires','india',xlim=c(74.5,80),ylim=c(7,14),plot=FALSE)
+botlats=c(12:8,12:8,9,8,8); toplats=botlats+1
+cenlats=botlats+.5
+tmp= c(74.2,74.9,75.3,75.5,76.3)
+leftlons=c(tmp,tmp-1,73.5,74.3,73.3);rightlons=leftlons+1
+cenlons=leftlons+.5
+for(i in 2:5){
+  if(i==2) oldpar=par(fig = c(0.05, .25, .55, .75), new = TRUE)
+  if(i==3) oldpar=par(fig = c(0.05+.5, .25+.5, .55, .75), new = TRUE)
+  if(i==4) oldpar=par(fig = c(0.05, .25, 0.05, .25), new = TRUE)
+  if(i==5) oldpar=par(fig = c(0.05+.5, .25+.5, 0.05, .25), new = TRUE)
+  plot(mymap$x,mymap$y,type="l",bty="n",xaxt="n",yaxt="n",ylab="",xlab="")
+  botlat=botlats[i]; toplat=botlat+1
+  leftlon=leftlons[i]; rightlon=leftlon+1
+  y=c(botlat,toplat,toplat,botlat,botlat)
+  x=c(leftlon,leftlon,rightlon,rightlon,leftlon)
+  polygon(x,y)
+}
+par(oldpar)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r chl.mon, echo=FALSE,fig.cap="Figure D2. Chlorophyll-a.", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+### FIGURE CHL
+oldpar=par(mfrow=c(2,2), mar=c(2,5,2,0))
+for(i in 2:5){
+  covname=paste("CHL.",i,sep="")
+dat=seio_covariates_mon[[covname]]
+datmon=seio_covariates_mon$Month
+datts=ts(dat,start=1956, frequency=12)
+plot(datts,ylab=paste("Surface Chl-a Box",i),xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
+#lines(ts(stats::filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2,col="red")
+}
+for(i in 2:5){
+  covname=paste("CHL.",i,sep="")
+dat=seio_covariates_mon[[covname]]
+datmon=seio_covariates_mon$Month
+if(i==2) oldpar=par(fig = c(0.05, .25, 0.8, 1), new = T)  
+if(i==3) oldpar=par(fig = c(0.05+.5, .25+.5, 0.8, 1), new = T)  
+if(i==4) oldpar=par(fig = c(0.05, .25, 0.8-.5, 1-.5), new = T)  
+if(i==5) oldpar=par(fig = c(0.05+.5, .25+.5, 0.8-.5, 1-.5), new = T)  
+catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
+names(catchmeans)=1:12
+barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,12),col="grey", xaxt="n")
+title("Mean Mthly\nChl-a",cex.main=.75)
+}
+library(maps)
+library(mapdata)
+ mymap=map('worldHires','india',xlim=c(74.5,80),ylim=c(7,14),plot=FALSE)
+  botlats=c(12:8,12:8,9,8,8); toplats=botlats+1
+  cenlats=botlats+.5
+  tmp= c(74.2,74.9,75.3,75.5,76.3)     
+  leftlons=c(tmp,tmp-1,73.5,74.3,73.3);rightlons=leftlons+1
+  cenlons=leftlons+.5
+for(i in 2:5){
+  if(i==2) oldpar=par(fig = c(0.05, .25, .55, .75), new = T)  
+if(i==3) oldpar=par(fig = c(0.05+.5, .25+.5, .55, .75), new = T)  
+if(i==4) oldpar=par(fig = c(0.05, .25, 0.05, .25), new = T)  
+if(i==5) oldpar=par(fig = c(0.05+.5, .25+.5, 0.05, .25), new = T)  
+plot(mymap$x,mymap$y,type="l",bty="n",xaxt="n",yaxt="n",ylab="",xlab="")
+    botlat=botlats[i]; toplat=botlat+1
+    leftlon=leftlons[i]; rightlon=leftlon+1
+    y=c(botlat,toplat,toplat,botlat,botlat)
+    x=c(leftlon,leftlon,rightlon,rightlon,leftlon)
+    polygon(x,y)
+  }
+par(oldpar)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Appendix E: Comparison of land and oceanic rainfall measurements
+
+```{r rainfall.mon, echo=FALSE,fig.cap="Figure E1", fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
+par(mfrow=c(2,1), mar=c(2,5,2,2))
+dat=seio_covariates_mon$Precip.Kerala
+datmon=seio_covariates_mon$Month
+datts=ts(dat,start=1956, frequency=12)
+plot(datts,ylab="Monthly precipitation over land (mm)",xlab="",bty="n")
+
+dat=seio_covariates_mon$precip.gpcp.kerala
+datts=ts(dat,start=1956, frequency=12)
+plot(datts,ylab="Monthly precipitation off Kerala coast",xlab="",bty="n")
+
+#lines(ts(stats::filter(dat,rep(1,24))/24,start=1956,frequency=12),lwd=2)
+oldpar=par(fig = c(0.5, .93, 0.8, 1), new = T)  
+dat=seio_covariates_mon$Precip.Kerala
+catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
+names(catchmeans)=1:12
+barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75, col="grey", xaxt="n")
+title("Mean Monthly Precip",cex.main=.75)
+par(oldpar)
+
+dat=seio_covariates_mon$precip.gpcp.kerala
+oldpar=par(fig = c(0.5, .93, .3, .5), new = T)  
+catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
+names(catchmeans)=1:12
+barplot(catchmeans,ylab="", cex.axis=.75,cex.names=.75, col="grey", xaxt="n")
+title("Mean Monthly Precip",cex.main=.75)
+
+par(oldpar)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r rainfall.mon.comparison, echo=FALSE,fig.cap="Figure E2. Monthly precipitation measured over land via land gauges versus the precipitation measured via remote sensing over the ocean.", fig.width=6,fig.height=6,message=FALSE,warning=FALSE}
+plot(seio_covariates_mon$Precip.Kerala, seio_covariates_mon$precip.gpcp.kerala, ylab="land precipitation",
+xlab="ocean precipitation")
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+<!--
+# Appendix F: Chlorophyll-a images in 2016
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+
+```{r fig-chl-2016, out.width = "400px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:CHL")), message=FALSE, warning=FALSE, eval=FALSE}
+figfile = system.file("docs", "2016 CHL.png", package="SardineForecast")
+knitr::include_graphics(figfile)
+```
+
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+-->
+
+# Appendix F: Influential years tests
+
+```{r child = 'Table App D.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Appendix G: Data Sources
+
+```{r child = 'Table App Data.Rmd'}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Appendix H: Data
+
+```{r child = 'Table App H data.Rmd'}
+```
+
+

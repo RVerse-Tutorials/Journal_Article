@@ -15,10 +15,6 @@ header-includes: \usepackage[labelformat=empty]{caption}
 
 Things to change
 
-* Precip only show PrecipGPCP and show correlation with land
-* Add SSH inshore - offshore as another upwelling index
-* When showing r2 versus time, group the upwelling indexes together or group by index that affect similar age groups
-* Check the size/age structure of the fishery by qtr
 * Dave said that Pacific sardine uses 3-yr running mean of SST at 5-15m over whole CalCOFI region as an index of recruitment.
 
 -->
@@ -232,9 +228,7 @@ par(oldpar)
 cat("\\clearpage")
 ```
 
-<!-- 
-Define fullrespdat.
---> 
+
 ```{r child = 'setup.Rmd'}
 ```
 
@@ -378,3 +372,9 @@ text(m1$model[loc,"nspawners0"], m1$fitted.values[loc], labels=years, pos=4, off
 par(oldpar)
 ```
 
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = 'Figure_DMI.Rmd'}
+```

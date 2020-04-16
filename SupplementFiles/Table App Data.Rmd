@@ -1,0 +1,9 @@
+---
+title: 'Appendix: Data Sources'
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r child='Table-App-Data-Editted.md'}
+```

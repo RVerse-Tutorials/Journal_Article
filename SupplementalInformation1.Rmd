@@ -1,5 +1,5 @@
 ---
-title: 'Supplemental Information: Full model test and diagnostics'
+title: 'Supplemental Information: Full model tests and diagnostics'
 output:
   pdf_document: default
   html_document: default
@@ -11,20 +11,21 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```
 
 ```{r echo=FALSE}
-Supplement <- TRUE
+Supplement <- TRUE # Change if this will be labelled appendix
 if(!exists(".rmdenvir")) .rmdenvir = environment()
+# here::set_here()
 ```
 
-# Tests for prior season catch as covariate
+# Tests for prior season catch as covariate"
 
-```{r child = 'Table App A spawner model.Rmd'}
+```{r child = file.path('SupplementFiles', 'Table App A spawner model.Rmd')}
 ```
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-```{r child = 'Table App A nonspawner model.Rmd'}
+```{r child = file.path('SupplementFiles', 'Table App A nonspawner model.Rmd')}
 ```
 
 ```{r, results="asis", echo=FALSE}
@@ -33,21 +34,21 @@ cat("\\clearpage")
 
 # Tests for environmental variables as covariates
 
-```{r child = 'Table App B spawner covariates.Rmd'}
+```{r child = file.path('SupplementFiles', 'Table App B spawner covariates.Rmd')}
 ```
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-```{r child = 'Table App B nonspawner covariates M with S2.Rmd'}
+```{r child = file.path('SupplementFiles', 'Table App B nonspawner covariates M with S2.Rmd')}
 ```
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-```{r child = 'Table App B nonspawner covariates M wo S2.Rmd'}
+```{r child = file.path('SupplementFiles', 'Table App B nonspawner covariates M wo S2.Rmd')}
 ```
 
 ```{r, results="asis", echo=FALSE}
@@ -56,7 +57,7 @@ cat("\\clearpage")
 
 # Tests for Chlorophyll-a as a covariate
 
-```{r child = 'Table App C chlorophyll.Rmd'}
+```{r child = file.path('SupplementFiles', 'Table App C chlorophyll.Rmd')}
 ```
 
 ```{r, results="asis", echo=FALSE}
@@ -66,7 +67,7 @@ cat("\\clearpage")
 
 # Influential years tests
 
-```{r child = 'Table App D.Rmd'}
+```{r child = file.path('SupplementFiles', 'Table App D.Rmd')}
 ```
 
 ```{r, results="asis", echo=FALSE}

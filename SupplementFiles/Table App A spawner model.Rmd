@@ -1,0 +1,833 @@
+---
+title: "Table A2 a-c"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
+---
+
+```{r child = file.path(here::here(),'setup.Rmd')}
+```
+
+```{r echo=FALSE}
+#set the table pre
+if(Supplement){
+  pre <- "S"
+  tabset <- "tabsupp:"
+}else{
+  pre <- "A"
+  tabset <- "tabappA:"
+}
+```
+
+```{r table-appA-set-spawner-years, echo=FALSE}
+#dat.spawners defined in setup-covariates.Rmd
+dat=dat.spawners
+Yr1 = min(dat$Year)
+Yr2 = max(dat$Year)
+
+#naive model error
+#def of MASE is MAE/naive error
+NE=mean(abs(dat$spawners0-dat$spawners1))
+```
+
+```{r seltableA1a, echo=FALSE}
+respdat = dat
+
+seltable = data.frame(
+  Model=paste("Naive Model ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC="",
+  LOOCV="",
+  stringsAsFactors=FALSE)
+
+#5 is most complex
+m5 = gam(spawners0 ~ spawners1+spawners2, data=respdat)
+m1 = lm(spawners0 ~ -1 + offset(spawners1), data=m5$model)
+
+#Naive model
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$ln(S_t)$ = $ln(S_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(aa[["df"]][2],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2="", 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", LOOCV="")
+tmp2 = data.frame(
+  Model=paste("Time dependency test A ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="", 
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="",
+  LOOCV=""
+)
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m5 = gam(spawners0 ~ spawners1+spawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ offset(spawners1), data=m0$model)
+m2 = gam(spawners0 ~ spawners1, data=m0$model)
+m3 = gam(spawners0 ~ spawners1 + spawners2, data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#simple model
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $ln(S_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln N_t
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha$ + $\\beta ln(S_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln Catch1 + ln Catch2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha$ + $\\beta_1 ln(S_{t-1})$ + $\\beta_2 ln(S_{t-2})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", LOOCV="")
+tmp2 = data.frame(
+  Model=paste("Time dependency test B ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="", 
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="", LOOCV="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m5 = gam(spawners0 ~ nspawners1+nspawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ offset(nspawners1), data=m0$model)
+m2 = gam(spawners0 ~ nspawners1, data=m0$model)
+m3 = gam(spawners0 ~ nspawners1 + nspawners2, data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#simple level model
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln N_t
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln Catch1 + ln Catch2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha$ + $\\beta_1 ln(N_{t-1})$ + $\\beta_2 ln(N_{t-2})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", LOOCV="")
+tmp2 = data.frame(
+  Model=paste("Time dependency test C ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="", 
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="", LOOCV="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m5 = gam(spawners0 ~ nspawners1+spawners1, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ offset(nspawners1), data=m0$model)
+m2 = gam(spawners0 ~ nspawners1, data=m0$model)
+m3 = gam(spawners0 ~ nspawners1 + spawners1, data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#simple model
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln N_t
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln N1 + ln S1
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3a. $ln(S_t)$ = $\\alpha$ + $\\beta_1 ln(N_{t-1})$ + $\\beta_2 ln(S_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#5 is most complex
+m5 = gam(spawners0 ~ nspawners1+spawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ 1, data=m0$model)
+m2 = gam(spawners0 ~ nspawners1, data=m0$model)
+m3 = gam(spawners0 ~ nspawners1 + spawners2, data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#linear ln N1 + ln S2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3b. $ln(S_t)$ = $\\alpha$ + $\\beta_1 ln(N_{t-1})$ + $\\beta_2 ln(S_{t-2})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+```
+
+```{r print-tableA1a, echo=FALSE}
+colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC", "LOOCV")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC", "LOOCV")
+
+thecap=paste("Model selection tests of time-dependency the log catch during spawning months using F-tests of nested linear models.  $S_t$ is the catch during the spawning period (Jul-Sep). $N_t$ is the catch during the non-spawning period (Oct-Jun). $S_{t-1}$ and $N_{t-1}$ are the catch during the prior season during and after the spawning period respectively. $S_{t-2}$ and $N_{t-2}$ are the same for two seasons prior.  Test A uses catch during the spawning period as the explanatory variable.  Test B uses catch during the non-spawning period as the explanatory variable.  The numbers in front of the model equation indicate the level of nestedness. For Test C, there are two nested model sets, each with a different model 3.  The Naive model is a model that uses the previous data point in the time series as the prediction; thus the Naive model has no estimated parameters.")
+fullcap=paste("Table ", ref(paste0(tabset,"spawner-model-linear"), pre=pre), ". ", thecap, sep="")
+kable(seltable, align="lccccccc", caption=fullcap, escape=FALSE)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+
+```{r seltableA1b, echo=FALSE}
+#set up table
+seltable = data.frame(
+  Model=paste("Time dependency test A ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC="", LOOCV="", stringsAsFactors=FALSE)
+
+#5 is most complex
+m5 = gam(spawners0 ~ spawners1+spawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ spawners1, data=m0$model)
+m2 = gam(spawners0 ~ s(spawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(spawners1, sp=0.6) + s(spawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#linear on S1 model
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $\\beta ln(S_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln N_t
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha$ + $s(ln(S_{t-1}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln Catch1 + ln Catch2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha$ + $s_1(ln(S_{t-1}))$ + $s_2(ln(S_{t-2}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", LOOCV="")
+tmp2 = data.frame(
+  Model=paste("Time dependency test B ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="", 
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="", LOOCV="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m5 = gam(spawners0 ~ nspawners1+nspawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ nspawners1, data=m0$model)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(nspawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#linear on N1
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln N_t
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln Catch1 + ln Catch2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(N_{t-2}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", LOOCV="")
+tmp2 = data.frame(
+  Model=paste("Time dependency test C ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="", 
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="", LOOCV="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m5 = gam(spawners0 ~ nspawners1+spawners1, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ 1, data=m0$model)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(spawners1, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#nonlinear ln N_t
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#nonlinear ln N1 + ln S1
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(S_{t-1}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#5 is most complex
+m5 = gam(spawners0 ~ nspawners1+spawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ 1, data=m0$model)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#linear ln N1 + ln S2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(S_{t-2}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+load("FittedLooPred.Rdata")
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", LOOCV="")
+tmp2 = data.frame(
+  Model=paste("Time varying test D ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="", 
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="", LOOCV="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#DLM
+mod <- FittedLooPred1984$Fitted[["dlm(intercept)"]]
+modloo <- FittedLooPred1984$LooPred[["dlm(intercept)"]]
+err <- mod$model$data[1,]-modloo$pred
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha_t$ + $\\epsilon_t$", 
+  Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
+  Adj.R2="", 
+  F="", p.value="", 
+  AIC=round(mod$AIC, digits=2),
+  LOOCV=round(sqrt(mean(err^2, na.rm=TRUE)), digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+mod <- FittedLooPred1984$Fitted[["dlm(intercept, slope)"]]
+modloo <- FittedLooPred1984$LooPred[["dlm(intercept, slope)"]]
+err <- mod$model$data[1,]-modloo$pred
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha_t$ + $\\beta_t t$ + $\\epsilon_t$", 
+  Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
+  Adj.R2="", 
+  F="", p.value="", 
+  AIC=round(mod$AIC, digits=2),
+  LOOCV=round(sqrt(mean(err^2, na.rm=TRUE)), digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+mod <- FittedLooPred1984$Fitted[["dlm(Jul-Sep(t-1))"]]
+modloo <- FittedLooPred1984$LooPred[["dlm(Jul-Sep(t-1))"]]
+err <- mod$model$data[1,]-modloo$pred
+tmp1=data.frame(
+  Model="3a. $ln(S_t)$ = $\\alpha$ + $\\beta_t ln(S_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
+  Adj.R2="", 
+  F="", p.value="", 
+  AIC=round(mod$AIC, digits=2),
+  LOOCV=round(sqrt(mean(err^2, na.rm=TRUE)), digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+mod <- FittedLooPred1984$Fitted[["dlm(Oct-Mar(t-1))"]]
+modloo <- FittedLooPred1984$LooPred[["dlm(Oct-Mar(t-1))"]]
+err <- mod$model$data[1,]-modloo$pred
+tmp1=data.frame(
+  Model="3b. $ln(S_t)$ = $\\alpha$ + $\\beta_t ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=mod$samp.size-attr(MARSS:::logLik.marssMLE(mod), "df"), 
+  MASE=round(mean(abs(MARSS:::residuals.marssMLE(mod, silent=TRUE)$model.residuals), na.rm=TRUE)/NE,digits=3), 
+  Adj.R2="", 
+  F="", p.value="", 
+  AIC=round(mod$AIC, digits=2),
+  LOOCV=round(sqrt(mean(err^2, na.rm=TRUE)), digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+```
+
+```{r print-tableA1b, echo=FALSE}
+colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC", "LOOCV")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC", "LOOCV")
+
+thecap=paste0("Model selection tests of time-dependency the catch during spawning months using non-linear or time-varying linear responses instead of time-constant linear responses as in Table ", ref(paste0(tabset,"spawner-model-linear"), pre=pre), ". See Table ", ref(paste0(tabset,"spawner-model-linear"), pre=pre), " for an explanation of the parameters and model set-up.")
+fullcap=paste("Table ", ref(paste0(tabset,"spawner-model-nonlinear"), pre=pre), ". ", thecap, sep="")
+kable(seltable, align="lccccccc", caption=fullcap, escape=FALSE)
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+
+```{r seltableA-spawner-1956, echo=FALSE}
+respdat = fullrespdat[which(fullrespdat$Year==1956):which(fullrespdat$Year==(Yr1-1)),]
+
+#set up table
+seltable = data.frame(
+  Model=paste("Time dependency test A ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC="", LOOCV="", stringsAsFactors=FALSE)
+
+#5 is most complex
+m5 = gam(spawners0 ~ spawners1+spawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ spawners1, data=m0$model)
+m2 = gam(spawners0 ~ s(spawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(spawners1, sp=0.6) + s(spawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#linear on S1 model
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $\\beta ln(S_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln N_t
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha$ + $s(ln(S_{t-1}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln Catch1 + ln Catch2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha$ + $s_1(ln(S_{t-1}))$ + $s_2(ln(S_{t-2}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", LOOCV="")
+tmp2 = data.frame(
+  Model=paste("Time dependency test B ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="", 
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="", LOOCV="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m5 = gam(spawners0 ~ nspawners1+nspawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ nspawners1, data=m0$model)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(nspawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#linear on N1
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln N_t
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#linear ln Catch1 + ln Catch2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(N_{t-2}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", LOOCV="")
+tmp2 = data.frame(
+  Model=paste("Time dependency test C ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="", 
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="", LOOCV="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m5 = gam(spawners0 ~ nspawners1+spawners1, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ 1, data=m0$model)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(spawners1, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#nonlinear ln N_t
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $s(ln(N_{t-1}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", p.value="", 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#nonlinear ln N1 + ln S1
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. $ln(S_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(S_{t-1}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+
+#5 is most complex
+m5 = gam(spawners0 ~ nspawners1+spawners2, data=respdat)
+m0=m5
+m1 = gam(spawners0 ~ 1, data=m0$model)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#linear ln N1 + ln S2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3. $ln(S_t)$ = $\\alpha$ + $s_1(ln(N_{t-1}))$ + $s_2(ln(S_{t-2}))$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2),
+  LOOCV=round(SardineForecast:::loogam(get(mod))$RMSE, digits=3)
+)
+seltable=rbind(seltable,tmp1)
+```
+
+```{r print-tableA1c, echo=FALSE}
+colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC", "LOOCV")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC", "LOOCV")
+
+thecap=paste0("Table ",ref(paste0(tabset,"spawner-model-nonlinear"), pre=pre), " with 1956-",Yr1-1, " data instead of ", Yr1, " to ", Yr2, " data.  See Table ",ref(paste0(tabset,"spawner-model-linear"), pre=pre), " for an explanation of the parameters and model set-up.")
+fullcap=paste("Table ", ref(paste0(tabset,"spawner-model-1956"), pre=pre), ". ", thecap, sep="")
+kable(seltable, align="lccccccc", caption=fullcap, escape=FALSE)
+```
+
+
+

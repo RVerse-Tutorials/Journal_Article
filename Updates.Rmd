@@ -9,9 +9,28 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # April 2020
 
-### April 10, 2020 To do
+### April 11, 2020
 
-* Move some of the main covariate tables to Appendices which will appear with the text
+Done
+
+* Made the appendix table for nonspawners. Finished appendices.
+* Removed Chl Jan-Mar, added H1 labels to Chl.
+* Nothing else on to do list finished
+
+To do
+
+* Edit Table 2 per changes in appendices
+* R programming language (R Development Core Team, 2019)
+
+### April 10, 2020
+
+Done
+
+* Made the appendix table for spawners. Should be easy now to do non-spawners
+
+To do
+
+* ~~Move some of the main covariate tables to Appendices which will appear with the text~~
 * Fix the refs to supplement tables in main text
 * Add refs to each hypothesis in the results
 * Discuss the land precipitation results briefly or cut the land precipitation data.
@@ -53,11 +72,11 @@ I spent the summer revamping and clarifying the hypotheses to test (per comments
 ### To do
 
 * Edit for specific journal
-* Write abstract
+* ~~Write abstract~~
 * Do I need a detailed version of the hypotheses table with references? in the appendix? Refs are currently scattered in introduction.
 * Test of autocorrelation of residuals and normality to appendix
-* Need to do influence analysis via cross-validation (LOO).  1994 catch is influential and outlier.
-* Cut the cartoon of sardine life-cycle? Or need to improve the quality of the figure.
+* ~~Need to do influence analysis via cross-validation (LOO).  1994 catch is influential and outlier.~~
+* ~~Cut the cartoon of sardine life-cycle? Or need to improve the quality of the figure.~~
 * Need to discuss the land precipitation results briefly or cut the land precipitation data. 
 * Discuss the CHL results more?
 

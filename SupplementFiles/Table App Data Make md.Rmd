@@ -1,0 +1,53 @@
+---
+title: 'Appendix: Data Sources'
+output:
+  md_document: default
+  html_document: default
+  pdf_document: default
+bibliography: '`r system.file("docs", "Sardine.bib", package = "SardineForecast")`'
+---
+
+# Landings Data
+
+```{r echo=FALSE}
+fil <- system.file("html", "oilsardine_qtr.html", package = "SardineForecast")
+htmltools::includeHTML(fil)
+```
+
+# SST Data
+
+```{r echo=FALSE}
+fil <- system.file("html", "sst.html", package = "SardineForecast")
+htmltools::includeHTML(fil)
+```
+
+# Upwelling Data
+
+```{r echo=FALSE}
+fil <- system.file("html", "upw.html", package = "SardineForecast")
+htmltools::includeHTML(fil)
+```
+
+# Precipitation Data
+
+```{r echo=FALSE}
+fil <- system.file("html", "precip.html", package = "SardineForecast")
+htmltools::includeHTML(fil)
+```
+
+# Chlorophyll Data
+
+```{r echo=FALSE}
+fil <- system.file("html", "chl.html", package = "SardineForecast")
+htmltools::includeHTML(fil)
+```
+
+# ENSO Data
+
+```{r echo=FALSE}
+fil <- system.file("html", "enso.html", package = "SardineForecast")
+htmltools::includeHTML(fil)
+```
+
+```{r child='Table-App-Data.md', eval=FALSE}
+```

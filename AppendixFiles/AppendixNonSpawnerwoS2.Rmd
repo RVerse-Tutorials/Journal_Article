@@ -1,0 +1,108 @@
+---
+title: 'Appendices: Non-spawner covariate tests'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
+---
+
+```{r echo=FALSE}
+addchl = TRUE
+add1956 = FALSE
+```
+
+```{r child = file.path(here::here(),'setup.Rmd')}
+```
+
+```{r child = file.path(here::here(),'AppendixFiles','Appendix-Functions.Rmd')}
+```
+
+```{r child = file.path(here::here(),'AppendixFiles','Appendix-Variables.Rmd')}
+```
+
+
+```{r nonspawncovnames2, echo=FALSE}
+vars <- getnonspawnercovs()
+datcommon <- dat.nonspawners[, 
+  c("Year", "nspawners0", "spawners1", "spawners2",
+    "nspawners1", "nspawners2", vars$allcovnames)]
+dat <- na.omit(datcommon)
+
+NE=mean(abs(dat$nspawners0-dat$nspawners1))
+```
+
+```{r nonspawnertablevals2}
+nullmod <- "$ln(N_t) = ln(N_{t-1}) + \\epsilon_t$"
+basemod <- "$ln(N_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$"
+resp <- "ln(N_t)"
+baseformula <- "nspawners0 ~ s(nspawners1, sp=0.6)"
+nullformula <- "nspawners0 ~ -1 + offset(nspawners1)"
+```
+
+```{r nonspawnertable2}
+seltable <- makeapptable(dat, nullmod, basemod, nullformula, baseformula, resp, vars$covnamelist, vars$covlags)
+```
+
+```{r nonspawnertablechlvals1, eval=addchl}
+basemod <- "$ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon_t$"
+baseformula <- "nspawners0 ~ poly(nspawners1, 2, raw=TRUE)"
+m3form <- "poly(cov, 2, raw=TRUE)"
+```
+
+
+```{r nonspawnchlnames2, echo=FALSE, eval=addchl}
+vars <- getnonspawnerchlcovs()
+datcommon <- dat.chl[, 
+  c("Year", "nspawners0", "spawners1", "spawners2",
+    "nspawners1", "nspawners2", vars$allcovnames)]
+dat <- na.omit(datcommon)
+```
+
+```{r nonspawnerchltable2, eval=addchl}
+seltable = rbind(seltable, spacetmp)
+chlbody <- makeapptable(dat, nullmod, basemod, nullformula, baseformula, resp, vars$covnamelist, vars$covlags, m3form=m3form)
+seltable <- rbind(seltable, chlbody)
+```
+
+```{r nonspawncovnames1956b, echo=FALSE, eval=add1956}
+covnamelist = list(
+    `Select covariates available from 1957`=c(
+      "Precip.Kerala.mon6to7.", "DMI.mon9to11.", "DMI.3.yr.runsum.")
+    )
+covlags = list(
+  Precip.Kerala.mon6to7. = c(0),
+  DMI.mon9to11. = c(1),
+  DMI.3.yr.runsum. = 0)
+allcovnames <- c()
+covnames <- unlist(covnamelist)
+for(i in covnames) allcovnames <- c(allcovnames, 
+   paste0(i, covlags[[i]]))
+
+datcommon <- dat.nonspawners[, 
+  c("Year", "nspawners0", "spawners1", "spawners2",
+    "nspawners1", "nspawners2", allcovnames)]
+dat <- na.omit(datcommon)
+
+basemod <- "$ln(N_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$"
+baseformula <- "nspawners0 ~ s(nspawners1, sp=0.6)"
+```
+
+```{r nonspawnertable1956b, eval=add1956}
+seltable = rbind(seltable, spacetmp)
+tabbody <- makeapptable(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags)
+seltable <- rbind(seltable, tabbody)
+```
+
+
+```{r print-apptable2, echo=FALSE}
+seltable = seltable[,c("Model", "Residual.df", "Adj.R2", "RMSE", "AIC", "LOOCV", "LOOMd")]
+colnames(seltable) <- c("Model", "Resid. df", "Adj. R2", "RMSE", "AICc", "LOOCV", "LOOMdAE")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Resid.\\\\df}", "\\shortstack{Adj.\\\\$R^2$}", "RMSE", "AICc", "\\shortstack{LOOCV\\\\RMSE}", "\\shortstack{LOOCV\\\\MdAE}")
+
+thecap=paste("Covariate tests for the October-March catch ($N_t$). M is the base model with prior season October-March catch ($N_{t-1}$) and July-September catch two seasons prior ($S_{t-2}$) as the covariates. To the base model, the  environmental covariates are added. ns-SST is nearshore (0-80km) and r-SST is regional (0-160km) SST. Similarly, ns-Chl is nearshore chlorophyll. The models are nested sets, e.g. 1, 2a, 3a and 1, 2b, 3b.")
+fullcap=paste("Table ", ref("apptab:nonspawnercovariatewoS2-models", pre="A"), ". ", thecap, sep="")
+kable(seltable, align=paste0("l", paste0(rep("c",dim(seltable)[2]-1),collapse="")), caption=fullcap, escape=FALSE)
+```
+
+Notes: The nested F-tests are given in Supporting Information. LOOCV = Leave one out cross-validation. RMSE = root mean square error. MdAE = median absolute error. AICc = Akaike Information Criterion corrected for small sample size. $\dagger$ and $\dagger\dagger$ = AICc greater than 2 and greater than 5 below model M (base catch model).  $\ddagger$, $\ddagger\ddagger$, and ${\ddagger}{\ddagger}{\ddagger}$  = LOOCV RMSE 5\%, 10\% and 20\% below model M, respectively. $t$ indicates current season (Jul-Jun) and $t-1$ is prior season. Thus a Jan-Mar covariate with $t-1$ would be in the same calendar year as the Jul-Sep catch, though in a prior fishing season. With the exception that for covariates that are calendar year (Jan-Dec) or multiyear, $t$ is the current calendar year.

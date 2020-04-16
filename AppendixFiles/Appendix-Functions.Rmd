@@ -1,0 +1,193 @@
+---
+title: 'Appendices: Common Functions'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r echo=FALSE}
+covfun <- function(mod, eqn, NE=NA, baseaic=-Inf, baseloo=-Inf, baseloomae=-Inf, baseloomd=-Inf){
+  # a is anova(m1, m2, etc
+  aa = summary(mod)
+  modrmse <- SardineForecast:::loogam(mod)$RMSE
+  ddag <- ""
+  if(modrmse < 0.95*baseloo) ddag <- "$\\ddagger$"
+  if(modrmse < 0.9*baseloo) ddag <- "$\\ddagger\\ddagger$"
+  if(modrmse < 0.8*baseloo) ddag <- "${\\ddagger}{\\ddagger}{\\ddagger}$"
+  #if(modrmse < 0.7*baseloo) ddag <- "${\\ddagger}{\\ddagger}{\\ddagger}{\\ddagger}$"
+
+  modrmse <- SardineForecast:::loogam(mod)$MdAE
+  ddag2 <- ""
+  if(modrmse < 0.95*baseloomd) ddag2 <- "$\\ddagger$"
+  if(modrmse < 0.9*baseloomd) ddag2 <- "$\\ddagger\\ddagger$"
+  if(modrmse < 0.8*baseloomd) ddag2 <- "${\\ddagger}{\\ddagger}{\\ddagger}$"
+  
+  modaic <- SardineForecast::AICc(mod)
+  dag <- ""
+  if(modaic < baseaic-2) dag <- "$\\dagger$"
+  if(modaic < baseaic-5) dag <- "$\\dagger\\dagger$"
+tmp1=data.frame(
+  Model=eqn, 
+  Residual.df=round(mod$df.residual,digits=1), 
+  MASE=round(mean(abs(residuals(mod)))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(mod))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(mod))^2)),digits=3), 
+  LOOCV=paste0(round(SardineForecast:::loogam(mod)$RMSE, digits=3), ddag),
+  Adj.R2=100*round(aa$r.sq, digits=2),
+  AIC=paste0(round(SardineForecast::AICc(mod), digits=2),dag),
+  LOOMd=paste0(round(SardineForecast:::loogam(mod)$MdAE, digits=3), ddag2),
+  LOOMAE=paste0(round(SardineForecast:::loogam(mod)$MAE, digits=3), ""))
+return(tmp1)
+}
+
+modfun <- function(mod, eqn, NE=NA){
+aa = summary(mod)
+tmp1=data.frame(
+  Model=eqn, 
+  Residual.df=round(mod$df.residual,digits=1), 
+  MASE=round(mean(abs(residuals(mod)))/NE,digits=3), 
+  MAE=round(mean(abs(residuals(mod))),digits=3), 
+  RMSE=round(sqrt(mean((residuals(mod))^2)),digits=3),
+  LOOCV=round(SardineForecast:::loogam(mod)$RMSE, digits=3),
+  Adj.R2=100*round(aa$r.sq, digits=2), 
+  AIC=round(AICc(mod), digits=2),
+  LOOMd=round(SardineForecast:::loogam(mod)$MdAE, digits=3),
+  LOOMAE=round(SardineForecast:::loogam(mod)$MAE, digits=3),
+  stringsAsFactors=FALSE)
+return(tmp1)
+}
+
+## Header
+getmodheader <- function(dat){
+  Yr1 <- min(dat$Year)
+  Yr2 <- max(dat$Year)
+  return(data.frame(
+  Model=paste("catch only models ", Yr1,"-", Yr2, " data", sep=""), 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em",
+  MAE="\\kern 1em", RMSE="\\kern 1em",
+  LOOCV="\\kern 1em",
+  Adj.R2="\\kern 1em", AIC="\\kern 1em", 
+  LOOMd="\\kern 1em", LOOMAE="\\kern 1em",
+  stringsAsFactors=FALSE))
+}
+
+# Space
+spacetmp = data.frame(Model="\\kern 1em",  Residual.df="\\kern 1em",  MASE="\\kern 1em", MAE="\\kern 1em", RMSE="\\kern 1em", LOOCV="\\kern 1em", Adj.R2="", AIC="", LOOMd="", LOOMAE="", stringsAsFactors=FALSE)
+
+# Get names
+getcovtit <- function(covname){
+  if(covname=="SST.4.mon10to12.") covtit = "$V_t$ = Oct-Dec SST (L1)"
+  if(covname=="SST.2.5.mon6to9.") covtit =  "$V_t$ = Jun-Sep ns-SST (L2)"
+  if(covname=="SST.2.5.mon9to10.") covtit =  "$V_t$ = Sep-Oct ns-SST (L1)"
+  if(covname=="SST.2.10.mon3to5.") covtit =  "$V_t$ = Mar-May r-SST (S5)"
+  if(covname=="SST.4.mon7to9.") covtit =  "$V_t$ = Jul-Sep SST"
+  if(covname=="SST.4.mon6to9.") covtit =  "$V_t$ = Jun-Sep SST"
+  if(covname=="SST.4.mon7to12.") covtit =  "$V_t$ = Jul-Dec SST"
+  if(covname=="SST.4.mon1to3.") covtit =  "$V_t$ = Jan-Mar SST"
+  if(covname=="SST.4.mon1to12.") covtit =  "$V_t$ = Jan-Dec SST"
+  if(covname=="SST.4.mon9to10.") covtit =  "$V_t$ = Sep-Oct SST"
+  if(covname=="SST.4.mon1to12.") covtit =  "$V_t$ = Jan-Dec SST"
+  if(covname=="SST.2.10.mon7to12.") covtit =  "$V_t$ = Jul-Dec r-SST"
+  if(covname=="precip.gpcp.kerala.mon6to7.") covtit = "$V_t$ = Jun-Jul Precipitation - satellite (S1)"
+  if(covname=="Precip.Kerala.mon4to5.") covtit = "$V_t$ = Apr-May Precipitation - land gauges (S2)"
+  if(covname=="Precip.Kerala.mon6to7.") covtit = "$V_t$ = Jun-Jul Precipitation - land gauges  (S1)"
+  if(covname=="precip.gpcp.kerala.mon4to5.") covtit = "$V_t$ = Apr-May Precipitation - satellite (S2)"
+  if(covname=="SST.2.5.mon10to12.") covtit =  "$V_t$ = Oct-Dec ns-SST (L1)"
+  if(covname=="Bakun.UPW.mon6to9.") covtit = "$V_t$ = Jun-Sep Bakun-UPW (L2)"
+  if(covname=="Wind.UPW.4.mon6to9.") covtit = "$V_t$ = Jun-Sep Wind-UPW (L2)"
+  if(covname=="SST.UPW.4.mon6to9.") covtit = "$V_t$ = Jun-Sep SST-derived UPW (L2)"
+  if(covname=="SST.2.5.mon6to9.") covtit = "$V_t$ = Jun-Sep ns-SST (L2)"
+  if(covname=="SST.2.10.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave r-SST (A1)"
+  if(covname=="SST.11.13.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave fo-SST (A1)"
+  if(covname=="SST.7.10.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave o-SST (A1)"
+  if(covname=="SST.7.13.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave o-SST (A1)"
+  if(covname=="SST.2.5.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave ns-SST (A1)"
+  if(covname=="SST.1.13.3.yr.runsum.") covtit = "$V_t$ = 2.5-year ave rr-SST (A1)"
+  if(covname=="ONI.mon1to12.") covtit = "$V_t$ = ONI (A2)"
+  if(covname=="DMI.mon9to11.") covtit = "$V_t$ = Sep-Nov DMI (A3)"
+  if(covname=="DMI.mon6to9.") covtit = "$V_t$ = Jun-Sep DMI (A3)"
+  if(covname=="DMI.3.yr.runsum.") covtit = "$V_t$ = DMI 3-yr ave (A3)"
+  if(covname=="log.CHL.4.mon1to3.")   covtit = "$V_t$ = Jan-Mar Chlorophyll"
+  if(covname=="log.CHL.4.mon7to9.")   covtit = "$V_t$ = Jul-Sep Chlorophyll (L3)"
+  if(covname=="log.CHL.4.mon10to12.") covtit = "$V_t$ = Oct-Dec Chlorophyll (L3)"
+  if(covname=="log.CHL.2.5.mon1to3.")   covtit = "$V_t$ = Jan-Mar ns-CHL"
+  if(covname=="log.CHL.2.5.mon7to9.")   covtit = "$V_t$ = Jul-Sep ns-CHL (L3)"
+  if(covname=="log.CHL.2.5.mon10to12.") covtit = "$V_t$ = Oct-Dec ns-CHL (L3)"
+  if(covname=="tide.level.interp.mon6to9.") covtit = "$V_t$ = Jun-Sep tide level"
+  if(covname=="tide.level.interp.mon1to12.") covtit = "$V_t$ = Jan-Dec tide level"
+  if(covname=="tide.level.interp.mon9to11.") covtit = "$V_t$ = Sep-Nov tide level"
+  if(covname=="tide.level.interp.mon8to8.") covtit = "$V_t$ = Aug tide level at Kochi (A3)"
+  if(covname=="tide.level.interp.mon9to9.") covtit = "$V_t$ = Sep tide level at Kochi (A3)"
+  if(covname=="tide.level.interp.mon7to8.") covtit = "$V_t$ = Jul-Aug tide level at Kochi (A3)"
+  if(covname=="anomalies.mon6to9.") covtit = "$V_t$ = Jun-Sep tide level anomalies at Kochi (A3)"
+
+  return(covtit)
+}
+```
+
+```{r, echo=FALSE}
+makeapptable <- function(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags, m3form = "s(cov, sp=0.6)"){
+  
+seltable <- getmodheader(dat)
+
+# Null model
+m0 = lm(as.formula(nullformula), data=dat)
+mod <- "m0"
+Model=paste0("null model: ", nullmod)
+tmp1 <- modfun(get(mod), Model)
+tmp1$Adj.R2 <- ""
+seltable=rbind(seltable,tmp1)
+# Base model
+m1 = gam(as.formula(baseformula), data=dat)
+mod <- "m1"
+Model <- paste0("base (M) 1. ", basemod)
+tmp1 <- modfun(get(mod), Model)
+seltable=rbind(seltable,tmp1)
+baseaic <- SardineForecast::AICc(m1)
+lg <- SardineForecast::loogam(m1)
+baseloo <- lg$RMSE
+baseloomae <- lg$MAE
+baseloomd <- lg$MdAE
+
+seltable=rbind(seltable, spacetmp)
+
+for(covgroup in names(covnamelist)){
+  #Group header
+  tmp1 <- spacetmp; tmp1$Model <- paste0("**", covgroup, "**")
+  seltable = rbind(seltable, tmp1, spacetmp)
+
+  for(covname in covnamelist[[covgroup]]){
+  #var header
+  covtit <- getcovtit(covname)
+  tmp1 <- spacetmp; tmp1$Model <- covtit
+  seltable = rbind(seltable, tmp1)
+  
+  for(i in 1:length(covlags[[covname]])){
+    lag <- covlags[[covname]][i]
+    let <- letters[i]
+    tlab <- ifelse(lag==0, "t", "t-1")
+    dat$cov=dat[[paste(covname, lag, sep="")]]
+    m1 = gam(as.formula(baseformula), data=dat)
+    m2 = gam(as.formula(paste(baseformula, "+ cov")), data=dat)
+    m3 = gam(as.formula(paste(baseformula, "+", m3form)), data=dat)
+  
+    mod <- "m2"
+    Model=paste0("2",let,". $", resp, "$ = M + $\\beta V_{", tlab,"}$")
+    tmp1 <- covfun(get(mod), Model, baseaic=baseaic, baseloo=baseloo, baseloomae=baseloomae, baseloomd=baseloomd)
+    seltable=rbind(seltable,tmp1)
+  
+    mod <- "m3"
+    covf <- ifelse(stringr::str_detect(m3form, "poly"),"p","s")
+    Model <- paste0("3",let, ". $", resp, "$ = M + $", covf, "(V_{", tlab, "})$")
+    tmp1 <- covfun(get(mod), Model, baseaic=baseaic, baseloo=baseloo, baseloomae=baseloomae, baseloomd=baseloomd)
+    seltable=rbind(seltable,tmp1)
+  }
+  seltable <- rbind(seltable, spacetmp)
+  }
+}
+seltable
+}
+```
+

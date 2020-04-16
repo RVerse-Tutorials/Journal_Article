@@ -1,0 +1,272 @@
+---
+title: 'Table 1: Monsoon Catch Model'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes:
+- \usepackage[labelformat=empty]{caption}
+- \usepackage{setspace}
+- \onehalfspacing
+- \usepackage{etoolbox}
+- \AtBeginEnvironment{tabular}{\singlespacing}
+- \setlength\parindent{24pt}
+- \usepackage{mathptmx}
+- \usepackage[margin=1in]{geometry}
+- \usepackage[fontsize=12.5pt]{scrextend}
+- \usepackage{lineno}
+- \linenumbers
+---
+
+```{r child = 'setup.Rmd'}
+```
+
+```{r seltable1, echo=FALSE}
+#defined in setup and determined by covariate availability
+dat=dat.spawners
+Yr1 = min(dat$Year)
+Yr2 = max(dat$Year)
+
+respdat = fullrespdat[which(fullrespdat$Year==Yr1):which(fullrespdat$Year==Yr2),]
+#naive model error
+NE=mean(abs(respdat$spawners0-respdat$spawners1))
+
+#set up table
+seltable = data.frame(
+  Model=paste("Naive Model ", min(respdat$Year),"-", max(respdat$Year), " data", sep=""), 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", F="", 
+  p.value="", 
+  AIC="", stringsAsFactors=FALSE)
+
+mne = lm(spawners0 ~ -1 + offset(spawners1), data=respdat)
+
+#naive model
+mod="mne"
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$ln(S_t) = ln(S_{t-1}) + \\epsilon_t$", 
+  Residual.df=round(aa$df[2],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", stringsAsFactors=FALSE)
+tmp2 = data.frame(
+  Model="AR-1 Model", 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+seltable=rbind(seltable,tmp1,tmp2)
+
+ar1 = lm(spawners0 ~ spawners1, data=respdat)
+
+#naive model
+mod="ar1"
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="$ln(S_t) = \\alpha + \\beta ln(S_{t-1}) + \\epsilon_t$", 
+  Residual.df=round(aa$df[2],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2="", 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="", stringsAsFactors=FALSE)
+tmp2 = data.frame(
+  Model="Time dependency test", 
+  Residual.df="", 
+  MASE="",
+  Adj.R2="", F="", p.value="", AIC="", stringsAsFactors=FALSE)
+seltable=rbind(seltable,tmp1,tmp2)
+
+#5 is most complex
+m0 = gam(spawners0 ~ nspawners1 + nspawners2 + spawners2, data=respdat)
+m1 = gam(spawners0 ~ offset(nspawners1), data=m0$model)
+m2 = gam(spawners0 ~ nspawners1, data=m0$model)
+m3 = gam(spawners0 ~ nspawners1 + nspawners2, data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#simple random walk model
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t) = \\alpha + ln(N_{t-1}) + \\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+#linear ln Catch1
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="2. M0 $ln(S_t) = \\alpha + \\beta ln(N_{t-1}) + \\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), 
+  p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+#linear ln Catch1 + ln Catch2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3a. $ln(S_t) = M0 + \\beta_2 ln(N_{t-2})$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), 
+  p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+m0 = gam(spawners0 ~ nspawners1 + nspawners2 + spawners2, data=respdat)
+m1 = gam(spawners0 ~ offset(nspawners1), data=m0$model)
+m2 = gam(spawners0 ~ nspawners1, data=m0$model)
+m3 = gam(spawners0 ~ nspawners1 + spawners2, data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#linear ln Catch1 + ln Spawner2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3b. $ln(S_t) = M0 + \\beta_2 ln(S_{t-2})$",
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), 
+  p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+## Space
+tmp1 = data.frame(
+  Model="\\kern 1em", 
+  Residual.df="\\kern 1em", 
+  MASE="\\kern 1em", 
+  Adj.R2="",
+  F="\\kern 1em",
+  p.value="\\kern 1em", 
+  AIC="")
+tmp2 = data.frame(
+  Model="Linearity and time-dependency test", 
+  Residual.df="", 
+  MASE="", 
+  Adj.R2="",
+  F="", 
+  p.value="", 
+  AIC="")
+seltable=rbind(seltable,tmp1,tmp2)
+
+m0 = gam(spawners0 ~ nspawners1 + nspawners2 + spawners2, data=respdat)
+m1 = gam(spawners0 ~ nspawners1, data=m0$model)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6)+s(nspawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+i=1; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="1. $ln(S_t)$ = $\\alpha$ + $\\beta ln(N_{t-1})$ + $\\epsilon_t$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F="", 
+  p.value="", 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+#non-linear ln Catch1
+i=2; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+    Model="$\\Rightarrow$ 2. M1 $ln(S_t) = \\alpha + s(ln(N_{t-1})) + \\epsilon_t$", 
+    Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+    MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+    Adj.R2=100*round(aa$r.sq, digits=3), 
+    F=round(a$F[i],digits=2), 
+    p.value=round(a[["Pr(>F)"]][i], digits=3), 
+    AIC=round(AIC(get(mod)), digits=2)
+    )
+seltable=rbind(seltable,tmp1)
+
+#non-linear ln Catch1 + ln Catch2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3a. $ln(S_t) = M1 + s(ln(N_{t-2}))$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), 
+  p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+
+m0 = gam(spawners0 ~ nspawners1 + nspawners2 + spawners2, data=respdat)
+m1 = gam(spawners0 ~ nspawners1, data=m0$model)
+m2 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=m0$model)
+m3 = gam(spawners0 ~ s(nspawners1, sp=0.6)+s(spawners2, sp=0.6), data=m0$model)
+a=anova(m1,m2,m3, test="F")
+
+#non-linear ln N1 + ln S2
+i=3; mod=paste("m",i,sep="")
+aa = summary(get(mod))
+tmp1=data.frame(
+  Model="3b. $ln(S_t) = M1 + s(ln(S_{t-2}))$", 
+  Residual.df=round(a[["Resid. Df"]][i],digits=1), 
+  MASE=round(mean(abs(residuals(get(mod))))/NE,digits=3), 
+  Adj.R2=100*round(aa$r.sq, digits=3), 
+  F=round(a$F[i],digits=2), 
+  p.value=round(a[["Pr(>F)"]][i], digits=3), 
+  AIC=round(AIC(get(mod)), digits=2)
+  )
+seltable=rbind(seltable,tmp1)
+```
+
+```{r print-table1, echo=FALSE}
+colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
+
+thecap = "Model selection tests of time-dependency and linearity for the monsoon (Jul-Sep) catch model using F-tests and AIC of nested models fit to log of landings data.  $S_t$ is the catch during the monsoon (Jul-Sep) of season $t$. $N_{t-1}$ is the post-monsoon (Oct-Mar) catch in the prior sardine season. $N_{t-2}$ is the same for two seasons prior.  $s()$ is a non-linear function of the response variable. MASE is mean absolute squared error of the residuals. The tests are nested and the numbers before the models indicates the nest level. In the list with numbers 1, 2, 3a, 3b, two nested tests were done; one on 1, 2, 3a and one on 1, 2, 3b. A simple base model may be indicated as M0 or M1, and the nested model as M0 (or M1) + an extra component. See tables in Appendix A for the full set of time-dependency and linearity tests. This table only shows the nested model sets that were most supported. The top model based on smallest AIC is marked with an arrow."
+
+fullcap = paste("Table ", ref("tab:spawner_model_selection"), ". ", thecap, sep="")
+
+kable(seltable, align="lcccccc", caption=fullcap, escape=FALSE)
+```

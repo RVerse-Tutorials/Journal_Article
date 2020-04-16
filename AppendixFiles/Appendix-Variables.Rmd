@@ -1,0 +1,117 @@
+---
+title: 'Appendices: Common Functions'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r echo=FALSE}
+getnonspawnercovs <- function(){
+covnamelist = list(
+    Precipitation=c("precip.gpcp.kerala.mon6to7.", "Precip.Kerala.mon6to7.",
+                    "precip.gpcp.kerala.mon4to5.", "Precip.Kerala.mon4to5."),
+    `Sea surface temperature`= c("SST.2.10.mon3to5.", "SST.2.5.mon10to12."),
+    Upwelling=c("SST.UPW.4.mon6to9.", "SST.2.5.mon6to9.", "Bakun.UPW.mon6to9."),
+    `Ocean climate`=c("SST.2.10.3.yr.runsum.",
+                      "ONI.mon1to12.", "DMI.mon9to11.",
+                      "DMI.3.yr.runsum."))
+covlags = list(
+  precip.gpcp.kerala.mon6to7. = c(0,1),
+  Precip.Kerala.mon6to7. = c(0,1),
+  precip.gpcp.kerala.mon4to5. = c(0,1),
+  Precip.Kerala.mon4to5. = c(0,1),
+  SST.2.10.mon3to5. = c(0,1),
+  SST.2.5.mon10to12. = c(0,1),
+  SST.UPW.4.mon6to9. = c(0,1),
+  SST.2.5.mon6to9. = c(0,1),
+  Bakun.UPW.mon6to9. = c(0,1),
+  SST.2.5.3.yr.runsum. = 0,  SST.2.10.3.yr.runsum. = 0,
+  SST.1.13.3.yr.runsum. = 0,   SST.7.13.3.yr.runsum. = 0,
+  DMI.3.yr.runsum. = c(0),
+  ONI.mon1to12. = c(0),
+  DMI.mon6to9. = c(0,1),
+  DMI.mon9to11. = c(0,1),
+  tide.level.interp.mon7to8. = c(0,1),
+  anomalies.mon6to9. = c(0,1),
+  tide.level.interp.mon8to8. = c(0,1))
+allcovnames <- c()
+covnames <- unlist(covnamelist)
+for(i in covnames) allcovnames <- c(allcovnames, 
+   paste0(i, covlags[[i]]))
+return(list(allcovnames=allcovnames, covnamelist=covnamelist, covlags=covlags))
+}
+```
+
+```{r echo=FALSE}
+getnonspawnerchlcovs <- function(){
+  covnamelist = list(
+    Chlorophyll=c("log.CHL.2.5.mon7to9.", 
+                  "log.CHL.2.5.mon10to12.")
+    )
+covlags = list(
+  DMI.mon9to11. = c(0,1),
+  log.CHL.2.5.mon7to9. = c(0,1),
+  log.CHL.2.5.mon10to12. = c(0,1),
+  log.CHL.2.5.mon1to3. = c(0,1))
+allcovnames <- c()
+covnames <- unlist(covnamelist)
+for(i in covnames) allcovnames <- c(allcovnames, 
+   paste0(i, covlags[[i]]))
+return(list(allcovnames=allcovnames, covnamelist=covnamelist, covlags=covlags))
+}
+```
+
+```{r echo=FALSE}
+getspawnercovs <- function(){
+covnamelist = list(
+    Precipitation=c("precip.gpcp.kerala.mon6to7.", "Precip.Kerala.mon6to7.",
+                    "precip.gpcp.kerala.mon4to5.", "Precip.Kerala.mon4to5."),
+    `Sea surface temperature`= c("SST.2.10.mon3to5.", "SST.2.5.mon10to12."),
+    Upwelling=c("SST.UPW.4.mon6to9.", "SST.2.5.mon6to9.", "Bakun.UPW.mon6to9."),
+    `Ocean climate`=c("SST.2.10.3.yr.runsum.",
+                      "ONI.mon1to12.", "DMI.mon9to11.",
+                      "DMI.3.yr.runsum."))
+covlags = list(
+  precip.gpcp.kerala.mon6to7. = 0,
+  precip.gpcp.kerala.mon4to5. = 0,
+  Precip.Kerala.mon6to7. = c(0),
+  Precip.Kerala.mon4to5. = c(0),
+  SST.2.10.mon3to5. = c(0,1),
+  SST.2.5.mon10to12. = 1,
+  SST.UPW.4.mon6to9. = c(0,1),
+  SST.2.5.mon6to9. = c(0,1),
+  Bakun.UPW.mon6to9. = c(0,1),
+  SST.2.5.3.yr.runsum. = 0,
+  SST.2.10.3.yr.runsum. = 0,
+  ONI.mon1to12. = c(1),
+  DMI.mon9to11. = c(1),
+  DMI.3.yr.runsum. = c(0))
+allcovnames <- c()
+covnames <- unlist(covnamelist)
+for(i in covnames) allcovnames <- c(allcovnames, 
+   paste0(i, covlags[[i]]))
+return(list(allcovnames=allcovnames, covnamelist=covnamelist, covlags=covlags))
+}
+```
+
+```{r  echo=FALSE}
+getspawnerchlcovs <- function(){
+covnamelist = list(
+    Chlorophyll=c("log.CHL.2.5.mon7to9.", 
+                  "log.CHL.2.5.mon10to12.")
+    )
+covlags = list(
+  log.CHL.2.5.mon7to9. = c(0,1),
+  log.CHL.2.5.mon10to12. = 1,
+  log.CHL.2.5.mon1to3. = 1)
+allcovnames <- c()
+covnames <- unlist(covnamelist)
+for(i in covnames) allcovnames <- c(allcovnames, 
+   paste0(i, covlags[[i]]))
+return(list(allcovnames=allcovnames, covnamelist=covnamelist, covlags=covlags))
+}
+```
+
+
+

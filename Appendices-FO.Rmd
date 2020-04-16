@@ -1,0 +1,26 @@
+---
+title: 'Appendices: Covariate tests'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
+---
+
+```{r include=FALSE}
+here::set_here()
+```
+
+```{r child = file.path('AppendixFiles','AppendixSpawner.Rmd')}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+```{r child = file.path('AppendixFiles','AppendixNonSpawnerwoS2.Rmd')}
+```
+
+```{r child = file.path('AppendixFiles','AppendixNonSpawner.Rmd'), eval=FALSE}
+```
+
