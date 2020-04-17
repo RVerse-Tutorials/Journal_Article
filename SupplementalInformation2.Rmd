@@ -16,7 +16,7 @@ Supplement <- TRUE
 
 # Data Sources
 
-```{r child = 'Table App Data.Rmd'}
+```{r child = file.path('SupplementFiles', 'Table App Data.Rmd')}
 ```
 
 ```{r, results="asis", echo=FALSE}
@@ -25,7 +25,7 @@ cat("\\clearpage")
 
 # Raw Data
 
-```{r child = 'Table App H data.Rmd'}
+```{r child = file.path('SupplementFiles', 'Table App H data.Rmd')}
 ```
 
 ```{r, results="asis", echo=FALSE}

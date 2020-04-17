@@ -138,9 +138,9 @@ Details
 <p>
 The Wind-based monthly upwelling indices (m s$^{-1}$) were downloaded from the NOAA
 ERDDAP server. The first is 1999-2009 on a 0.125 degree grid. The second
-is 2009 to present on a 0.25 degree grid. Download urls with information:
+is 2009 to present on a 0.25 degree grid. Download urls with information: </br>
 <a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdQSstressmday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdQSstressmday/index.html</a>
-and
+and </br>
 <a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdQAstressmday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdQAstressmday/index.html</a>.
 </p>
 <p>
@@ -150,7 +150,8 @@ second is 2003-2016 on a 0.1 degree grid. Both are AVHRR so accurate for
 close to the coast. </br>
 <a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdPH2sstamday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdPH2sstamday/index.html</a>
 and </br>
-<a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdAGsstamday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdAGsstamday/index.html</a>.
+
+<a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdAGsstamday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdAGsstamday/index.html</a>. 
 The SST-based UPW index is the difference between the coast box (1 to 5) and a box
 3 degrees longitude offshore at the same latitude.
 </p>
@@ -389,13 +390,17 @@ The Oceanic Nino Index (ONI) is one of the primary indices used to monitor the E
 Niño 3.4 region (5°N-5°S, 120°-170°W)\], based on centered 30-year base
 periods updated every 5 years.  
 The ONI was downloaded from the National Weather Service Climate Prediction Center 
+
 <a href="http://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt">http://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt</a>
 <p>
 The DMI is the monthly Dipole Mode Index. The DMI is defined by the SSTA (SST anomaly) difference between the
 western Indian Ocean (10°S–10°N, 50°E–70°E) and the southeastern Indian
-Ocean (10°S–0°, 90°E–110°E). The data were downloaded from  </br>
+Ocean (10°S–0°, 90°E–110°E). The data were downloaded from
+
 <a href="https://www.esrl.noaa.gov/psd/gcos_wgsp/Timeseries/Data/dmi.long.data">https://www.esrl.noaa.gov/psd/gcos_wgsp/Timeseries/Data/dmi.long.data</a> The original data source is the
-Japan Agency for Marine-Earth Science and Technology (JAMSTEC) via the page <a href="http://www.jamstec.go.jp/frcgc/research/d1/iod/e/iod/about_iod.html">http://www.jamstec.go.jp/frcgc/research/d1/iod/e/iod/about_iod.html</a>.
+Japan Agency for Marine-Earth Science and Technology (JAMSTEC) via the page 
+
+<a href="http://www.jamstec.go.jp/frcgc/research/d1/iod/e/iod/about_iod.html">http://www.jamstec.go.jp/frcgc/research/d1/iod/e/iod/about_iod.html</a>.
 </p>
 <h3>
 References
@@ -406,7 +411,9 @@ mode events on global climate.” <em>Climate Research</em>, <b>25</b>(2),
 151-169. doi:
 <a href="https://doi.org/10.3354/cr025151">10.3354/cr025151</a>.
 </p>
-<p>Climate Prediction Center. El Nino-Southern Oscillation. <a href="https://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml">
+<p>Climate Prediction Center. El Nino-Southern Oscillation. 
+
+<a href="https://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml">
 https://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml</a>
 </p>
 <hr />

@@ -3,6 +3,7 @@ title: "Raw Data"
 output:
   pdf_document: default
   word_document: default
+  header-includes: \usepackage[labelformat=empty]{caption}
 ---
 
 <!-- 
@@ -15,6 +16,7 @@ Generic setup code common across all Rmds; run code in setup.Rmd if not knitting
 
 ```{r echo=FALSE}
 #set the table pre
+Supplement=TRUE
 if(Supplement){
   pre <- "S"
   tabset <- "tabsupp:"
@@ -24,58 +26,85 @@ if(Supplement){
 }
 ```
 
+```{r child = file.path(here::here(),'AppendixFiles','Appendix-Variables.Rmd')}
+```
+
+```{r getcovnames, echo=FALSE}
+vars <- c(getnonspawnercovs()$allcovnames,
+          getspawnercovs()$allcovnames)
+vars <- unique(vars)
+vars <- vars[str_sub(vars, str_length(vars))!=1]
+varnames <- c(Year="Year",
+              nspawners0="N",
+              spawners0="S",
+              precip.gpcp.kerala.mon6to7.0 = "Jun-Jul Precip - ocean", 
+              precip.gpcp.kerala.mon4to5.0 = "Apr-May Precip - ocean",
+              Precip.Kerala.mon6to7.0 = "Jun-Jul Precip - land",
+              Precip.Kerala.mon4to5.0 = "Apr-May Precip - land",
+              SST.2.10.mon3to5.0 = "Apr-May r-SST",
+              SST.2.5.mon10to12.0 = "Oct-Dec ns-SST",
+              SST.UPW.4.mon6to9.0 = "Jun-Sep UPW",
+              SST.2.5.mon6to9.0 = "Jun-Sep ns-SST",
+              Bakun.UPW.mon6to9.0 = "Jun-Sep Bakun UPW",
+              SST.2.10.3.yr.runsum.0 = "2.5 yr ave r-SST",
+              ONI.mon1to12.0 = "ONI",
+              DMI.mon9to11.0 = "Sep-Nov DMI",
+              DMI.3.yr.runsum.0 = "2.5 yr ave DMI",
+              log.CHL.2.5.mon7to9.0 = "Jul-Sep log ns-CHL",
+              log.CHL.2.5.mon10to12.0 = "Oct-Dec log ns-CHL"
+)
+latexvarnames <- c(Year="Year",
+              nspawners0="N",
+              spawners0="S",
+              precip.gpcp.kerala.mon6to7.0 = "\\shortstack{Jun-Jul\\\\o-Precip}", 
+              precip.gpcp.kerala.mon4to5.0 = "\\shortstack{Apr-May\\\\o-Precip}",
+              Precip.Kerala.mon6to7.0 = "\\shortstack{Jun-Jul\\\\l-Precip}",
+              Precip.Kerala.mon4to5.0 = "\\shortstack{Apr-May\\\\l-Precip}",
+              ONI.mon1to12.0 = "ONI",
+              DMI.mon9to11.0 = "\\shortstack{Sep-Nov\\\\DMI}",
+              DMI.3.yr.runsum.0 = "\\shortstack{2.5 yr\\\\ave DMI}",
+              Bakun.UPW.mon6to9.0 = "\\shortstack{Jun-Sep\\\\Bakun UPW}",
+              SST.2.10.mon3to5.0 = "\\shortstack{Apr-May\\\\r-SST}",
+              SST.2.5.mon10to12.0 = "\\shortstack{Oct-Dec\\\\ns-SST}",
+              SST.UPW.4.mon6to9.0 = "\\shortstack{Jun-Sep\\\\sst-diff UPW}",
+              SST.2.5.mon6to9.0 = "\\shortstack{Jun-Sep\\\\ns-SST}",
+              SST.2.10.3.yr.runsum.0 = "\\shortstack{2.5 yr\\\\ave r-SST}",
+              log.CHL.2.5.mon7to9.0 = "\\shortstack{Jul-Sep\\\\log CHL}",
+              log.CHL.2.5.mon10to12.0 = "\\shortstack{Oct-Dec\\\\log CHL}"
+)
+```
+
 ```{r table-appH-dat, echo=FALSE}
 #dat.spawners defined in setup.Rmd
 dat=fullrespdat
-dat=subset(dat, Year>1982 & Year<2016)
-cols=c("Year", "nspawners0", "spawners0",
-       "precip.gpcp.kerala.mon6to7.0", "precip.gpcp.kerala.mon4to5.0",
-       "SST.2.10.mon3to5.0", "SST.2.5.mon10to12.0",
-       "SST.UPW.4.mon6to9.0", "SST.2.5.mon6to9.0", "Bakun.UPW.mon6to9.0",
-       "SST.2.5.3.yr.runsum.0",
-       "ONI.mon1to12.0", "DMI.mon9to11.0")
-chl.names <- c("log.CHL.2.5.mon7to9.0", "log.CHL.2.5.mon10to12.0", "log.CHL.2.5.mon1to3.0")
-dat=dat[,cols]
-dat$CHL7to9=NA
-dat$CHL7to9[dat$Year %in% dat.chl$Year]=dat.chl[,chl.names[1]][dat.chl$Year %in% dat$Year]
-dat$CHL10to12=NA
-dat$CHL10to12[dat$Year %in% dat.chl$Year]=dat.chl[,chl.names[2]][dat.chl$Year %in% dat$Year]
-dat$CHL1to3=NA
-dat$CHL1to3[dat$Year %in% dat.chl$Year]=dat.chl[,chl.names[3]][dat.chl$Year %in% dat$Year]
+dat=subset(dat, Year<2016)
+cols=c("Year", "nspawners0", "spawners0", vars,"log.CHL.2.5.mon7to9.0", "log.CHL.2.5.mon10to12.0")
+if(!isLatex){
+  dat <- dat[,names(varnames)]
+  colnames(dat) <- varnames
+}
 ```
 
 ```{r print-tableH-cols, echo=FALSE}
-colnames(dat)=c("Year", "N", "S",
-       "Jun-Jul Precip", "Apr-May Precip",
-       "Apr-May r-SST", "Oct-Dec ns-SST",
-       "Jun-Sep UPW", "Jun-Sep ns-SST", "Jun-Sep Bakun UPW",
-       "2.5 yr ave ns-SST",
-       "ONI", "Sep-Nov DMI",
-       "Jul-Sep log ns-CHL", "Oct-Dec log ns-CHL", "Jan-Mar log ns-CHL")
-
-if(isLatex) colnames(dat)=c("Year", "log N", "log S",
-       "\\shortstack{Jun-Jul\\\\Precip}", "\\shortstack{Apr-May\\\\Precip}",
-       "\\shortstack{Apr-May\\\\ns-SST}", "\\shortstack{Oct-Dec\\\\ns-SST}",
-       "\\shortstack{Jun-Sep\\\\UPW}", "\\shortstack{Jun-Sep\\\\ns-SST}",
-       "\\shortstack{Jun-Sep\\\\Bakun UPW}",
-       "\\shortstack{2.5 yr\\\\ave SST}",
-       "ONI", "\\shortstack{Sep-Nov\\\\DMI}",
-       "\\shortstack{Jul-Sep\\\\log CHL}",
-       "\\shortstack{Oct-Dec\\\\log CHL}",
-       "\\shortstack{Jan-Mar\\\\log CHL}")
+if(isLatex){
+  dat <- dat[,names(latexvarnames)]
+  colnames(dat) <- latexvarnames
+}
 ```
 
 ```{r print-tableH-1, echo=FALSE}
 
-seltable = dat[,1:13]
+seltable = dat[,1:11]
 n=ncol(seltable)
+seltable[is.na(seltable)] <- NA
 
 seltable[,2:n] <- round(seltable[,2:n], digits=2)
-thecap=paste("Landings data and environmental covariates. N=Oct-Mar Kerala landings.  S=Jul-Sep Kerala landings. Values have been rounded to 2 digits. ns-SST = nearshore (0-80km) boxes 2 to 5 in Figure 1 (main text). r-SST = regional (0-160km) boxes 1 to 5 and 7 to 10.")
-fullcap=paste("Table ", ref(paste0(tabset, "data"), pre="H"), ". ", thecap, sep="")
+thecap=paste("Landings data and environmental covariates, part 1. N=Oct-Mar Kerala landings.  S=Jul-Sep Kerala landings. Values have been rounded to 2 digits. ns- = nearshore (0-80km) boxes 2 to 5 in Figure 1 (main text). r- = regional (0-160km) boxes 1 to 5 and 7 to 10.")
+fullcap=paste("Table ", ref(paste0(tabset, "data"), pre=pre), ". ", thecap, sep="")
 # kable(seltable, align=paste0("l", rep("c", n-1)), caption=fullcap, row.names=FALSE, escape=FALSE)
 al <- paste0("l", paste0(rep("c", n - 1), collapse=""))
-if(isLatex) kableExtra::landscape(knitr::kable(seltable, align=al, caption=fullcap, row.names=FALSE, escape=FALSE))
+# if(isLatex) kableExtra::landscape(knitr::kable(seltable, align=al, caption=fullcap, row.names=FALSE, escape=FALSE))
+kable(seltable, align=al, caption=fullcap, escape=FALSE, row.names=FALSE)
 ```
 
 ```{r, results="asis", echo=FALSE}
@@ -83,13 +112,16 @@ cat("\\clearpage")
 ```
 
 ```{r print-tableH-2, echo=FALSE}
-seltable = dat[,c(1,14:16)]
+seltable = dat[,c(1,12:ncol(dat))]
+seltable = seltable[!is.na(seltable[,2]),]
 n=ncol(seltable)
+seltable[is.na(seltable)] <- NA
 
 seltable[,2:n] <- round(seltable[,2:n], digits=2)
-thecap=paste("Nearshore chlorophyll-a from boxes 2 to 5.")
-fullcap=paste("Table ", ref(paste0(tabset,"data-chl"), pre="H"), ". ", thecap, sep="")
+thecap=paste("Landings data and environmental covariates, part 1.")
+fullcap=paste("Table ", ref(paste0(tabset,"data-chl"), pre=pre), ". ", thecap, sep="")
 # kable(seltable, align=paste0("l", rep("c", n-1)), caption=fullcap, row.names=FALSE, escape=FALSE)
 al <- paste0("l", paste0(rep("c", n - 1), collapse=""))
-if(isLatex) kableExtra::landscape(knitr::kable(seltable, align=al, caption=fullcap, row.names=FALSE, escape=FALSE))
+# if(isLatex) kableExtra::landscape(knitr::kable(seltable, align=al, caption=fullcap, row.names=FALSE, escape=FALSE))
+kable(seltable, align=al, caption=fullcap, escape=FALSE, row.names=FALSE)
 ```
