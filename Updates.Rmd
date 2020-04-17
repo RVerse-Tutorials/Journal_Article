@@ -9,6 +9,27 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # April 2020
 
+### April 14-16, 2020
+
+Done
+
+* Finished the appendices
+* Finished cleaning up supporting material
+* First edit of Table 1
+* Editted Table 2
+* Added acknowledgements and keywords and authors
+
+To do
+
+* Edit discussion and conclusion
+* R programming language (R Development Core Team, 2019)
+* Check ref to Figure 5
+* Look for ref for why precip over land might be bad
+* Address remaining editor comments in Word doc
+* ?? Test of autocorrelation of residuals and normality to appendix
+* Compare edited text to old text
+* Check that data supplement has all the data
+
 ### April 11, 2020
 
 Done
@@ -19,7 +40,7 @@ Done
 
 To do
 
-* Edit Table 2 per changes in appendices
+* ~~Edit Table 2 per changes in appendices~~
 * R programming language (R Development Core Team, 2019)
 
 ### April 10, 2020
@@ -31,9 +52,9 @@ Done
 To do
 
 * ~~Move some of the main covariate tables to Appendices which will appear with the text~~
-* Fix the refs to supplement tables in main text
-* Add refs to each hypothesis in the results
-* Discuss the land precipitation results briefly or cut the land precipitation data.
+* ~~Fix the refs to supplement tables in main text~~
+* Editor says cut this. ~~Add refs to each hypothesis in the results~~
+* ~~Discuss the land precipitation results briefly or cut the land precipitation data.~~
 
 * Test of autocorrelation of residuals and normality to appendix
 * Revamp discussion per editors comments
