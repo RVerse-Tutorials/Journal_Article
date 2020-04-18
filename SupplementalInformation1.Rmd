@@ -98,12 +98,22 @@ fullcap.precip <- paste0("Figure ", ref(paste0(figset,"figprecip"), pre=pre), ".
 ```
 
 ```{r rainfall.mon.comparison, echo=FALSE,fig.cap=fullcap.precip, fig.width=6,fig.height=6,message=FALSE,warning=FALSE}
-plot(seio_covariates_mon$Precip.Kerala, seio_covariates_mon$precip.gpcp.kerala, ylab="Land precipitation",
-xlab="Ocean precipitation")
+plot(seio_covariates_mon$Precip.Kerala, seio_covariates_mon$precip.gpcp.kerala, ylab="Monthly land precipitation (mm)",
+xlab="Monthly ocean precipitation (average mm/day)")
 ```
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
+# Comparison of multiyear average regional SST and DMI
+
+```{r echo=FALSE}
+thecap=paste0("Multiyear average regional SST versus multiyear average DMI. Adjusted $R^2$=40.9%")
+fullcap.dmi <- paste0("Figure ", ref(paste0(figset,"figsstvdmi"), pre=pre), ". ", thecap)
+```
+
+```{r sst.dmi.comparison, echo=FALSE,fig.cap=fullcap.dmi, fig.width=6,fig.height=6,message=FALSE,warning=FALSE}
+plot(fullrespdat$DMI.3.yr.runsum.0, fullrespdat$SST.2.10.3.yr.runsum.0, xlab="2.5-year average DMI", ylab="2.5-year average regional SST")
+```
 

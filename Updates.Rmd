@@ -13,9 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 To do
 
-* Edit discussion and conclusion
-* Address remaining editor comments in Word doc
+* [started] Edit discussion and conclusion
+* [started] Address remaining editor comments in Word doc
 * Compare edited text to old text
+* [cut probably] need citation March–May SST has been speculated to correlate with successful egg development and spawning behavior
+* ~~Add plot of 2.5 yr ave SST versus 2.5 yr ave DMI to supplement~~
+
 
 Done
 
