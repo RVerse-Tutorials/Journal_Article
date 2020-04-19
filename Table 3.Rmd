@@ -57,7 +57,7 @@ seltable <- maketable3(dat, nullmod, basemod, nullformula, baseformula, resp, co
 
 ```{r tab3-nonspawncovnames, echo=FALSE}
 covnamelist = list(
-    `October-May catch - simpler model`=c(
+    `October-March catch - simpler model`=c(
       "Precip.Kerala.mon6to7.",
       "SST.2.10.3.yr.runsum.",
       "DMI.3.yr.runsum.")
@@ -94,7 +94,7 @@ seltable <- rbind(seltable, nonspawnerwoS2table)
 
 ```{r tab3-nonspawncovnames2, echo=FALSE}
 covnamelist = list(
-    `October-May catch - more complex model`=c(
+    `October-March catch - more complex model`=c(
       "Precip.Kerala.mon6to7.",
       "SST.2.10.3.yr.runsum.",
       "DMI.3.yr.runsum.")

@@ -1,5 +1,5 @@
 ---
-title: "Post-Monsoon (Oct-May) Catch Covariates Analysis"
+title: "Post-Monsoon (Oct-Mar) Catch Covariates Analysis"
 output:
   pdf_document: default
   word_document: default
@@ -170,7 +170,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch ($N_t$) during post-monsoon months (Oct-May) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  The base model (M) with prior catch dependency was selected independently (Appendix A). In the Appendix C tables, the 2nd best model is used. This model is simpler than the best model (based on AIC) and uses only $N_{t-1}$. To the base model, covariates are added.  $V_t$ is the covariate in the calendar year, and $V_{t-1}$ is the covariate in the prior calendar year. The specific hypothesis (Table ", ref("tab:hypotheses"), ") being tested is noted in parentheses. The models are tested as nested sets.  Thus 1, 2a, 3a is a set and 1, 2b, 3b is another set. MASE is the mean absolute square error (residuals).")
+thecap=paste("Model selection tests of GPCP precipitation as an explanatory variable for the catch ($N_t$) during post-monsoon months (Oct-Mar) using", Yr1, "to", Yr2,  "data.  The data range is determined by the years for which SST was available in order to use a consistent dataset across covariate tests.  The base model (M) with prior catch dependency was selected independently (Appendix A). In the Appendix C tables, the 2nd best model is used. This model is simpler than the best model (based on AIC) and uses only $N_{t-1}$. To the base model, covariates are added.  $V_t$ is the covariate in the calendar year, and $V_{t-1}$ is the covariate in the prior calendar year. The specific hypothesis (Table ", ref("tab:hypotheses"), ") being tested is noted in parentheses. The models are tested as nested sets.  Thus 1, 2a, 3a is a set and 1, 2b, 3b is another set. MASE is the mean absolute square error (residuals).")
 fullcap=paste("Table ", ref("tabappB:nspawner-model-precipM2", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
@@ -382,7 +382,7 @@ seltable=seltable[1:(dim(seltable)[1]-1),]
 colnames(seltable)=c("Model", "Residual df", "MASE", "Adj.R2", "F", "p value", "AIC")
 if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Residual\\\\df}", "MASE", "\\shortstack{Adj.\\\\R2}", "F", "\\shortstack{p\\\\value}", "AIC")
 
-thecap=paste0("Model selection tests of average sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1) as the explanatory variable ($V_t$) for the catch during post-monsoon months (Oct-May) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. See Table ", ref("tabappB:nspawner-model-precipM2", pre="B"), " for an explanation of the models.")
+thecap=paste0("Model selection tests of average sea surface temperature off the Kerala coast (up to 80km offshore in boxes 2-5 in Figure 1) as the explanatory variable ($V_t$) for the catch during post-monsoon months (Oct-Mar) using ", Yr1," to ", Yr2, " data.  The hypothesis tested (Table ", ref("tab:hypotheses"), ") is noted in parentheses. See Table ", ref("tabappB:nspawner-model-precipM2", pre="B"), " for an explanation of the models.")
 fullcap=paste("Table ", ref("tabappB:nspawner-model-sstM2", pre="B"), ". ", thecap, sep="")
 kable(seltable, align="lcccccc", caption=fullcap, row.names=FALSE, escape=FALSE)
 ```
