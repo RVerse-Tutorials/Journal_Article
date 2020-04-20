@@ -480,5 +480,5 @@ par(oldpar)
 cat("\\clearpage")
 ```
 
-```{r child = 'Figure_DMI.Rmd'}
+```{r child = 'Figure_DMI_3.Rmd'}
 ```

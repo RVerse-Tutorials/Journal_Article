@@ -26,6 +26,9 @@ dat2$log.CHL.2.5.mon10to12.1[chlNA] <- NA
 fit2=gam(nspawners0~s(nspawners1, sp=0.6), data=dat2)
 dat2$resid=residuals(fit2)
 dat2$time=1:dim(dat2)[1]
+dat2$nspawners0[dat2$Year==1994]=NA
+dat2$cat0=MARSS::zscore(dat2$nspawners0)
+dat2$cat1=MARSS::zscore(dat2$nspawners1)
 dat2$cov2=MARSS::zscore(dat2$Precip.Kerala.mon6to7.0)
 dat2$cov1=MARSS::zscore(residuals(lm(DMI.3.yr.runsum.0~Year, data=dat2)))
 dat2$cov1=MARSS::zscore(dat2$DMI.3.yr.runsum.0)
@@ -36,38 +39,51 @@ dat2$cov0[chlNA] <- 0
 ```{r figdmi-fitmodels}
 library(MARSS)
 Zt = array(NA, dim=c(1,1,dim(dat2)[1]))
-Zt[1,1,] = dat2$cov1
+Zt[1,1,] = dat2$cat1
 A=matrix(0)
 R=matrix("r")
-Q=diag(1,1) #fix so doesn't go to zero
-Q=matrix("q")
+Q=matrix(.01)
 inits.list = list(x0=matrix(c(1), nrow=1))
 modlist = list(Z=Zt, Q=Q, U=matrix(0, 1, 1), B=diag(1), A=A, R=R)
-fit.dmi <- MARSS(dat2$resid, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
+fit.cat <- MARSS(dat2$cat0, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
+
+library(MARSS)
+Zt = array(NA, dim=c(1,2,dim(dat2)[1]))
+Zt[1,1,] = dat2$cat1
+Zt[1,2,] = dat2$cov1
+A=matrix(0)
+R=matrix("r")
+Q=matrix(list(0),2,2); diag(Q)=list(0.01,"q")
+Q=diag(0.01,2)
+inits.list = list(x0=matrix(c(0), nrow=2))
+modlist = list(Z=Zt, Q=Q, U="zero", A=A, R=R)
+fit.dmi <- MARSS(dat2$cat0, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
 q.dmi <- coef(fit.dmi)$Q
 
 library(MARSS)
-Zt = array(NA, dim=c(1,1,dim(dat2)[1]))
-Zt[1,1,] = dat2$cov0
+Zt = array(NA, dim=c(1,2,dim(dat2)[1]))
+Zt[1,1,] = dat2$cat1
+Zt[1,2,] = dat2$cov0
 A=matrix(0)
 R=matrix("r")
-Q=diag(1,1)
-Q=matrix("q")
-inits.list = list(x0=matrix(c(1), nrow=1))
-modlist = list(Z=Zt, Q=Q, U=matrix(0, 1, 1), B=diag(1), A=A, R=R)
-fit.chl <- MARSS(dat2$resid, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
+Q=matrix(list(0),2,2); diag(Q)=list(0.01,"q")
+Q=diag(0.01,2)
+inits.list = list(x0=matrix(c(0), nrow=2))
+modlist = list(Z=Zt, Q=Q, U="zero", A=A, R=R)
+fit.chl <- MARSS(dat2$cat0, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
 q.chl <- coef(fit.chl)$Q
 
 library(MARSS)
-Zt = array(NA, dim=c(1,1,dim(dat2)[1]))
-Zt[1,1,] = dat2$cov2
+Zt = array(NA, dim=c(1,2,dim(dat2)[1]))
+Zt[1,1,] = dat2$cat1
+Zt[1,2,] = dat2$cov2
 A=matrix(0)
 R=matrix("r")
-Q=diag(1,1) #fix so doesn't go to zero
-Q=matrix("q")
-inits.list = list(x0=matrix(c(1), nrow=1))
-modlist = list(Z=Zt, Q=Q, U=matrix(0, 1, 1), B=diag(1), A=A, R=R)
-fit.precip <- MARSS(dat2$resid, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
+Q=matrix(list(0),2,2); diag(Q)=list(0.01,"q")
+Q=diag(0.01,2)
+inits.list = list(x0=matrix(c(0), nrow=2))
+modlist = list(Z=Zt, Q=Q, U="zero", A=A, R=R)
+fit.precip <- MARSS(dat2$cat0, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
 q.precip <- coef(fit.precip)$Q
 
 library(MARSS)
@@ -83,16 +99,19 @@ modlist = list(Z=Zt, Q=Q, U=matrix(0, nrow=2), A=A, R=R)
 fit.dmi.chl <- MARSS(dat2$resid, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
 
 library(MARSS)
-Zt = array(NA, dim=c(1,2,dim(dat2)[1]))
-Zt[1,1,] = dat2$cov1
-Zt[1,2,] = dat2$cov2
+Zt = array(NA, dim=c(1,3,dim(dat2)[1]))
+Zt[1,1,] = dat2$cat1
+Zt[1,2,] = dat2$cov1
+Zt[1,3,] = dat2$cov2
 A=matrix(0)
 R=matrix("r")
 Q=diag(1,2) #fix so doesn't go to zero
-Q=diag(c(q.dmi, q.precip))
-inits.list = list(x0=matrix(c(0), nrow=2))
-modlist = list(Z=Zt, Q=Q, U=matrix(0, nrow=2), A=A, R=R)
-fit.dmi.precip <- MARSS(dat2$resid, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
+Q=diag(c(0.01,q.dmi, q.precip))
+Q=diag(c(0.01,0.01, 0.01))
+
+inits.list = list(x0=matrix(c(0), nrow=3))
+modlist = list(Z=Zt, Q=Q, U=matrix(0, nrow=3), A=A, R=R)
+fit.dmi.precip <- MARSS(dat2$cat0, model=modlist, silent=TRUE, method="BFGS", inits=inits.list)
 ```
 
 
@@ -102,8 +121,8 @@ trim=1/win
   ii = seq(1,ncol(err)-win+1)
 val=c()
 for(i in ii){
-  val<- rbind(val,c(sqrt(mean(err["null",i:(i+win-1)]^2, trim=trim)), 
-                    sqrt(mean(err["dmi", i:(i+win-1)]^2, trim=trim))))
+  val<- rbind(val,c(sqrt(mean(err[1,i:(i+win-1)]^2, trim=trim)), 
+                    sqrt(mean(err[2, i:(i+win-1)]^2, trim=trim))))
 }
 return(val)
 }
@@ -111,8 +130,8 @@ valtrim <- function(err, win=10, trim=0.5){
   ii = seq(1,ncol(err)-win+1)
 val=c()
 for(i in ii){
-  val<- rbind(val,c(mean(abs(err["null",i:(i+win-1)]), trim=trim), 
-                    mean(abs(err["dmi", i:(i+win-1)]), trim=trim)))
+  val<- rbind(val,c(mean(abs(err[1,i:(i+win-1)]), trim=trim), 
+                    mean(abs(err[2, i:(i+win-1)]), trim=trim)))
 }
 return(val)
 }
@@ -120,8 +139,8 @@ return(val)
 
 ```{r figdmi-makefigure, fig.cap=paste("Figure",  ref("fig:tvdmi")), fig.height=9, fig.width=6}
 par(mfrow=c(3,1), mar=c(3,4,2,1))
-plot(dat2$Year, fit.dmi$states[1,], type="l", lwd=2, ylab="Time-varying effect size", xlab="", col="red", ylim=c(-1.5,.5))
-lines(dat2$Year, fit.precip$states[1,], col="grey", lwd=2)
+plot(dat2$Year, fit.dmi$states[2,], type="l", lwd=2, ylab="Time-varying effect size", xlab="", col="red", ylim=c(-1.5,.5))
+lines(dat2$Year, fit.precip$states[2,], col="grey", lwd=2)
 abline(h=0, lty=2)
 legend("bottomright", bty="n", 
        legend=c("DMI","Precipitation"),
@@ -129,11 +148,11 @@ legend("bottomright", bty="n",
 legend("topleft", legend="a", bty="n")
 
 #RMSE plot
-err.dmi <- rbind(null=dat2$resid, dmi=(fitted(fit.dmi, type="ytt1")$.fitted-dat2$resid))
-err.dmi.precip <- rbind(null=dat2$resid, 
-               dmi=(fitted(fit.dmi.precip, type="ytt1")$.fitted-dat2$resid))
-err.precip <- rbind(null=dat2$resid, 
-               dmi=(fitted(fit.precip, type="ytt1")$.fitted-dat2$resid))
+err.dmi <- rbind(null=MARSSkfss(fit.cat)$Innov, dmi=MARSSkfss(fit.dmi)$Innov)
+err.dmi.precip <- rbind(null=MARSSkfss(fit.cat)$Innov, 
+               dmi=MARSSkfss(fit.dmi.precip)$Innov)
+err.precip <- rbind(null=MARSSkfss(fit.cat)$Innov, 
+               dmi=MARSSkfss(fit.precip)$Innov)
 err.chl <- rbind(null=dat2$resid, 
                dmi=(fitted(fit.chl, type="ytt1")$.fitted-dat2$resid))
 win=10
@@ -142,7 +161,7 @@ ii = seq(1,ncol(err.dmi)-win+1)
 #RMSE plot
 val <- valrmse(err.dmi, win=win)
 plot(dat2$Year[ii+win], val[,1], type="l", ylim=c(log(1.1),log(2.5)), lwd=2, ylab="10 day RMSE (% raw catch)", xlab="End year of window", yaxt="n")
-axis(side=2, at=log(c(1, 1.10, 1.25, 1.5, 1.75, 2, 2.5)), labels=c(0, 10, 25, 50, 75, 100, 150))
+axis(side=2, at=log(c(1, 1.10, 1.25, 1.5, 1.75, 2, 5)), labels=c(0, 10, 25, 50, 75, 100, 150))
 lines(dat2$Year[ii+win], val[,2], col="red", lwd=2)
 val <- valrmse(err.dmi.precip, win=win)
 lines(dat2$Year[ii+win], val[,2], col="blue", lwd=2)
@@ -156,7 +175,7 @@ legend("topleft", legend="b", bty="n")
 #Trim plot
 val <- valtrim(err.dmi, win=win)
 plot(dat2$Year[ii+win], val[,1], type="l", ylim=c(log(1.1),log(2)), lwd=2, ylab="10 day median absolute error (% raw catch)", xlab="End year of window", yaxt="n")
-axis(side=2, at=log(c(1, 1.10, 1.25, 1.5, 1.75, 2)), labels=c(0, 10, 25, 50, 75, 100))
+axis(side=2, at=log(c(1, 1.10, 1.25, 1.5, 1.75, 5)), labels=c(0, 10, 25, 50, 75, 100))
 lines(dat2$Year[ii+win], val[,2], col="red", lwd=2)
 val <- valtrim(err.dmi.precip, win=win)
 lines(dat2$Year[ii+win], val[,2], col="blue", lwd=2)
