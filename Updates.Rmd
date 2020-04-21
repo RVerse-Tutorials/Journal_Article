@@ -9,6 +9,24 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # April 2020
 
+### April 21, 2020
+
+Submitted!
+
+To do
+
+* I think the R2 in abstract should be 72 not 70.7.
+* Maybe have all three big tables in appendix?
+
+Done
+
+* Edit discussion and conclusion
+* Address remaining editor comments in Word doc
+* Compare edited text to old text
+* [cut but if need later see Kripa et al 2018] need citation March–May SST has been speculated to correlate with successful egg development and spawning behavior
+* Changed to use ICOADS SST for the longer SST time series instead of DMI
+
+
 ### April 17, 2020
 
 To do
@@ -76,9 +94,9 @@ To do
 * Editor says cut this. ~~Add refs to each hypothesis in the results~~
 * ~~Discuss the land precipitation results briefly or cut the land precipitation data.~~
 
-* Test of autocorrelation of residuals and normality to appendix
-* Revamp discussion per editors comments
-* Compare edited text to old text
+* [later] Test of autocorrelation of residuals and normality to appendix
+* ~~Revamp discussion per editors comments~~
+* ~~Compare edited text to old text~~
 
 ### April 9, 2020 Done
 
