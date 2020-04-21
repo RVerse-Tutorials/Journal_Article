@@ -106,14 +106,14 @@ xlab="Monthly ocean precipitation (average mm/day)")
 cat("\\clearpage")
 ```
 
-# Comparison of multiyear average regional SST and DMI
+# Comparison of multiyear average regional SST from AVHRR and ICOADS
 
 ```{r echo=FALSE}
-thecap=paste0("Multiyear average regional SST versus multiyear average DMI. Adjusted $R^2$=40.9%")
+thecap=paste0("Multiyear average regional SST from the AVHRR versus ICOADS data sets.")
 fullcap.dmi <- paste0("Figure ", ref(paste0(figset,"figsstvdmi"), pre=pre), ". ", thecap)
 ```
 
 ```{r sst.dmi.comparison, echo=FALSE,fig.cap=fullcap.dmi, fig.width=6,fig.height=6,message=FALSE,warning=FALSE}
-plot(fullrespdat$DMI.3.yr.runsum.0, fullrespdat$SST.2.10.3.yr.runsum.0, xlab="2.5-year average DMI", ylab="2.5-year average regional SST")
+plot(fullrespdat$SSTICOAD.2.10.3.yr.runsum.0, fullrespdat$SST.2.10.3.yr.runsum.0, xlab="2.5-year average SST - ICOADS", ylab="2.5-year average regional SST - AVHRR")
 ```
 

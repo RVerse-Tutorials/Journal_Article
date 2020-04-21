@@ -1,9 +1,8 @@
 ---
-title: Use of satellite data for understanding and predicting oil sardine (*Sardinella longiceps*) catch variability along the southwest coast of India
-date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
   pdf_document: default
-  html_document: default
+  html_document:
+      keep_md: true
   word_document: default
 header-includes: \usepackage[labelformat=empty]{caption}
 ---
@@ -11,19 +10,21 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r child = 'setup.Rmd'}
 ```
 
-<!--
-
-Things to change
-
-* Dave said that Pacific sardine uses 3-yr running mean of SST at 5-15m over whole CalCOFI region as an index of recruitment.
-
--->
+```{r eval=FALSE}
+library(knitr)
+opts_chunk$set(dev="postscript", 
+               dpi=300)
+```
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
 ```
 
-```{r fig-study-area, out.width = "350px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:studyarea")),message=FALSE,warning=FALSE}
+```{r echo=FALSE}
+thecap <- paste("Figure",  ref("fig:studyarea"))
+```
+
+```{r fig-study-area, out.width = "350px", fig.align='center', echo=FALSE, fig.cap=thecap, message=FALSE, warning=FALSE, eval=FALSE}
 figfile = system.file("docs", "kerala_study_area_with_inset.jpg", package="SardineForecast")
 knitr::include_graphics(figfile)
 ```
@@ -148,7 +149,7 @@ cat("\\clearpage")
 
 ```{r cov.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:COVts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
 ### FIGURE covariates
-oldpar=par(mfrow=c(2,2), mar=c(2,5,2,1))
+oldpar=par(mfrow=c(2,2), mar=c(2,5,2,2))
 i=4
 covname=paste("SST.UPW.",i,sep="")
 dat=seio_covariates_mon[[covname]]
@@ -233,7 +234,7 @@ cat("\\clearpage")
 ```
 
 ```{r cov-effects, echo=FALSE,fig.cap=paste("Figure",  ref("fig:cov-effects")), fig.width=8,fig.height=9,message=FALSE,warning=FALSE}
-oldpar=par(mfcol=c(3,2), mar=c(4,5,2,0))
+oldpar=par(mfcol=c(3,2), mar=c(5,4,2,2))
 ylims=c(-3,2)
 dat=dat.spawners
 dat=subset(dat, Year>1982 & Year<2016)

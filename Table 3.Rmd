@@ -18,13 +18,18 @@ header-includes: \usepackage[labelformat=empty]{caption}
 
 
 ```{r tab3-spawncovnames, echo=FALSE}
+# Make sure data used is consistent across appendices and here
+vars <- getspawnercovs()
+datcommon <- dat.spawners[, 
+  c("Year", "spawners0", "spawners1", "spawners2",
+    "nspawners1", "nspawners2", vars$allcovnames)]
+datcommon <- na.omit(datcommon)
 covnamelist = list(
     `July-September catch`=c(
       "SST.2.5.mon6to9.", 
       "Bakun.UPW.mon6to9.",
       "Precip.Kerala.mon6to7.",
-      "SST.2.10.3.yr.runsum.",
-      "DMI.3.yr.runsum.")
+      "SST.2.10.3.yr.runsum.")
     )
 covlags = list(
   SST.2.5.mon6to9. = 0,
@@ -36,10 +41,9 @@ allcovnames <- c()
 covnames <- unlist(covnamelist)
 for(i in covnames) allcovnames <- c(allcovnames, 
    paste0(i, covlags[[i]]))
-datcommon <- dat.spawners[, 
+dat <- datcommon[, 
   c("Year", "spawners0", "spawners1", "spawners2",
     "nspawners1", "nspawners2", allcovnames)]
-dat <- na.omit(datcommon)
 NE=mean(abs(dat$spawners0-dat$spawners1))
 ```
 
@@ -52,30 +56,36 @@ nullformula <- "spawners0 ~ -1 + offset(spawners1)"
 ```
 
 ```{r tab3-spawntable}
-seltable <- maketable3(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags, type="nonlinear", include.num=FALSE, include.group=FALSE, header="**July-Sept catch**", compact=TRUE)
+headval <- paste0("**July-Sept catch ", min(dat$Year), "-", max(dat$Year), "**")
+seltable <- maketable3(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags, type="nonlinear", include.num=FALSE, include.group=FALSE, header=headval, compact=TRUE)
 ```
 
 ```{r tab3-nonspawncovnames, echo=FALSE}
+# Make sure data used is consistent across appendices and here
+vars <- getnonspawnercovs()
+datcommon <- dat.nonspawners[, 
+  c("Year", "nspawners0", "spawners1", "spawners2",
+    "nspawners1", "nspawners2", vars$allcovnames)]
+datcommon <- na.omit(datcommon)
 covnamelist = list(
     `October-March catch - simpler model`=c(
       "Precip.Kerala.mon6to7.",
       "SST.2.10.3.yr.runsum.",
-      "DMI.3.yr.runsum.")
+      "DMI.mon9to11.")
     )
 covlags = list(
   SST.2.5.mon6to9. = 0,
   Precip.Kerala.mon6to7. = 0,
   Bakun.UPW.mon6to9. = 0,
-  DMI.3.yr.runsum. = 0,
+  DMI.mon9to11. = 1,
   SST.2.10.3.yr.runsum. = 0)
 allcovnames <- c()
 covnames <- unlist(covnamelist)
 for(i in covnames) allcovnames <- c(allcovnames, 
    paste0(i, covlags[[i]]))
-datcommon <- dat.nonspawners[, 
+dat <- datcommon[, 
   c("Year", "nspawners0", "spawners1", "spawners2",
     "nspawners1", "nspawners2", allcovnames)]
-dat <- na.omit(datcommon)
 NE=mean(abs(dat$spawners0-dat$spawners1))
 ```
 
@@ -88,7 +98,8 @@ nullformula <- "nspawners0 ~ -1 + offset(nspawners1)"
 ```
 
 ```{r tab3-nonspawntable}
-nonspawnerwoS2table <- maketable3(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags, type="nonlinear", include.num=FALSE, include.group=FALSE, header="**October-March catch - simpler model**", compact=TRUE)
+headval <- paste0("**October-March catch - simpler model ", min(dat$Year), "-", max(dat$Year), "**")
+nonspawnerwoS2table <- maketable3(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags, type="nonlinear", include.num=FALSE, include.group=FALSE, header=headval, compact=TRUE)
 seltable <- rbind(seltable, nonspawnerwoS2table)
 ```
 
@@ -97,22 +108,20 @@ covnamelist = list(
     `October-March catch - more complex model`=c(
       "Precip.Kerala.mon6to7.",
       "SST.2.10.3.yr.runsum.",
-      "DMI.3.yr.runsum.")
+      "DMI.mon9to11.")
     )
 covlags = list(
-  SST.2.5.mon6to9. = 0,
+  DMI.mon9to11. = 1,
   Precip.Kerala.mon6to7. = 0,
   Bakun.UPW.mon6to9. = 0,
-  DMI.3.yr.runsum. = 0,
   SST.2.10.3.yr.runsum. = 0)
 allcovnames <- c()
 covnames <- unlist(covnamelist)
 for(i in covnames) allcovnames <- c(allcovnames, 
    paste0(i, covlags[[i]]))
-datcommon <- dat.nonspawners[, 
-  c("Year", "nspawners0", "spawners1", "spawners2",
-    "nspawners1", "nspawners2", allcovnames)]
-dat <- na.omit(datcommon)
+dat <- datcommon[, 
+  c("Year", "nspawners0", "spawners2",
+    "nspawners1", allcovnames)]
 NE=mean(abs(dat$spawners0-dat$spawners1))
 ```
 
@@ -125,6 +134,7 @@ nullformula <- "nspawners0 ~ -1 + offset(nspawners1)"
 ```
 
 ```{r tab3-nonspawntable2}
+headval <- paste0("**October-March catch - more complex model ", min(dat$Year), "-", max(dat$Year), "**")
 nonspawnertable <- maketable3(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags, type="nonlinear", include.num=FALSE, include.group=FALSE, header="**October-March catch - more complex model**", compact=TRUE)
 seltable <- rbind(seltable, nonspawnertable)
 ```

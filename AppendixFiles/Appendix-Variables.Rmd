@@ -14,8 +14,7 @@ covnamelist = list(
     `Sea surface temperature`= c("SST.2.10.mon3to5.", "SST.2.5.mon10to12."),
     Upwelling=c("SST.UPW.4.mon6to9.", "SST.2.5.mon6to9.", "Bakun.UPW.mon6to9."),
     `Ocean climate`=c("SST.2.10.3.yr.runsum.",
-                      "ONI.mon1to12.", "DMI.mon9to11.",
-                      "DMI.3.yr.runsum."))
+                      "ONI.mon1to12.", "DMI.mon9to11."))
 covlags = list(
   precip.gpcp.kerala.mon6to7. = c(0,1),
   Precip.Kerala.mon6to7. = c(0,1),
@@ -26,6 +25,7 @@ covlags = list(
   SST.UPW.4.mon6to9. = c(0,1),
   SST.2.5.mon6to9. = c(0,1),
   Bakun.UPW.mon6to9. = c(0,1),
+  SSTICOAD.2.10.3.yr.runsum. = 0,
   SST.2.5.3.yr.runsum. = 0,  SST.2.10.3.yr.runsum. = 0,
   SST.1.13.3.yr.runsum. = 0,   SST.7.13.3.yr.runsum. = 0,
   DMI.3.yr.runsum. = c(0),
@@ -70,8 +70,7 @@ covnamelist = list(
     `Sea surface temperature`= c("SST.2.10.mon3to5.", "SST.2.5.mon10to12."),
     Upwelling=c("SST.UPW.4.mon6to9.", "SST.2.5.mon6to9.", "Bakun.UPW.mon6to9."),
     `Ocean climate`=c("SST.2.10.3.yr.runsum.",
-                      "ONI.mon1to12.", "DMI.mon9to11.",
-                      "DMI.3.yr.runsum."))
+                      "ONI.mon1to12.", "DMI.mon9to11."))
 covlags = list(
   precip.gpcp.kerala.mon6to7. = 0,
   precip.gpcp.kerala.mon4to5. = 0,
@@ -84,6 +83,7 @@ covlags = list(
   Bakun.UPW.mon6to9. = c(0,1),
   SST.2.5.3.yr.runsum. = 0,
   SST.2.10.3.yr.runsum. = 0,
+  SSTICOAD.2.10.3.yr.runsum. = 0,
   ONI.mon1to12. = c(1),
   DMI.mon9to11. = c(1),
   DMI.3.yr.runsum. = c(0))

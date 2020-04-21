@@ -66,7 +66,7 @@ R Mendelssohn's **rerddapXtracto** R package which uses the ropensci
 Details
 </h3>
 <p>
-For 1981 to 2003, We used the Pathfinder Version 5.2 (L3C) monthly day
+**AVHRR Data** For 1981 to 2003, We used the Pathfinder Version 5.2 (L3C) monthly day
 and night product on a 0.0417 degree grid. These SST data use the
 Advanced Very-High Resolution Radiometer (AVHRR) instrument on the
 Pathfinder satellites. These data were provided by the 
@@ -83,11 +83,16 @@ Resolution Radiometer (AVHRR) instruments on the POES satellites and are
 on a 0.1 degree grid.
 </p>
 <p>
-Both SST data sets were downloaded from the NOAA ERDDAP server:
+**ICOADS** SST was extracted from the International Comprehensive Ocean-Atmosphere Data Set (ICOADS) collection of surface marine data. Data from 1960 onward were used, which are on a 1°x1° grid. The nearshore data (boxes 1 to 5) is not as accurate as the AVHRR-based SST data. The ICOADS data were only used for the regional SST measurements not for nearshore or for the SST-differential based upwelling estimate.
+</p>
+<p>
+The SST data sets were downloaded from the NOAA ERDDAP server:
 
 <a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdAGsstamday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdAGsstamday/index.html</a>
 
 <a href="https://coastwatch.pfeg.noaa.gov/erddap/info/erdPH2sstamday/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/erdPH2sstamday/index.html</a>.
+
+<a href="https://coastwatch.pfeg.noaa.gov/erddap/info/esrlIcoads1ge/index.html">https://coastwatch.pfeg.noaa.gov/erddap/info/esrlIcoads1ge/index.html</a> 
 </p>
 <p>
 The SST values were averaged across thirteen 1
@@ -97,10 +102,13 @@ degree by 1 degree boxes which parallel the bathymetry (Figure 1 in main text).
 References
 </h3>
 <p>
-These data were provided by GHRSST and the US National Oceanographic
+The AVHRR data were provided by GHRSST and the US National Oceanographic
 Data Center. The data were
 downloaded from NOAA CoastWatch-West Coast Regional Node and Southwest
 Fisheries Science Center’s Environmental Research Division. 
+</p>
+<p>
+The ICOADS data were provided by the NOAA/OAR/ESRL PSD, Boulder, Colorado, USA, from their web site at <a href="http://www.esrl.noaa.gov/psd/">http://www.esrl.noaa.gov/psd/</a>
 </p>
 <p>
 Casey KS, Brandon TB, Cornillon P, Evans R (2010). “The past, present,

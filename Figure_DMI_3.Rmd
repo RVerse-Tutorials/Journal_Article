@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = FALSE, warning=FALSE, results='hide', message=FALSE
 dat <- fullrespdat
 dat$log.CHL.2.5.mon10to12.1[is.na(dat$log.CHL.2.5.mon10to12.1)] <- -1
 dat2=gam(nspawners0~nspawners1+spawners2+
-           DMI.3.yr.runsum.0+Year+
+           SSTICOAD.2.10.3.yr.runsum.0+Year+
            log.CHL.2.5.mon10to12.1+
            Precip.Kerala.mon6to7.0, data=dat)$model
 chlNA <- dat2$log.CHL.2.5.mon10to12.1 == -1
@@ -29,7 +29,7 @@ dat2$resid=residuals(fit2)
 dat2$resid[dat2$Year==1994]<-NA
 dat2$time=1:dim(dat2)[1]
 dat2$cov2=MARSS::zscore(dat2$Precip.Kerala.mon6to7.0)
-dat2$cov1=MARSS::zscore(dat2$DMI.3.yr.runsum.0)
+dat2$cov1=MARSS::zscore(dat2$SSTICOAD.2.10.3.yr.runsum)
 # dat2$cov1=residuals(lm(DMI.3.yr.runsum.0~time, data=dat2))
 # dat2$cov1=MARSS::zscore(dat2$cov1)
 dat2$cov0=MARSS::zscore(dat2$log.CHL.2.5.mon10to12.1)
@@ -38,7 +38,7 @@ dat2$cov0[chlNA] <- 0
 
 ```{r figdmi-fitmodels}
 library(MARSS)
-qfix=.8
+qfix=0.6
 Zt = array(NA, dim=c(1,3,dim(dat2)[1]))
 pol <- poly(as.vector(dat2$cov1),3)
 Zt[1,1,] = pol[,1]
@@ -105,7 +105,7 @@ plot(dat2$Year, fit.dmi$states[1,], type="l", lwd=2, ylab="Linear effect size", 
 lines(dat2$Year, fit.precip$states[1,], col="grey", lwd=2)
 abline(h=0, lty=2)
 legend("bottomright", bty="n", 
-       legend=c("DMI","Precipitation"),
+       legend=c("SST","Precipitation"),
        col=c("red", "grey"), lwd=c(2,2))
 legend("topleft", legend="a", bty="n")
 
@@ -125,25 +125,10 @@ lines(dat2$Year[ii+win], val[,2], col="red", lwd=2)
 val <- valrmse(err.precip, win=win)
 lines(dat2$Year[ii+win], val[,2], col="grey", lwd=3)
 legend("topright", bty="n", 
-       legend=c("No covariates", "DMI only","Precip only"),
+       legend=c("No covariates", "SST","Precipitation"),
        col=c("black", "red", "grey"), lwd=c(2,2,2))
 legend("topleft", legend="b", bty="n")
 title("Model fit")
-
-# #out of sample prediction
-# err.dmi <- (rbind(null=dat2$resid, dmi=MARSSkfss(fit.dmi)$Innov[1,]))
-# err.precip <- (rbind(null=dat2$resid,
-#                dmi=MARSSkfss(fit.precip)$Innov[1,]))
-# val <- valrmse(err.dmi, win=win)
-# plot(dat2$Year[ii+win], val[,1], type="l", ylim=c(log(1.1),log(2.5)), lwd=2, ylab="10 year Prediction RMSE", xlab="End year of 10-year window")
-# lines(dat2$Year[ii+win], val[,2], col="red", lwd=2)
-# val <- valrmse(err.precip, win=win)
-# lines(dat2$Year[ii+win], val[,2], col="grey", lwd=3)
-# legend("topright", bty="n", 
-#        legend=c("No covariates", "DMI only","Precip only"),
-#        col=c("black", "red", "grey"), lwd=c(2,2,2))
-# legend("topleft", legend="c", bty="n")
-# title("Out of sample prediction")
 ```
 
 ```{r figdmi-makefigure2, fig.cap=paste("Figure",  ref("fig:tvdmi")), fig.height=4, fig.width=6}
@@ -151,9 +136,6 @@ title("Model fit")
 err.dmi <- (rbind(null=dat2$resid, dmi=residuals(fit.dmi)$model.residuals[1,]))
 err.precip <- (rbind(null=dat2$resid, 
                dmi=residuals(fit.precip)$model.residuals[1,]))
-# err.dmi <- (rbind(null=dat2$resid, dmi=MARSSkfss(fit.dmi)$Innov[1,]))
-# err.precip <- (rbind(null=dat2$resid,
-#                dmi=MARSSkfss(fit.precip)$Innov[1,]))
 
 win=10
 ii = seq(1,ncol(err.dmi)-win+1)
@@ -166,12 +148,15 @@ lines(dat2$Year[ii+win], val[,2], col="red", lwd=2)
 val <- valrmse(err.precip, win=win)
 lines(dat2$Year[ii+win], val[,2], col="grey", lwd=3)
 legend("topright", bty="n", 
-       legend=c("No covariates", "DMI only","Precip only"),
+       legend=c("No covariates", "SST","Precipitation"),
        col=c("black", "red", "grey"), lwd=c(2,2,2))
 title("Model fit - time-varying covariate effects")
 ```
 
 ```{r results='show', eval=FALSE}
+err.dmi <- (rbind(null=dat2$resid, dmi=MARSSkfss(fit.dmi)$Innov[1,]))
+err.precip <- (rbind(null=dat2$resid,
+               dmi=MARSSkfss(fit.precip)$Innov[1,]))
 sqrt(mean(err.dmi[1,]^2, na.rm=TRUE))
 sqrt(mean(err.dmi[2,]^2, na.rm=TRUE))
 sqrt(mean(err.precip[2,]^2, na.rm=TRUE))

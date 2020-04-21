@@ -32,4 +32,12 @@ cat("\\clearpage")
 cat("\\clearpage")
 ```
 
+# Code for analyses
+
+In the final paper, these will be included as a zip file. For paper review, please go to 
+
+https://eeholmes.github.io/Sardine-FO
+
+for code and data.
+
 

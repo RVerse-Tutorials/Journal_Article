@@ -53,6 +53,7 @@ respdat=respdat[respdat$Year<=max(seio_covariates_mon$Year),]
     paste0("SST.UPW.",1:5),
     paste0("Wind.UPW.",1:5),
     paste0("SST.", 1:13),
+    paste0("SSTICOAD.", 1:13),
     "precip.gpcp.kerala", "Precip.Kerala",
    "ONI","DMI","Bakun.UPW", "tide.level.interp", "anomalies")
   covmon=list(
@@ -64,7 +65,8 @@ respdat=respdat[respdat$Year<=max(seio_covariates_mon$Year),]
   #replace with 5 year mean for that month
   seio_covariates_mon2 = seio_covariates_mon
   tmpcov=c("SST.UPW.3","SST.UPW.4","SST.UPW.5","SST.2",
-           "SST.3","SST.4","SST.5","SST.7","SST.8","SST.9","SST.10","SST.11","SST.12","SST.13")
+           paste0("SST.", c(2:5, 7:13)),
+           paste0("SSTICOAD.", c(2:5, 7:13))) 
   for(itmpcov in tmpcov){
     for(mon in 10:12){
     filt1=with(seio_covariates_mon2, Year==1994 & Month==mon)
@@ -82,20 +84,16 @@ for(i in 1:length(covnames)){
   varname=paste(covname,".mon",mon[1],"to",mon[length(mon)],".0",sep="")
   covdat=tapply(seio_covariates_mon2[[covname]],seio_covariates_mon2$Year,function(x){mean(x[mon],na.rm=TRUE)})
   covdat[is.infinite(covdat)]=NA
-  # maxcovdat=tapply(seio_covariates_mon2[[covname]],seio_covariates_mon2$Year,function(x){max(x[mon],na.rm=TRUE)})
-  # maxcovdat[is.infinite(covdat)]=NA  
   if(str_detect(varname, "mon1to3")|str_detect(varname, "mon4to6")){
     respdat[[varname]]=c(covdat[-1],NA)
- #   respdat[[paste0("max.",varname)]]=c(maxcovdat[-1],NA)
  }else{
     respdat[[varname]]=covdat
- #   respdat[[paste0("max.",varname)]]=maxcovdat
  }
-  }
+}
 }
 for(bx in list(c(2:5), c(2:5,7:10), c(7:13), c(7,10), c(11:13), c(1:13))){
 for(j in c("mon1to3.0", "mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
-  for(jj in c("SST.", "log.CHL.")){
+  for(jj in c("SST.", "log.CHL.", "SSTICOAD.")){
   varname=c(paste0(jj, bx,".",j))
   tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
   varname=paste0(jj, bx[1],".",bx[NROW(bx)],".",j)
@@ -103,20 +101,7 @@ for(j in c("mon1to3.0", "mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "
   }
 }
 }
-# for(j in c("mon1to3.0", "mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
-#   bx=c(2:5,7:10)
-#   varname=c(paste0("log.CHL.",bx,".",j))
-#   tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
-#   varname=paste0("log.CHL.",bx[1],".",bx[NROW(bx)],".",j)
-#   respdat[[varname]]=tmp
-# }
-# for(j in c("mon1to3.0", "mon9to10.0", "mon6to9.0", "mon1to12.0", "mon3to5.0",  "mon10to12.0",  "mon7to9.0")){
-#   bx=c(2:5)
-#   varname=c(paste0("log.CHL.",bx,".",j))
-#   tmp=apply(respdat[,varname],1,mean,na.rm=TRUE)
-#   varname=paste0("log.CHL.",bx[1],".",bx[NROW(bx)],".",j)
-#   respdat[[varname]]=tmp
-# }
+
 #add lags
 for(i in colnames(respdat)){
   name=paste(str_sub(i, 1, str_length(i)-1),"1",sep="")
@@ -125,8 +110,8 @@ for(i in colnames(respdat)){
   respdat[[name]] = c(NA,NA,respdat[[i]][1:(dim(respdat)[1]-2)])
 }
 #make 2.5 year runsum of SST
-for(varn in c("SST.", "DMI", "Precip.Kerala")){
-  if(varn=="SST.") ivals <- c("2.5", "2.10", "7.10", "7.13", "11.13", "1.13")
+for(varn in c("SST.", "DMI", "Precip.Kerala", "SSTICOAD.")){
+  if(varn=="SST." | varn=="SSTICOAD.") ivals <- c("2.5", "2.10", "7.10", "7.13", "11.13", "1.13")
   if(varn=="DMI" | varn=="Precip.Kerala") ivals <- c("")
 for(i in ivals){
 tmp=(respdat[,paste0(varn,i,".mon1to12.0")]*12 -
@@ -159,12 +144,7 @@ covnames = c("precip.gpcp.kerala.mon6to7.", "precip.gpcp.kerala.mon4to5.",
              "SST.UPW.4.mon6to9.", "Bakun.UPW.mon6to9.",
              "SST.2.5.mon6to9.", "SST.2.5.mon9to10.",
              "SST.2.10.mon3to5.", "SST.2.5.mon10to12.",
-             "ONI.mon1to12.", "DMI.mon9to11.", "DMI.mon6to9.", runsumnames,
-             "tide.level.interp.mon6to7.", 
-             "tide.level.interp.mon7to8.", 
-             "tide.level.interp.mon8to8.",
-             "tide.level.interp.mon9to9.", 
-             "anomalies.mon6to9.", "DMI.3.yr.runsum.", "Precip.Kerala.3.yr.runsum.")
+             "ONI.mon1to12.", "DMI.mon9to11.", "DMI.mon6to9.", runsumnames)
 ```
 
 ```{r message=FALSE,warning=FALSE, echo=FALSE}
