@@ -11,6 +11,8 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```
 
 ```{r eval=FALSE}
+# set eval=FALSE to not evaluate, but for paper submission, I run this to save the dpi=300
+# requested by the journal
 library(knitr)
 opts_chunk$set(dev="postscript", 
                dpi=300)

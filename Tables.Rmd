@@ -11,34 +11,5 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```
 
 
-```{r child = 'Table_Hypotheses.tex'}
-```
-
-
-
-```{r, results="asis", echo=FALSE, eval=FALSE}
-cat("#\n\n\\clearpage")
-```
-
-```{r child = file.path('Old', 'Table 1 - Monsoon Catch.Rmd'), eval=FALSE}
-```
-
-```{r, results="asis", echo=FALSE, eval=FALSE}
-cat("#\n\n\\clearpage")
-```
-
-```{r child = file.path('Old', 'Table 2 - Post-Monsoon Catch.Rmd'), eval=FALSE}
-```
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
 ```{r child = 'Table 3.Rmd'}
-```
-
-```{r, include=FALSE}
-#kableExtra is adding lines to tables in Appendix
-#this line needed to prepare the hypotheses table.
-library(kableExtra)
 ```
