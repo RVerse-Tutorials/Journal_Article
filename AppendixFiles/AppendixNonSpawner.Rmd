@@ -27,14 +27,9 @@ if(Supplement){
 ```{r child = file.path(here::here(),'AppendixFiles','Appendix-Variables.Rmd')}
 ```
 
-```{r echo=FALSE}
-addchl = TRUE
-add1956 = FALSE
-```
-
 ```{r nonspawncovnames, echo=FALSE}
 vars <- getnonspawnercovs()
-datcommon <- dat.nonspawners[, 
+datcommon <- dat.spawners[, 
   c("Year", "nspawners0", "spawners1", "spawners2",
     "nspawners1", "nspawners2", vars$allcovnames)]
 dat <- na.omit(datcommon)
@@ -54,51 +49,6 @@ nullformula <- "nspawners0 ~ -1 + offset(nspawners1)"
 seltable <- makeapptable(dat, nullmod, basemod, nullformula, baseformula, resp, vars$covnamelist, vars$covlags)
 ```
 
-```{r nonspawncovnames1956a, echo=FALSE, eval=add1956}
-covnamelist = list(
-    `Select covariates available from 1957`=c(
-      "Precip.Kerala.mon6to7.", "DMI.mon9to11.")
-    )
-covlags = list(
-  Precip.Kerala.mon6to7. = c(0),
-  DMI.mon9to11. = c(1),
-  tide.level.interp.mon8to8. = 1)
-allcovnames <- c()
-for(i in 1:length(covlags)) allcovnames <- c(allcovnames, paste0(names(covlags[i]), covlags[[i]]))
-
-datcommon <- dat.nonspawners[, 
-  c("Year", "nspawners0", "spawners1", "spawners2",
-    "nspawners1", "nspawners2", allcovnames)]
-datcommon <- subset(datcommon, Year < 1990)
-dat <- na.omit(datcommon)
-```
-
-```{r nonspawnertable1956a, eval=add1956}
-seltable = rbind(seltable, spacetmp)
-tabbody <- makeapptable(dat, nullmod, basemod, nullformula, baseformula, resp, covnamelist, covlags)
-seltable <- rbind(seltable, tabbody)
-```
-
-
-```{r nonspawnchlnames, echo=FALSE, eval=addchl}
-vars <- getnonspawnerchlcovs()
-datcommon <- dat.chl[, 
-  c("Year", "nspawners0", "spawners1", "spawners2",
-    "nspawners1", "nspawners2", vars$allcovnames)]
-dat <- na.omit(datcommon)
-```
-
-```{r nonspawnertablechlvals, eval=addchl}
-basemod <- "$ln(N_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon_t$"
-baseformula <- "nspawners0 ~ poly(nspawners1, 2, raw=TRUE)"
-m3form <- "poly(cov, 2, raw=TRUE)"
-```
-
-```{r nonspawnerchltable, eval=addchl}
-seltable = rbind(seltable, spacetmp)
-chlbody <- makeapptable(dat, nullmod, basemod, nullformula, baseformula, resp, vars$covnamelist, vars$covlags, m3form=m3form)
-seltable <- rbind(seltable, chlbody)
-```
 
 ```{r print-apptable2, echo=FALSE}
 seltable = seltable[,c("Model", "Residual.df", "Adj.R2", "RMSE", "AIC", "LOOCV", "LOOMd")]

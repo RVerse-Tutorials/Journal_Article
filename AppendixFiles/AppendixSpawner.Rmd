@@ -17,12 +17,6 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```
 
 
-```{r echo=FALSE}
-addchl = TRUE
-add1956 = FALSE
-```
-
-
 ```{r spawncovnames, echo=FALSE}
 vars <- getspawnercovs()
 datcommon <- dat.spawners[, 
@@ -45,26 +39,6 @@ nullformula <- "spawners0 ~ -1 + offset(spawners1)"
 seltable <- makeapptable(dat, nullmod, basemod, nullformula, baseformula, resp, vars$covnamelist, vars$covlags)
 ```
 
-```{r spawnchlnames, echo=FALSE, eval=addchl}
-vars <- getspawnerchlcovs()
-datcommon <- dat.chl[, 
-  c("Year", "spawners0", "spawners1", "spawners2",
-    "nspawners1", "nspawners2", vars$allcovnames)]
-dat <- na.omit(datcommon)
-NE=mean(abs(dat$spawners0-dat$spawners1))
-```
-
-```{r tablechlvals, eval=addchl}
-basemod <- "$ln(S_t) = \\alpha + p(ln(N_{t-1})) + \\epsilon_t$"
-baseformula <- "spawners0 ~ poly(nspawners1, 2, raw=TRUE)"
-m3form <- "poly(cov, 2, raw=TRUE)"
-```
-
-```{r chltable, eval=addchl}
-seltable = rbind(seltable, spacetmp)
-chlbody <- makeapptable(dat, nullmod, basemod, nullformula, baseformula, resp, vars$covnamelist, vars$covlags, m3form=m3form)
-seltable <- rbind(seltable, chlbody)
-```
 
 ```{r print-apptable1, echo=FALSE}
 seltable = seltable[,c("Model", "Residual.df", "Adj.R2", "RMSE", "AIC", "LOOCV", "LOOMd")]

@@ -46,7 +46,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 .Rproj.user
-SardinePaper1.Rproj
+*.Rproj
 .RData
 .Rhistory
-rsconnect/documents/Updates.Rmd/rpubs.com/rpubs/Document.dcf

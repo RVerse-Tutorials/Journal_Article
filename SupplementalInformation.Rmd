@@ -1,0 +1,63 @@
+---
+title: 'Supplemental Information: Full model tests and diagnostics'
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+header-includes: \usepackage[labelformat=empty]{caption}
+---
+
+`setup.Rmd` is always called at the start of my Rmds. It loads the data and sets up variables.
+
+```{r child = 'setup.Rmd'}
+```
+
+```{r echo=FALSE}
+# This is some code so I don't have the change things if I submit to a 
+# different journal that uses 'appendices' instead of 'supplements'
+Supplement <- TRUE # Change if this will be labeled appendix
+
+# The .rmdenvir is where the figure and table counter is located. 
+# This must be at the head of all Rmds
+if(!exists(".rmdenvir")) .rmdenvir = environment()
+```
+
+I've cut this down quite a bit. But it gives you an idea of how to set this up.
+
+# Tests for prior season catch as covariate
+
+```{r child = file.path('SupplementFiles', 'Table App A spawner model.Rmd')}
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+# Comparison of land and oceanic rainfall measurements
+
+```{r echo=FALSE}
+#set the table pre
+if(Supplement){
+  pre <- "S"
+  figset <- "figsupp:"
+}else{
+  pre <- "E"
+  figset <- "figappE:"
+}
+```
+
+```{r echo=FALSE}
+thecap=paste0("Monthly precipitation measured over land via land gauges versus the precipitation measured via remote sensing over the ocean.")
+fullcap.precip <- paste0("Figure ", ref(paste0(figset,"figprecip"), pre=pre), ". ", thecap)
+```
+
+```{r rainfall.mon.comparison, echo=FALSE,fig.cap=fullcap.precip, fig.width=6,fig.height=6,message=FALSE,warning=FALSE}
+plot(covariates$Precip.Kerala, covariates$precip.gpcp.kerala, ylab="Monthly land precipitation (mm)",
+xlab="Monthly ocean precipitation (average mm/day)")
+```
+
+```{r, results="asis", echo=FALSE}
+cat("\\clearpage")
+```
+
+

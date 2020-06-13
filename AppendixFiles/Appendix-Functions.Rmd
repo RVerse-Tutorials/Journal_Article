@@ -7,6 +7,13 @@ output:
 ---
 
 ```{r echo=FALSE}
+# These are the table functions. 
+# I want to use a standardized format for each appendix table
+# so I put the function here and call it.
+# I could also save this as a script and source it.
+```
+
+```{r echo=FALSE}
 covfun <- function(mod, eqn, NE=NA, baseaic=-Inf, baseloo=-Inf, baseloomae=-Inf, baseloomd=-Inf, digits=3){
   # a is anova(m1, m2, etc
   aa = summary(mod)

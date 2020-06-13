@@ -63,7 +63,7 @@ seltable <- maketable3(dat, nullmod, basemod, nullformula, baseformula, resp, co
 ```{r tab3-nonspawncovnames, echo=FALSE}
 # Make sure data used is consistent across appendices and here
 vars <- getnonspawnercovs()
-datcommon <- dat.nonspawners[, 
+datcommon <- dat.spawners[, 
   c("Year", "nspawners0", "spawners1", "spawners2",
     "nspawners1", "nspawners2", vars$allcovnames)]
 datcommon <- na.omit(datcommon)
@@ -140,13 +140,13 @@ seltable <- rbind(seltable, nonspawnertable)
 ```
 
 ```{r print-table3, echo=FALSE}
-seltable = seltable[,c("Model", "Residual.df", "Adj.R2", "RMSE", "AIC", "LOOCV", "LOOMd")]
-colnames(seltable) <- c("Model", "Resid. df", "Adj. R2", "RMSE", "AICc", "LOOCV", "LOOMdAE")
-if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Resid.\\\\df}", "\\shortstack{Adj.\\\\$R^2$}", "RMSE", "AICc", "\\shortstack{LOOCV\\\\RMSE}", "\\shortstack{LOOCV\\\\MdAE}")
+seltable = seltable[,c("Model", "Residual.df", "Adj.R2", "RMSE", "AIC", "LOOCV")]
+colnames(seltable) <- c("Model", "Resid. df", "Adj. R2", "RMSE", "AICc", "LOOCV")
+if(isLatex) colnames(seltable)=c("Model", "\\shortstack{Resid.\\\\df}", "\\shortstack{Adj.\\\\$R^2$}", "RMSE", "AICc", "\\shortstack{LOOCV\\\\RMSE}")
 
 thecap=paste("Top covariates for the monsoon (Jul-Sep) and post-monsoon (Oct-Mar) catch ($S_t$ and $N_t$) models. M is the base models with only prior catch as covariates. To the base models, the  environmental covariates are added. ns-SST is nearshore (0-80km) and r-SST is regional (0-160km). The full set of nested covariate models and tests are given in the appendices.", sep="")
 fullcap=paste("Table ", ref("tab:covariate-models"), ". ", thecap, sep="")
 kable(seltable, align=paste0("l", paste0(rep("c",dim(seltable)[2]-1),collapse="")), caption=fullcap, escape=FALSE)
 ```
 
-Notes: The nested F-tests are given in Supporting Information. LOOCV = Leave one out cross-validation. RMSE = root mean square error. MdAE = median absolute error. AICc = Akaike Information Criterion corrected for small sample size. $\dagger$ and $\dagger\dagger$ = AICc greater than 2 and greater than 5 below model M (base catch model).  $\ddagger$, $\ddagger\ddagger$, and ${\ddagger}{\ddagger}{\ddagger}$  = LOOCV RMSE 5\%, 10\% and 20\% below model M, respectively. $t$ indicates current season (Jul-Jun). For covariates that are multiyear, $t$ is the current calendar year.
+Notes: The nested F-tests are given in Supporting Information. LOOCV = Leave one out cross-validation. RMSE = root mean square error. AICc = Akaike Information Criterion corrected for small sample size. $\dagger$ and $\dagger\dagger$ = AICc greater than 2 and greater than 5 below model M (base catch model).  $\ddagger$, $\ddagger\ddagger$, and ${\ddagger}{\ddagger}{\ddagger}$  = LOOCV RMSE 5\%, 10\% and 20\% below model M, respectively. $t$ indicates current season (Jul-Jun). For covariates that are multiyear, $t$ is the current calendar year.

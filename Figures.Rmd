@@ -10,11 +10,22 @@ header-includes: \usepackage[labelformat=empty]{caption}
 ```{r child = 'setup.Rmd'}
 ```
 
+```{r echo=FALSE}
+# Note not all the figures are shown. I have cut some out to shorten the file
+```
+
 ```{r eval=FALSE}
 # set eval=FALSE to not evaluate, but for paper submission, I run this to save the dpi=300
 # requested by the journal
 library(knitr)
 opts_chunk$set(dev="postscript", 
+               dpi=300)
+```
+
+```{r}
+# This will save the figures to the folder figures
+library(knitr)
+opts_chunk$set(fig.path='figures/', dev=c('png'), 
                dpi=300)
 ```
 
@@ -26,8 +37,8 @@ cat("\\clearpage")
 thecap <- paste("Figure",  ref("fig:studyarea"))
 ```
 
-```{r fig-study-area, out.width = "350px", fig.align='center', echo=FALSE, fig.cap=thecap, message=FALSE, warning=FALSE, eval=FALSE}
-figfile = system.file("docs", "kerala_study_area_with_inset.jpg", package="SardineForecast")
+```{r fig-study-area, out.width = "350px", fig.align='center', echo=FALSE, fig.cap=thecap, message=FALSE, warning=FALSE}
+figfile = file.path(here::here(), "figures/kerala_study_area_with_inset.jpg")
 knitr::include_graphics(figfile)
 ```
 
@@ -35,9 +46,21 @@ knitr::include_graphics(figfile)
 cat("\\clearpage")
 ```
 
-```{r fig-cartoon, out.width = "400px", fig.align='center', echo=FALSE, fig.cap=paste("Figure",  ref("fig:cartoon")), message=FALSE, warning=FALSE, eval=FALSE}
-figfile = system.file("docs", "cartoon.png", package="SardineForecast")
-knitr::include_graphics(figfile)
+```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
+par(mfrow = c(1, 1), mar = c(5, 5, 1, 5))
+dat <- oilsardine_qtr
+plot(ts(dat$Kerala / 1000, start = 1956, frequency = 4), ylab = "Quarterly Kerala Catch (1000 kg)", xlab = "", bty = "L", ylim = c(0, 200))
+oldpar <- par(fig = c(0.5, 1, 0.55, .97), new = TRUE)
+catchmeans <- tapply(dat$Kerala, dat$Qtr, mean, na.rm = TRUE)
+names(catchmeans) <- c("JFM", "AMJ", "JAS", "OND")
+barplot(catchmeans / 1000,
+  ylab = "", col = "grey", cex.axis = .75,
+  cex.names = .75, line = -1, yaxt = "n", border = NA
+)
+axis(2)
+box(bty = "L")
+title("Mean Quarterly Catch", cex.main = .75)
+par(oldpar)
 ```
 
 ```{r, results="asis", echo=FALSE}
@@ -49,8 +72,8 @@ cat("\\clearpage")
 oldpar=par(mfrow=c(1,1), mar=c(2,4,2,0))
 i=4
   covname=paste("SST.",i,sep="")
-dat=seio_covariates_mon[[covname]]
-datmon=seio_covariates_mon$Month
+dat=covariates[[covname]]
+datmon=covariates$Month
 datts=ts(dat,start=1956, frequency=12)
 plot(datts,ylab="Ave Monthly SST",xlab="",bty="n",ylim=c(24,31),xlim=c(2000,2005), yaxs="i", xaxs="i")
 ```
@@ -64,12 +87,12 @@ desc.cex = .75
 for(start in yrs){
   i=4
   covname=paste("SST.",i,sep="")
-  dat=seio_covariates_mon[[covname]]
+  dat=covariates[[covname]]
   datts1=window(ts(dat,start=1956, frequency=12),start=c(start,1), end=c(start+nyr,12))
   dat1=as.vector(datts1)
   i=11
   covname=paste("SST.",i,sep="")
-  dat=seio_covariates_mon[[covname]]
+  dat=covariates[[covname]]
   datts2=window(ts(dat,start=1956, frequency=12),start=c(start,1), end=c(start+nyr,12))
   dat2=as.vector(datts2)
   plot(dat1, ylim=c(ymin,ymax), xaxt="n",type="l",lwd=2,col="red",ylab="",xlab="")
@@ -101,7 +124,7 @@ for(start in yrs){
   lines(c(j+2,j+4),c(lev,lev)-jit,lwd=8,col=cols[4],lend=2) #bad
   text(j+6,lev,"fish move offshore",cex=desc.cex)
   
-  dat=seio_covariates_mon[["CHL.4"]]
+  dat=covariates[["CHL.4"]]
   datts1=window(ts(dat,start=1956, frequency=12),start=c(start,1), end=c(start+nyr,12))
   dat1=as.vector(datts1)
   TT=length(dat1)
@@ -124,364 +147,65 @@ for(start in yrs){
 cat("\\clearpage")
 ```
 
-```{r fig-qtrly-catch, echo=FALSE,fig.cap=paste("Figure",  ref("fig:catch")), fig.width=8,fig.height=6,message=FALSE,warning=FALSE}
-par(mfrow=c(1,1),mar=c(5,5,1,5))
-dat=oilsardine_qtr
-plot(ts(dat$Kerala/1000,start=1956, frequency=4),ylab="Quarterly Kerala Catch (1000 kg)",xlab="",bty="L", ylim=c(0,200))
-# tmp <- ringseine[!is.na(ringseine$HP),]
-# par(new = T)
-# plot(tmp$Year, tmp$Length.net, axes=FALSE, xlab=NA, ylab=NA, type="l", xlim=c(1956,2015), ylim=c(0,3000), lwd=3, col="grey")
-# axis(side = 4)
-# mtext(side = 4, line = 3, 'Ring Seine Net Length (m)')
-oldpar=par(fig = c(0.5, 1, 0.55, .97), new = TRUE)  
-catchmeans=tapply(dat$Kerala, dat$Qtr, mean, na.rm=TRUE)
-names(catchmeans)=c("JFM","AMJ","JAS","OND")
-barplot(catchmeans/1000,ylab="",col="grey",cex.axis=.75,
-        cex.names=.75, line=-1, yaxt="n", border=NA)
-axis(2)
-box(bty="L")
-title("Mean Quarterly Catch",cex.main=.75)
-par(oldpar)
-```
 
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-```{r cov.mon, echo=FALSE,fig.cap=paste("Figure",  ref("fig:COVts")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
-### FIGURE covariates
-oldpar=par(mfrow=c(2,2), mar=c(2,5,2,2))
-i=4
-covname=paste("SST.UPW.",i,sep="")
-dat=seio_covariates_mon[[covname]]
-datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="", xlab="",bty="n",ylim=c(-1,5),xlim=c(1980,2020))
-yl <- expression('SST-derived upwelling index ('*degree*'C)')
-mtext(yl, side=2, line=2)
-#legend("topright","A", bty="n")
-
-covname=paste("CHL.",i,sep="")
-dat=seio_covariates_mon[[covname]]
-datts=ts(dat,start=1956, frequency=12)
-yl <- expression('Surface chlorophyll-a (mg m'^"-3"*')')
-plot(datts,ylab="", xlab="",bty="n",ylim=c(0,35),xlim=c(1980,2020))
-mtext(yl, side=2, line=2)
-#legend("topright","B", bty="n")
-
-covname=paste("SST.",i,sep="")
-dat=seio_covariates_mon[[covname]]
-datts=ts(dat,start=1956, frequency=12)
-yl <- expression('Nearshore SST ('*degree*'C)')
-plot(datts,ylab="", xlab="",bty="n",ylim=c(24,35),xlim=c(1980,2020))
-mtext(yl, side=2, line=2)
-#legend("topright","C", bty="n")
-
-covname="precip.gpcp.kerala"
-dat=seio_covariates_mon[[covname]]
-datts=ts(dat,start=1956, frequency=12)
-plot(datts,ylab="", xlab="",bty="n",ylim=c(0,18),xlim=c(1980,2020))
-yl<-expression('Average daily precipitation (mm day'^"-1"*')')
-mtext(yl, side=2, line=2)
-#legend("topright","D", bty="n")
-
-xr <- 0.3
-par(fig = c(0.05, xr, 0.8, 1), new = T)  #panel left-top
-covname=paste("SST.UPW.",i,sep="")
-dat=seio_covariates_mon[[covname]]
-datmon=seio_covariates_mon$Month
-catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
-names(catchmeans)=1:12
-barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,1.5), col="grey", xaxt="n")
-title("Monthly mean",cex.main=.75)
-
-par(fig = c(0.05+.5, xr+.5, 0.8, 1), new = T)  # panel right-top
-covname=paste("CHL.",i,sep="")
-dat=seio_covariates_mon[[covname]]
-datmon=seio_covariates_mon$Month
-catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
-names(catchmeans)=1:12
-barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,12),col="grey", names.arg="")
-title("Monthly mean",cex.main=.75)
-
-par(fig = c(0.05, xr, 0.8-.5, 1-.5), new = TRUE)  #left-bottom
-covname=paste("SST.",i,sep="")
-dat=seio_covariates_mon[[covname]]
-datmon=seio_covariates_mon$Month
-catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
-names(catchmeans)=1:12
-barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(25,30),col="grey", xpd=FALSE, bty="l", names.arg="")
-axis(1, labels=FALSE, lwd.ticks=-1)
-title("Monthly mean",cex.main=.75)
-
-par(fig = c(0.05+.5, xr+.5, 0.8-.5, 1-.5), new = TRUE)  #right-bottom
-covname="precip.gpcp.kerala"
-dat=seio_covariates_mon[[covname]]
-datmon=seio_covariates_mon$Month
-catchmeans=tapply(dat, datmon, mean, na.rm=TRUE)
-names(catchmeans)=1:12
-barplot(catchmeans,ylab="",cex.axis=.75,cex.names=.75,ylim=c(0,10),col="grey", names.arg="")
-title("Monthly mean",cex.main=.75)
-
-par(oldpar)
-
-```
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-
-```{r child = 'setup.Rmd'}
-```
 
 ```{r cov-effects, echo=FALSE,fig.cap=paste("Figure",  ref("fig:cov-effects")), fig.width=8,fig.height=9,message=FALSE,warning=FALSE}
-oldpar=par(mfcol=c(3,2), mar=c(5,4,2,2))
-ylims=c(-3,2)
-dat=dat.spawners
-dat=subset(dat, Year>1982 & Year<2016)
-covnames=c("SST.2.5.3.yr.runsum.0", "SST.UPW.4.mon6to9.0", "Precip.Kerala.mon6to7.0")
-dat$cov0=dat[["SST.2.5.3.yr.runsum.0"]]
-dat$cov1=dat[["SST.UPW.4.mon6to9.0"]]
-dat$cov2=dat[["Precip.Kerala.mon6to7.0"]]
-m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m2 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov1, sp=0.6), data=dat)
-m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov2, sp=0.6), data=dat)
-xl <- expression("2.5-year average SST ("*degree*"C)")
-plot(m1, select=2, xlab=xl, ylab="Effect", ylim=ylims)
-#legend("topright","A", bty="n")
-legend("topleft","Jul-Sep catch", bty="n")
-abline(h=0, col="grey")
-plot(m2, select=2, xlab="Jun-Sep SST-derived upwelling index", ylab="Effect", ylim=ylims)
-#legend("topright","B", bty="n")
-text(1.25,-3,"high upwelling",pos=4)
-text(0,-3,"low upwelling",adj = 0)
-abline(h=0, col="grey")
-legend("topleft","Jul-Sep catch", bty="n")
-plot(m2, select=2, xlab="Jun-Jul land precipitation (mm/day)", ylab="Effect", ylim=ylims)
-#legend("topright","B", bty="n")
-abline(h=0, col="grey")
-legend("topleft","Jul-Sep catch", bty="n")
+oldpar <- par(mfcol = c(3, 2), mar = c(5, 4, 2, 2))
+ylims <- c(-3, 2)
+dat <- dat.spawners
+dat <- subset(dat, Year > 1982 & Year < 2016)
+covnames <- c("SST.2.5.3.yr.runsum.0", "SST.UPW.4.mon6to9.0", "Precip.Kerala.mon6to7.0")
+dat$cov0 <- dat[["SST.2.5.3.yr.runsum.0"]]
+dat$cov1 <- dat[["SST.UPW.4.mon6to9.0"]]
+dat$cov2 <- dat[["Precip.Kerala.mon6to7.0"]]
+m1 <- gam(spawners0 ~ s(nspawners1, sp = 0.6) + s(cov0, sp = 0.6), data = dat)
+m2 <- gam(spawners0 ~ s(nspawners1, sp = 0.6) + s(cov1, sp = 0.6), data = dat)
+m3 <- gam(spawners0 ~ s(nspawners1, sp = 0.6) + s(cov2, sp = 0.6), data = dat)
+xl <- expression("2.5-year average SST (" * degree * "C)")
+plot(m1, select = 2, xlab = xl, ylab = "Effect", ylim = ylims)
+# legend("topright","A", bty="n")
+legend("topleft", "Jul-Sep catch", bty = "n")
+abline(h = 0, col = "grey")
+plot(m2, select = 2, xlab = "Jun-Sep SST-derived upwelling index", ylab = "Effect", ylim = ylims)
+# legend("topright","B", bty="n")
+text(1.25, -3, "high upwelling", pos = 4)
+text(0, -3, "low upwelling", adj = 0)
+abline(h = 0, col = "grey")
+legend("topleft", "Jul-Sep catch", bty = "n")
+plot(m2, select = 2, xlab = "Jun-Jul land precipitation (mm/day)", ylab = "Effect", ylim = ylims)
+# legend("topright","B", bty="n")
+abline(h = 0, col = "grey")
+legend("topleft", "Jul-Sep catch", bty = "n")
 
-dat=dat.nonspawners
-dat=subset(dat, Year>1982 & Year<2016)
-covnames=c("SST.2.5.3.yr.runsum.0", "SST.UPW.4.mon6to9.0", "Precip.Kerala.mon6to7.0", ylim=ylims)
-dat$cov0=dat[[covnames[1]]]
-dat$cov1=dat[[covnames[2]]]
-dat$cov2=dat[[covnames[3]]]
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m2 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov2, sp=0.6), data=dat)
-xl <- expression("2.5-year average SST ("*degree*"C)")
-plot(m1, select=3, xlab=xl, ylab="Effect", ylim=ylims)
-#legend("topright","C", bty="n")
-legend("topleft","Oct-Mar catch", bty="n")
-abline(h=0, col="grey")
-plot(m2, select=3, xlab="Jun-Sep SST-derived upwelling index", ylab="Effect", ylim=ylims)
-#legend("topright","D", bty="n")
-legend("topleft","Oct-Mar catch", bty="n")
-abline(h=0, col="grey")
-#abline(v=0, col="blue")
-text(1.25,-3,"high upwelling",pos=4)
-text(0,-3,"low upwelling",adj = 0)
-plot(m3, select=3, xlab="Jun-Jul land precipitation (mm/day)", ylab="Effect", ylim=ylims)
-#legend("topright","D", bty="n")
-legend("topleft","Oct-Mar catch", bty="n")
-abline(h=0, col="grey")
-
-par(oldpar)
-```
-
-```{r, results="asis", echo=FALSE}
-cat("\\clearpage")
-```
-
-<!-- 
-Define fullrespdat.
---> 
-```{r child = 'setup.Rmd'}
-```
-
-```{r fitted, echo=FALSE,fig.cap=paste("Figure",  ref("fig:fitted")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE, eval=FALSE}
-# fitted comparison
-jig=.3 #keep of the legend
-oldpar=par(mfrow=c(2,2), mar=c(4,6,1,0))
-tcex=0.85
-dat=dat.spawners
-covnames=c("SST.2.5.3.yr.runsum.0")
-dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
-dat$cov1=dat[["Precip.Kerala.mon6to7.0"]]
-dat <- subset(dat, Year>1983 & Year<2016)
-Yr1 = min(dat$Year)
-Yr2 = max(dat$Year)
-years = c(1986, 1994, 2013)
-loc=which(dat$Year %in% years)
-m0 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) +  s(cov1, sp=0.6), data=dat)
-xmin=min(m1$model[,"spawners0"],m1$fitted.values,m0$fitted.values)
-xmax=jig+max(m0$model[,"spawners0"],m0$fitted.values,m1$fitted.values,m0$model[,"spawners0"],m0$fitted.values)
-plot(m0$model[,"spawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Observed log Jul-Sep catch", ylab="Predicted log catch")
-lines(c(xmin,xmax),c(xmin,xmax-jig))
-r2 <- round(100*summary(m0)$r.sq,digits=1)
-rmse <- round(forecast::accuracy(m0)[,"RMSE"], digits=2)
-ll = bquote(paste(italic(R)^2," = ",.(r2),"  RMSE = ",.(rmse)))
-val=0.25*diff(par('usr')[3:4])/par('pin')[2]
-text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
-text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="No environ. covariates")
-legend("topright","a", bty="n")
-text(m0$model[loc,"spawners0"], m0$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
-
-mc <- m3
-plot(mc$model[,"spawners0"],mc$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Observed log Jul-Sep catch", ylab="Predicted log catch")
-lines(c(xmin,xmax-jig),c(xmin,xmax-jig)) # -jig to keep off legend
-r2 <- round(100*summary(mc)$r.sq,digits=1)
-rmse <- round(forecast::accuracy(mc)[,"RMSE"], digits=2)
-ll = bquote(paste(italic(R)^2," = ",.(r2),"  RMSE = ",.(rmse)))
-val=0.25*diff(par('usr')[3:4])/par('pin')[2]
-text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
-text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="With 2.5-year average SST")
-legend("topright","b", bty="n")
-text(mc$model[loc,"spawners0"], mc$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
-
-dat=dat.nonspawners
-covnames=c("SST.2.5.3.yr.runsum.0")
-dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
-dat$cov0=dat[["DMI.3.yr.runsum.0"]]
-dat$cov1=dat[["Precip.Kerala.mon6to7.0"]]
-dat <- subset(dat, Year>1983 & Year<2016)
-Yr1 = min(dat$Year)
-Yr2 = max(dat$Year)
-years = c(1986, 1991, 1994, 2013)
-loc=which(dat$Year %in% years)
-m0 = gam(nspawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6) + s(cov1, sp=0.6), data=dat)
-xmin=min(m0$model[,"nspawners0"],m0$fitted.values,m1$fitted.values,m2$fitted.values)
-xmax=jig+max(m0$model[,"nspawners0"],m0$fitted.values,m1$fitted.values,m2$fitted.values)
-plot(m0$model[,"nspawners0"],m0$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Observed log Oct-Mar catch", ylab="Predicted log catch")
-lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
-r2 <- round(100*summary(m0)$r.sq,digits=1)
-rmse <- round(forecast::accuracy(m0)[,"RMSE"], digits=2)
-ll = bquote(paste(italic(R)^2," = ",.(r2),"  RMSE = ",.(rmse)))
-val=0.25*diff(par('usr')[3:4])/par('pin')[2]
-text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
-text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="No environ. covariates")
-legend("topright","c", bty="n")
-text(m0$model[loc,"nspawners0"], m0$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
-
-mc <- m3
-plot(mc$model[,"nspawners0"],mc$fitted.values, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Observed log Oct-Mar catch", ylab="Predicted log catch")
-lines(c(xmin,xmax-jig),c(xmin,xmax-jig))
-r2 <- round(100*summary(mc)$r.sq,digits=1)
-rmse <- round(forecast::accuracy(mc)[,"RMSE"], digits=2)
-ll = bquote(paste(italic(R)^2," = ",.(r2),"  RMSE = ",.(rmse)))
-val=0.25*diff(par('usr')[3:4])/par('pin')[2]
-text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
-text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="With 2.5-year average SST")
-#legend("topleft",legend=ll, bty="n")
-legend("topright","d", bty="n")
-text(mc$model[loc,"nspawners0"], mc$fitted.values[loc], labels=years, pos=4, offset=0.3, cex=tcex)
-
-par(oldpar)
-```
-
-```{r fitted-loo, echo=FALSE,fig.cap=paste("Figure",  ref("fig:fitted")), fig.width=8,fig.height=8,message=FALSE,warning=FALSE}
-# loocv rmse comparison
-jig=.3 #keep of the legend
-oldpar=par(mfrow=c(2,2), mar=c(4,6,1,0))
-tcex=0.85
-dat=dat.spawners
-dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
-dat$cov1=dat[["Precip.Kerala.mon6to7.0"]]
-dat <- subset(dat, Year>1982 & Year<2016)
-years = c(1986, 1994, 2013)
-loc=which(dat$Year %in% years)
-m0 = gam(spawners0 ~ s(nspawners1, sp=0.6), data=dat)
-m1 = gam(spawners0 ~ s(nspawners1, sp=0.6) + s(cov0, sp=0.6), data=dat)
-m3 = gam(spawners0 ~ s(nspawners1, sp=0.6) +  s(cov1, sp=0.6), data=dat)
-xmin=5
-xmax=13
-vals0 <- SardineForecast::loogam(m0)
-plot(vals0$actual, vals0$pred, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Observed log Jul-Sep catch", ylab="Predicted log catch")
-lines(c(xmin,xmax),c(xmin,xmax-jig))
-rmse <- round(vals0$RMSE, digits=2)
-mdae <- round(vals0$MdAE, digits=2)
-ll = paste0("LOOCV RMSE=", rmse, ", MdAE=", mdae)
-#ll = paste0("LOOCV RMSE=", rmse)
-val=0.25*diff(par('usr')[3:4])/par('pin')[2]
-text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
-text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="No environ. covariates")
-legend("topright","a", bty="n")
-text(vals0$actual[loc], vals0$pred[loc], labels=years, pos=1, offset=0.3, cex=tcex)
-
-mc <- m1
-vals <- SardineForecast::loogam(mc)
-plot(vals$actual, vals$pred, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Observed log Jul-Sep catch", ylab="Predicted log catch")
-lines(c(xmin,xmax-jig),c(xmin,xmax-jig)) # -jig to keep off legend
-rmse <- round(vals$RMSE, digits=2)
-mdae <- round(vals$MdAE, digits=2)
-ll = paste0("LOOCV RMSE=", rmse, ", MdAE=", mdae)
-#ll = paste0("LOOCV RMSE=", rmse)
-val=0.25*diff(par('usr')[3:4])/par('pin')[2]
-text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
-text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="With 2.5-year average SST")
-legend("topright","b", bty="n")
-text(vals$actual[loc], vals$pred[loc], labels=years, pos=4, offset=0.3, cex=tcex)
-
-dat=dat.nonspawners
-dat$cov0=dat[["SST.2.10.3.yr.runsum.0"]]
-#dat$cov0=dat[["DMI.3.yr.runsum.0"]]
-dat$cov1=dat[["Precip.Kerala.mon6to7.0"]]
-dat <- subset(dat, Year>1982 & Year<2015)
-years = c(1986, 1991, 1994, 2013)
-loc=which(dat$Year %in% years)
-m0 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6), data=dat)
-m1 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov0, sp=0.6), data=dat)
-#m3 = gam(nspawners0 ~ s(nspawners1, sp=0.6) + s(spawners2, sp=0.6) + s(cov1, sp=0.6), data=dat)
-xmin=5
-xmax=13
-vals0 <- SardineForecast::loogam(m0)
-plot(vals0$actual, vals0$pred, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Observed log Oct-Mar catch", ylab="Predicted log catch")
-lines(c(xmin,xmax),c(xmin,xmax-jig))
-rmse <- round(vals0$RMSE, digits=2)
-mdae <- round(vals0$MdAE, digits=2)
-ll = paste0("LOOCV RMSE=", rmse, ", MdAE=", mdae)
-#ll = paste0("LOOCV RMSE=", rmse)
-val=0.25*diff(par('usr')[3:4])/par('pin')[2]
-text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
-text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="No environ. covariates")
-legend("topright","c", bty="n")
-text(vals0$actual[loc], vals0$pred[loc], labels=years, pos=4, offset=0.3, cex=tcex)
-
-mc <- m1
-vals <- SardineForecast::loogam(mc)
-plot(vals$actual, vals$pred, xlim=c(xmin,xmax), ylim=c(xmin,xmax),
-     xlab="Observed log Oct-Mar catch", ylab="Predicted log catch")
-lines(c(xmin,xmax-jig),c(xmin,xmax-jig)) # -jig to keep off legend
-rmse <- round(vals$RMSE, digits=2)
-mdae <- round(vals$MdAE, digits=2)
-ll = paste0("LOOCV RMSE=", rmse, ", MdAE=", mdae)
-#ll = paste0("LOOCV RMSE=", rmse)
-val=0.25*diff(par('usr')[3:4])/par('pin')[2]
-text(par('usr')[1], par('usr')[4]-val, pos=4, labels=ll)
-text(par('usr')[1], par('usr')[4]-2*val, pos=4, labels="With 2.5-year average SST")
-legend("topright","d", bty="n")
-text(vals$actual[loc], vals$pred[loc], labels=years, pos=4, offset=0.3, cex=tcex)
+dat <- dat.spawners
+dat <- subset(dat, Year > 1982 & Year < 2016)
+covnames <- c("SST.2.5.3.yr.runsum.0", "SST.UPW.4.mon6to9.0", "Precip.Kerala.mon6to7.0", ylim = ylims)
+dat$cov0 <- dat[[covnames[1]]]
+dat$cov1 <- dat[[covnames[2]]]
+dat$cov2 <- dat[[covnames[3]]]
+m1 <- gam(nspawners0 ~ s(nspawners1, sp = 0.6) + s(spawners2, sp = 0.6) + s(cov0, sp = 0.6), data = dat)
+m2 <- gam(nspawners0 ~ s(nspawners1, sp = 0.6) + s(spawners2, sp = 0.6) + s(cov1, sp = 0.6), data = dat)
+m3 <- gam(nspawners0 ~ s(nspawners1, sp = 0.6) + s(spawners2, sp = 0.6) + s(cov2, sp = 0.6), data = dat)
+xl <- expression("2.5-year average SST (" * degree * "C)")
+plot(m1, select = 3, xlab = xl, ylab = "Effect", ylim = ylims)
+# legend("topright","C", bty="n")
+legend("topleft", "Oct-Mar catch", bty = "n")
+abline(h = 0, col = "grey")
+plot(m2, select = 3, xlab = "Jun-Sep SST-derived upwelling index", ylab = "Effect", ylim = ylims)
+# legend("topright","D", bty="n")
+legend("topleft", "Oct-Mar catch", bty = "n")
+abline(h = 0, col = "grey")
+# abline(v=0, col="blue")
+text(1.25, -3, "high upwelling", pos = 4)
+text(0, -3, "low upwelling", adj = 0)
+plot(m3, select = 3, xlab = "Jun-Jul land precipitation (mm/day)", ylab = "Effect", ylim = ylims)
+# legend("topright","D", bty="n")
+legend("topleft", "Oct-Mar catch", bty = "n")
+abline(h = 0, col = "grey")
 
 par(oldpar)
 ```
 
 ```{r, results="asis", echo=FALSE}
 cat("\\clearpage")
-```
-
-```{r child = 'Figure_DMI_3.Rmd'}
 ```
